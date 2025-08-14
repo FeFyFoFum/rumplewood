@@ -11,108 +11,92 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      font-family:'Inter',sans-serif;
+    :root {
+      --pink: #fbd3de;
+      --cream: #fffcf3;
+      --black: #000;
+      --navy: #0a3161;
 
-      /* colors */
-      --pink:#fbd3de;
-      --cream:#fffcf3;
-      --black:#000;
-      --navy:#0a3161;
-      --blue:#1155cc;
-      --red:#b50e12;
-
-      /* layout + style knobs */
-      --perimeter:36px;        /* top & side border thickness */
-      --band-width:1120px;     /* cream band max width */
-      --band-pad-y:28px;       /* vertical padding inside cream band */
-      --rule-thickness:1px;    /* each line in the double rule */
-      --rule-gap:1px;          /* gap between the two lines */
-      --top-spacing:52px;      /* space from top border to stars/band cluster */
-
-      /* stars */
-      --star-gap:0px;          /* 0 = touching, negative = overlap, positive = gap */
-      --star-side:14px;        /* side star size */
-      --star-mid:17px;         /* middle star size */
-      --stars-to-band-gap:6px; /* vertical gap between stars and the band’s top line */
+      --perimeter: 3vw;       /* top/side border thickness (scales) */
+      --band-pad-y: 2vh;      /* vertical padding in cream band */
+      --rule-thickness: 4px;  /* each line in the double rule */
+      --rule-gap: 3px;        /* gap between the two lines */
+      --max-width: 500px;     /* lock max width of logo block */
     }
 
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--pink); color:#111;
-      border:var(--perimeter) solid var(--black);
-      border-bottom:0;                  /* remove bottom border */
-      box-sizing:border-box;
-      min-height:100vh;
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* center the header cluster */
-    .wrap{
-      max-width:var(--band-width);
-      margin:var(--top-spacing) auto 64px;
-      padding:0 16px;
+    body {
+      background: var(--pink);
+      border: var(--perimeter) solid var(--black);
+      border-bottom: 0;
+      box-sizing: border-box;
     }
 
-    /* STARS – live in the pink above the band */
-    .stars{
-      display:flex; justify-content:center; align-items:flex-end;
-      user-select:none; font-size:0;
-      margin:0 0 var(--stars-to-band-gap);
+    .wrap {
+      max-width: var(--max-width);
+      margin: 4vh auto;
+      text-align: center;
     }
-    .stars span{
-      display:inline-block; line-height:1; padding:0;
-      margin:0 calc(var(--star-gap)/2);
-      font-family:'Inter',sans-serif;
-    }
-    .stars .left {color:var(--blue); font-size:var(--star-side);}
-    .stars .mid  {color:#000;        font-size:var(--star-mid);}
-    .stars .right{color:var(--red);  font-size:var(--star-side);}
 
-    /* CREAM BAND with double rules (top black, bottom navy) */
-    .band{
-      position:relative; background:var(--cream);
-      padding:var(--band-pad-y) 18px;
+    /* Stars PNG scales with font size of logo */
+    .stars {
+      display: block;
+      margin: 0 auto 1vh;
+      height: 2.2em; /* tied to logo font size */
+      width: auto;
     }
-    .band::before, .band::after{
-      content:""; position:absolute; left:0; right:0;
-      height:calc(var(--rule-thickness)*2 + var(--rule-gap));
-      pointer-events:none;
+
+    /* Cream band with double rules */
+    .band {
+      background: var(--cream);
+      padding: var(--band-pad-y) 1em;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
     }
-    .band::before{
-      top:0;
+    .band::before,
+    .band::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: calc(var(--rule-thickness)*2 + var(--rule-gap));
+      pointer-events: none;
+    }
+    .band::before {
+      top: 0;
       background:
-        linear-gradient(var(--black),var(--black)) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--black),var(--black)) bottom / 100% var(--rule-thickness) no-repeat;
+        linear-gradient(var(--black), var(--black)) top / 100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--black), var(--black)) bottom / 100% var(--rule-thickness) no-repeat;
     }
-    .band::after{
-      bottom:0;
+    .band::after {
+      bottom: 0;
       background:
-        linear-gradient(var(--navy),var(--navy)) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--navy),var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
+        linear-gradient(var(--navy), var(--navy)) top / 100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--navy), var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
     }
 
-    header{text-align:center}
-    .logo{
-      font-family:'Rubik Mono One',sans-serif;
-      font-size:32px; letter-spacing:.5px; margin:0;
+    .logo {
+      font-family: 'Rubik Mono One', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 0;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- Stars are in the pink, just above the band -->
-    <div class="stars" aria-hidden="true">
-      <span class="left">★</span><span class="mid">★</span><span class="right">★</span>
-    </div>
+    <img src="loladomeLOGOstars.png" alt="" class="stars" />
 
-    <!-- Cream band with double rules -->
     <div class="band">
-      <header>
-        <h1 class="logo">LOLADOME</h1>
-      </header>
+      <h1 class="logo">LOLADOME</h1>
     </div>
   </div>
 </body>
 </html>
-
-
