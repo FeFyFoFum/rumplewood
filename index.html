@@ -1,145 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOLADOME</title>
-  <meta name="description" content="LOLADOME Football Pool" />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
-
   <style>
-    :root{
-      font-family:'Inter',sans-serif;
-      /* ——— tweakables ——— */
-      --perimeter: 34px;          /* black page border thickness */
-      --panel-bg: #fffcf3;        /* cream box */
-      --pink: #fbd3de;            /* page bg */
-      --rule-thickness: 3px;      /* thickness of each rule in the double line */
-      --rule-gap: 2px;            /* gap between the two rules (smaller = closer) */
-      --star-gap: -1px;           /* negative = slight overlap; 0 = touching; positive = gap */
-      --blue: #1155cc;
-      --navy: #0a3161;
-      --red:  #b50e12;
+    :root {
+      --star-gap: 0px; /* adjust here */
     }
-
-    /* Page frame */
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--pink);
-      color:#111;
-      border:var(--perimeter) solid #000; /* solid black perimeter */
-      box-sizing:border-box;
+    body {
+      background-color: #fbd3de;
+      margin: 0;
+      padding: 0;
+      border: 12px solid black; /* 3× thicker than before */
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
-
-    /* Panel with custom double rules (top=black, bottom=navy) */
-    .panel{
-      position:relative;
-      max-width:1040px;
-      margin:48px auto;
-      background:var(--panel-bg);
-      padding:18px 16px 32px;
-      box-sizing:border-box;
+    .container {
+      background-color: #fffdf6;
+      max-width: 800px;
+      margin: 60px auto; /* triple space before first double line */
+      padding: 20px;
+      border-top: 4px double black; /* thicker double lines */
+      border-bottom: 4px double black;
     }
-    /* top double (black) */
-    .panel::before{
-      content:"";
-      position:absolute; left:0; right:0; top:0;
-      height: calc(var(--rule-thickness)*2 + var(--rule-gap));
-      background:
-        linear-gradient(#000,#000) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(#000,#000) bottom / 100% var(--rule-thickness) no-repeat;
-      pointer-events:none;
+    .stars {
+      display: flex;
+      align-items: flex-end; /* bottoms aligned */
+      justify-content: center;
+      gap: var(--star-gap);
+      margin-bottom: 10px;
     }
-    /* bottom double (navy) */
-    .panel::after{
-      content:"";
-      position:absolute; left:0; right:0; bottom:0;
-      height: calc(var(--rule-thickness)*2 + var(--rule-gap));
-      background:
-        linear-gradient(var(--navy),var(--navy)) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--navy),var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
-      pointer-events:none;
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
-
-    header{text-align:center}
-
-    /* Stars: bottom aligned, tight spacing, SVG for precise sizing */
-    .stars{
-      display:flex;
-      justify-content:center;
-      align-items:flex-end;     /* bottoms aligned */
-      margin:10px 0 8px;
-      user-select:none;
+    .content-box {
+      border: 2px dashed #ccc;
+      padding: 50px;
+      text-align: center;
+      background-color: white;
     }
-    .stars svg{display:block}
-    .stars .mid{width:17px; height:auto; margin:0 var(--star-gap)}
-    .stars .left,.stars .right{width:14px; height:auto; margin:0 var(--star-gap)}
-    .stars .left  path{fill:var(--blue)}
-    .stars .mid   path{fill:#000}
-    .stars .right path{fill:var(--red)}
-
-    .logo{
-      font-family:'Rubik Mono One',sans-serif;
-      font-size:28px;
-      margin:2px 0 14px;
-      letter-spacing:.5px;
-    }
-
-    .form-wrap{padding:0 4px}
-    iframe{
-      width:100%; height:80vh; border:0; display:block;
-      border-radius:8px; background:#fff; box-shadow:0 1px 12px rgba(0,0,0,.05);
-    }
-
-    .placeholder{
-      display:flex; align-items:center; justify-content:center;
-      height:60vh; border:2px dashed rgba(0,0,0,.15);
-      border-radius:8px; background:#fff; color:#444; font-size:16px;
-      text-align:center; padding:16px;
-    }
-
-    @media (max-width:640px){
-      .logo{font-size:24px}
-      iframe{height:75vh}
+    svg {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="panel">
-    <header>
-      <!-- Stars (SVG, bottom-aligned, tight) -->
-      <div class="stars" aria-hidden="true">
-        <!-- left small star -->
-        <svg class="left" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-        </svg>
-        <!-- middle star (17px) -->
-        <svg class="mid" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-        </svg>
-        <!-- right small star -->
-        <svg class="right" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-        </svg>
-      </div>
-
-      <h1 class="logo">LOLADOME</h1>
-    </header>
-
-    <div class="form-wrap">
-      <!-- Replace with your Google Form/Sheet embed when ready -->
-      <!-- Example: <iframe src="https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true" allowfullscreen></iframe> -->
-      <div class="placeholder">Placeholder: add your Google Form/Sheet iframe here.</div>
+  <div class="container">
+    <div class="stars">
+      <svg class="star left" width="14" height="14" viewBox="1 2 22 20" fill="blue" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.4 8.168L12 18.896l-7.334 3.87 1.4-8.168L.132 9.21l8.2-1.192z"/>
+      </svg>
+      <svg class="star middle" width="17" height="17" viewBox="1 2 22 20" fill="black" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.4 8.168L12 18.896l-7.334 3.87 1.4-8.168L.132 9.21l8.2-1.192z"/>
+      </svg>
+      <svg class="star right" width="14" height="14" viewBox="1 2 22 20" fill="darkred" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.4 8.168L12 18.896l-7.334 3.87 1.4-8.168L.132 9.21l8.2-1.192z"/>
+      </svg>
+    </div>
+    <div class="title">LOLADOME</div>
+    <div class="content-box">
+      Placeholder: add your Google Form/Sheet iframe here.
     </div>
   </div>
 </body>
 </html>
-
-
-
