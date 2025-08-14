@@ -13,68 +13,85 @@
   <style>
     :root{
       font-family:'Inter',sans-serif;
+
+      /* colors */
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
       --navy:#0a3161;
+      --blue:#1155cc;
+      --red:#b50e12;
 
-      /* tweakables */
-      --perimeter:36px;        /* page border thickness */
-      --band-width: 1120px;    /* cream band max width */
-      --band-pad-y: 28px;      /* vertical padding inside cream band */
-      --rule-thickness: 3px;   /* each line thickness */
-      --rule-gap: 2px;         /* space between the 2 lines */
-      --star-gap: 0px;         /* 0 = touching, negative = overlap */
+      /* layout + style knobs */
+      --perimeter:36px;        /* top & side border thickness */
+      --band-width:1120px;     /* cream band max width */
+      --band-pad-y:28px;       /* vertical padding inside cream band */
+      --rule-thickness:3px;    /* each line in the double rule */
+      --rule-gap:2px;          /* gap between the two lines */
+      --top-spacing:52px;      /* space from top border to stars/band cluster */
+
+      /* stars */
+      --star-gap:0px;          /* 0 = touching, negative = overlap, positive = gap */
       --star-side:14px;        /* side star size */
       --star-mid:17px;         /* middle star size */
-      --top-spacing: 52px;     /* space from black perimeter to cream band */
+      --stars-to-band-gap:6px; /* vertical gap between stars and the band’s top line */
     }
 
     html,body{height:100%}
     body{
       margin:0; background:var(--pink); color:#111;
-      border:var(--perimeter) solid var(--black); box-sizing:border-box;
-      display:block;
+      border:var(--perimeter) solid var(--black);
+      border-bottom:0;                  /* remove bottom border */
+      box-sizing:border-box;
+      min-height:100vh;
     }
 
-    /* layout container just to center the band */
-    .wrap{max-width:var(--band-width); margin:var(--top-spacing) auto 64px; padding:0 16px;}
+    /* center the header cluster */
+    .wrap{
+      max-width:var(--band-width);
+      margin:var(--top-spacing) auto 64px;
+      padding:0 16px;
+    }
 
-    /* Cream band with custom double rules */
+    /* STARS – live in the pink above the band */
+    .stars{
+      display:flex; justify-content:center; align-items:flex-end;
+      user-select:none; font-size:0;
+      margin:0 0 var(--stars-to-band-gap);
+    }
+    .stars span{
+      display:inline-block; line-height:1; padding:0;
+      margin:0 calc(var(--star-gap)/2);
+      font-family:'Inter',sans-serif;
+    }
+    .stars .left {color:var(--blue); font-size:var(--star-side);}
+    .stars .mid  {color:#000;        font-size:var(--star-mid);}
+    .stars .right{color:var(--red);  font-size:var(--star-side);}
+
+    /* CREAM BAND with double rules (top black, bottom navy) */
     .band{
       position:relative; background:var(--cream);
-      padding: var(--band-pad-y) 18px;
+      padding:var(--band-pad-y) 18px;
     }
     .band::before, .band::after{
-      content:""; position:absolute; left:0; right:0; height:calc(var(--rule-thickness)*2 + var(--rule-gap));
+      content:""; position:absolute; left:0; right:0;
+      height:calc(var(--rule-thickness)*2 + var(--rule-gap));
       pointer-events:none;
     }
-    .band::before{ top:0;
+    .band::before{
+      top:0;
       background:
         linear-gradient(var(--black),var(--black)) top    / 100% var(--rule-thickness) no-repeat,
         linear-gradient(var(--black),var(--black)) bottom / 100% var(--rule-thickness) no-repeat;
     }
-    .band::after{ bottom:0;
+    .band::after{
+      bottom:0;
       background:
         linear-gradient(var(--navy),var(--navy)) top    / 100% var(--rule-thickness) no-repeat,
         linear-gradient(var(--navy),var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
     }
 
-    header{ text-align:center; }
-
-    /* Stars: crisp glyphs, bottoms aligned, true zero gap */
-    .stars{
-      display:flex; justify-content:center; align-items:flex-end;
-      margin: 2px 0 10px; user-select:none; font-size:0;
-    }
-    .stars span{
-      display:inline-block; line-height:1;
-      margin:0 calc(var(--star-gap)/2); padding:0; font-family:'Inter',sans-serif;
-    }
-    .stars .left { color:#1155cc; font-size:var(--star-side); }
-    .stars .mid  { color:#000;    font-size:var(--star-mid); }
-    .stars .right{ color:#b50e12; font-size:var(--star-side); }
-
+    header{text-align:center}
     .logo{
       font-family:'Rubik Mono One',sans-serif;
       font-size:32px; letter-spacing:.5px; margin:0;
@@ -83,11 +100,14 @@
 </head>
 <body>
   <div class="wrap">
+    <!-- Stars are in the pink, just above the band -->
+    <div class="stars" aria-hidden="true">
+      <span class="left">★</span><span class="mid">★</span><span class="right">★</span>
+    </div>
+
+    <!-- Cream band with double rules -->
     <div class="band">
       <header>
-        <div class="stars" aria-hidden="true">
-          <span class="left">★</span><span class="mid">★</span><span class="right">★</span>
-        </div>
         <h1 class="logo">LOLADOME</h1>
       </header>
     </div>
