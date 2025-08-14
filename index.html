@@ -13,66 +13,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
 
   <style>
-    :root { font-family: 'Inter', sans-serif; }
+    :root {
+      font-family: 'Inter', sans-serif;
+      --star-overlap: -2px; /* adjust this for gap/overlap between stars */
+    }
+
     /* Solid black perimeter around whole page */
     html, body { height: 100%; }
     body  {
       margin:0;
       background:#fbd3de;
       color:#111;
-      border:12px solid #000;        /* perimeter */
+      border:36px solid #000;           /* perimeter 3× thicker */
       box-sizing:border-box;
     }
 
     .panel {
-      position: relative;
       max-width: 1040px;
-      margin: 48px auto 48px;        /* increased top/bottom space from perimeter */
-      background: #fffcf3;           /* box color */
+      margin: 48px auto;
+      background: #fffcf3;
       padding: 18px 16px 32px;
       box-sizing: border-box;
-    }
-
-    /* TOP twin rules (black) */
-    .panel::before {
-      content:"";
-      position:absolute; left:0; right:0; top:0;
-      height:6px;                     /* gap between the two thin lines */
-      background:
-        linear-gradient(#000,#000) top    / 100% 1px no-repeat,
-        linear-gradient(#000,#000) bottom / 100% 1px no-repeat;
-      pointer-events:none;
-    }
-    /* BOTTOM twin rules (navy) */
-    .panel::after {
-      content:"";
-      position:absolute; left:0; right:0; bottom:0;
-      height:6px;
-      background:
-        linear-gradient(#0a3161,#0a3161) top    / 100% 1px no-repeat,
-        linear-gradient(#0a3161,#0a3161) bottom / 100% 1px no-repeat;
-      pointer-events:none;
+      border-top:    6px double #000000;
+      border-bottom: 6px double #0a3161;
     }
 
     header { text-align:center; }
 
-    /* STAR MOTIF — bottom-aligned, very tight */
-    .stars{
+    /* STAR MOTIF — bottom aligned */
+    .stars {
       display:flex;
       justify-content:center;
-      align-items:flex-end;  /* bottom alignment */
+      align-items:flex-end;  /* ensures bottoms align */
       margin: 6px 0 8px;
       user-select:none;
     }
-    .stars span{
+    .stars span {
       line-height:1;
       display:block;
-      margin:0 -2px;         /* tiny overlap for tight look */
+      margin:0 var(--star-overlap);
       padding:0;
     }
-    .stars .s-left  { color:#1155cc; font-size:14px; }  /* slightly smaller */
-    .stars .s-mid   { color:#000000; font-size:18px; }  /* largest */
-    .stars .s-right { color:#b50e12; font-size:14px; }  /* slightly smaller */
+    .stars .s-left  { color:#1155cc; font-size:14px; }
+    .stars .s-mid   { color:#000000; font-size:17px; }
+    .stars .s-right { color:#b50e12; font-size:14px; }
 
     .logo {
       font-family: 'Rubik Mono One', sans-serif;
