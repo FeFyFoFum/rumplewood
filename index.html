@@ -21,7 +21,7 @@
       --pink: #fbd3de;            /* page bg */
       --rule-thickness: 3px;      /* thickness of each rule in the double line */
       --rule-gap: 2px;            /* gap between the two rules (smaller = closer) */
-      --star-gap: 1px;           /* negative = slight overlap; 0 = touching; positive = gap */
+      --star-gap: 0px;           /* negative = slight overlap; 0 = touching; positive = gap */
       --blue: #1155cc;
       --navy: #0a3161;
       --red:  #b50e12;
@@ -79,7 +79,7 @@
     }
     .stars svg{display:block}
     .stars .mid{width:17px; height:auto; margin:0 var(--star-gap)}
-    .stars .left,.stars .right{width:15px; height:auto; margin:0 var(--star-gap)}
+    .stars .left,.stars .right{width:14px; height:auto; margin:0 var(--star-gap)}
     .stars .left  path{fill:var(--blue)}
     .stars .mid   path{fill:#000}
     .stars .right path{fill:var(--red)}
@@ -140,4 +140,5 @@
   </div>
 </body>
 </html>
+
 
