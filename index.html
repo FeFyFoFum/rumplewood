@@ -4,30 +4,48 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOLADOME</title>
-  <meta name="description" content="Home of the LOLA football pool." />
+  <meta name="description" content="LOLADOME Football Pool" />
 
-  <!-- Load Inter and Rubik Mono One -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
 
   <style>
     :root { font-family: 'Inter', sans-serif; }
-    body { margin:0; min-height:100dvh; display:grid; place-items:center; background:#fafafa; }
-    .card{ background:#fff; border:1px solid #e5e5e5; border-radius:16px; padding:28px 24px; width:min(680px, 92%); box-shadow:0 1px 12px rgba(0,0,0,.03); text-align:center; }
-    .logo { font-family: 'Rubik Mono One', sans-serif; font-size:28px; margin:0 0 8px 0; letter-spacing:.5px; }
-    p{ margin:0 0 16px 0; color:#555 }
-    a.button{ display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #ddd; text-decoration:none; }
-    footer{ margin-top:8px; font-size:12px; color:#888; }
-  </style>
-</head>
-<body>
-  <main class="card">
-    <h1 class="logo">LOLADOME</h1>
-    <p>Home of the LOLA football pool.</p>
-    <p><a class="button" href="/pool.html">Enter the Pool</a></p>
-    <footer>© <span id="y"></span> LOLADOME</footer>
-  </main>
-  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
-</body>
-</html>
+    body  { margin:0; background:#fbd3de; }
+
+    /* Main panel that holds the header + iframe */
+    .panel {
+      max-width: 1040px;
+      margin: 0 auto 32px;
+      background: #fffcf3;                 /* requested box color */
+      border-top: 6px double #000000;       /* top double (black) */
+      border-bottom: 6px double #0a3161;    /* bottom double (navy) */
+      padding: 18px 16px 32px;
+      box-sizing: border-box;
+    }
+
+    header { text-align:center; }
+
+    /* Star motif */
+    .stars {
+      line-height: 1;
+      margin: 4px 0 8px;
+      letter-spacing: 2px; /* small spacing between stars */
+      user-select: none;
+    }
+    .stars .s-left  { color:#1155cc; font-size:12px; }  /* ~9pt */
+    .stars .s-mid   { color:#000000; font-size:16px; }  /* ~12pt */
+    .stars .s-right { color:#b50e12; font-size:12px; }  /* ~9pt */
+
+    /* Logo */
+    .logo {
+      font-family: 'Rubik Mono One', sans-serif;
+      font-size: 28px;
+      margin: 2px 0 14px;
+      letter-spacing: .5px;
+    }
+
+    /* Form i*
