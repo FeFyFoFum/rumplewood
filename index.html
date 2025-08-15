@@ -21,12 +21,13 @@
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
-      --navy:#0a3161;
+      --navy:#0a3161;        /* darker blue you’re using in the band rules */
       --star-red:#b50e12;
 
       /* Measurements */
       --top-border: calc(var(--u) * 3);
       --side-rail:  calc(var(--u) * 6);
+
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -35,7 +36,8 @@
       --cluster-gap:    calc(var(--u) * 0.6);
       --wrap-width:     calc(var(--u) * 36);
       --wrap-margin-top:calc(var(--u) * 3.7);
-      --ring:#e6e6e6;
+
+      --ring:#e6e6e6; /* header band rules only */
     }
 
     html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
@@ -45,10 +47,13 @@
       border-top: var(--top-border) solid var(--black);
       min-height:100vh;
       box-sizing:border-box;
+
+      /* keep content clear of fixed side rails */
       padding-left: var(--side-rail);
       padding-right: var(--side-rail);
     }
 
+    /* Fixed side rails that persist during scroll (infinite rails) */
     .rail{
       position:fixed; top:0; bottom:0;
       width: var(--side-rail); background: var(--black);
@@ -69,6 +74,7 @@
       height: var(--stars-h); width:auto;
     }
 
+    /* Cream band */
     .band{
       position:relative; background:var(--cream);
       padding: var(--band-pad-y) calc(var(--u) * 1);
@@ -104,12 +110,13 @@
     }
     .subhead .caps{ color:var(--star-red); font-weight:600; }
 
+    /* Updates area */
     .updates-wrap{
       width:min(var(--wrap-width), 92vw);
       margin: 16px auto 80px; text-align:left;
     }
 
-    /* Cream post cards */
+    /* Post card (rounded corners + cream background) */
     .update-card{
       background: var(--cream);
       border: 2px solid var(--black);
@@ -119,6 +126,7 @@
       margin-bottom: 32px;
     }
 
+    /* Title lines — Montserrat (navy) + Josefin (red) */
     .u-title{ text-align:center; margin:0 0 28px; }
     .u-title-line1{
       font-family:'Montserrat',sans-serif; font-weight:800;
@@ -130,6 +138,7 @@
       color:var(--star-red); margin-top:6px;
     }
 
+    /* Subtitle (bullets) — Inter, black */
     .u-sub{
       margin:0 0 14px; color:var(--black);
       font-size:11px; padding-left:18px;
@@ -137,6 +146,7 @@
     }
     .u-sub li{ margin:4px 0; }
 
+    /* Responsive inline images, black-framed, rounded */
     a.u-shot{
       position:relative; display:block;
       border:2px solid var(--black);
@@ -148,6 +158,7 @@
       width:100%; height:auto; display:block;
       object-fit:contain;
     }
+    /* subtle 'zoom' cue */
     .u-shot::after{
       content:""; position:absolute; right:10px; bottom:10px;
       width:26px; height:26px; border:2px solid var(--black);
@@ -157,13 +168,18 @@
     }
     @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
 
-    video.u-thumb { display:block; width:100%; height:auto; }
+    /* Hide lightbox arrows on mobile */
+    @media (max-width: 768px){
+      .lg-prev, .lg-next { display:none !important; }
+    }
   </style>
 </head>
 <body>
+  <!-- Fixed side rails -->
   <div class="rail rail-left"></div>
   <div class="rail rail-right"></div>
 
+  <!-- Header with stars + band -->
   <div class="wrap">
     <img src="loladomeLOGOstars.png" alt="" class="stars" />
     <div class="band">
@@ -174,34 +190,14 @@
     </div>
   </div>
 
+  <!-- Updates -->
   <main class="updates-wrap" id="page-gallery">
 
-    <!-- Example post -->
-    <article class="update-card">
-      <div class="u-title">
-        <div class="u-title-line1">MATCHDAY 01</div>
-        <div class="u-title-line2">17 August 2025</div>
-      </div>
-      <ul class="u-sub">
-        <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
-        <li>everyone’s picks are above, good luck</li>
-      </ul>
-      <a class="u-shot lg-item"
-         href="assets/000testfile.png"
-         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 1)">
-        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 image 1">
-      </a>
-      <a class="u-shot lg-item" style="margin-top:12px;"
-         href="assets/sample.mp4"
-         data-sub-html="MATCHDAY 01 — Looping video example">
-        <video class="u-thumb" autoplay muted loop playsinline>
-          <source src="assets/sample.mp4" type="video/mp4">
-        </video>
-      </a>
-    </article>
+    <!-- FEFYFOFUM -->
+
   </main>
 
-  <!-- lightGallery JS -->
+  <!-- lightGallery JS + plugins -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
 
@@ -212,37 +208,15 @@
         plugins: [lgZoom],
         speed: 300,
         download: false,
-        swipeToClose: true
+        swipeToClose: true,
+        mobileSettings: {
+          controls: true,
+          showCloseIcon: true,
+          showNext: false,
+          showPrev: false
+        }
       });
     });
-
-    // Post generator — manual ID entry
-    function addPost(id, title1, title2, subs, media) {
-      const wrap = document.getElementById('page-gallery');
-      const card = document.createElement('article');
-      card.className = 'update-card';
-
-      const titleHTML = `
-        <div class="u-title">
-          <div class="u-title-line1">${title1}</div>
-          <div class="u-title-line2">${title2}</div>
-        </div>`;
-      const subsHTML = `<ul class="u-sub">${subs.map(s => `<li>${s}</li>`).join('')}</ul>`;
-      const mediaHTML = media.map(m =>
-        m.type === 'img'
-          ? `<a class="u-shot lg-item" href="${m.src}" data-sub-html="${m.caption}">
-               <img class="u-thumb" src="${m.src}" alt="${m.alt}">
-             </a>`
-          : `<a class="u-shot lg-item" href="${m.src}" data-sub-html="${m.caption}">
-               <video class="u-thumb" autoplay muted loop playsinline>
-                 <source src="${m.src}" type="video/mp4">
-               </video>
-             </a>`
-      ).join('');
-
-      card.innerHTML = titleHTML + subsHTML + mediaHTML;
-      wrap.insertBefore(card, wrap.firstChild);
-    }
   </script>
 </body>
 </html>
