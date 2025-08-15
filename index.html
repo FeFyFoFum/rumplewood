@@ -8,9 +8,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- LightGallery CSS -->
+  <!-- lightGallery CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
 
   <style>
@@ -21,12 +21,13 @@
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
-      --navy:#0a3161;
-      --star-blue:#1155cc;
+      --navy:#0a3161;        /* darker blue you’re using in the band rules */
       --star-red:#b50e12;
 
-      /* Derived sizes */
-      --perimeter: calc(var(--u) * 6); /* doubled */
+      /* Measurements */
+      --top-border: calc(var(--u) * 3);
+      --side-rail:  calc(var(--u) * 6);
+
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -35,135 +36,150 @@
       --cluster-gap:    calc(var(--u) * 0.6);
       --wrap-width:     calc(var(--u) * 36);
       --wrap-margin-top:calc(var(--u) * 3.7);
+
+      --ring:#e6e6e6; /* header band rules only */
     }
 
-    html, body {
-      height:100%; margin:0;
-      font-family:'Inter',sans-serif;
+    html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
+    body{
       background:var(--pink);
       color:#111;
-      border-left: var(--perimeter) solid var(--black);
-      border-right: var(--perimeter) solid var(--black);
+      border-top: var(--top-border) solid var(--black);
+      min-height:100vh;
+      box-sizing:border-box;
+
+      /* keep content clear of fixed side rails */
+      padding-left: var(--side-rail);
+      padding-right: var(--side-rail);
     }
+
+    /* Fixed side rails that persist during scroll (infinite rails) */
+    .rail{
+      position:fixed; top:0; bottom:0;
+      width: var(--side-rail); background: var(--black);
+      z-index: 1000; pointer-events:none;
+    }
+    .rail-left{ left:0; }
+    .rail-right{ right:0; }
 
     .wrap{
-      width: min(var(--wrap-width), 92vw);
-      margin: var(--wrap-margin-top) auto 64px;
+      width:min(var(--wrap-width), 92vw);
+      margin: var(--wrap-margin-top) auto 32px;
       text-align:center;
-      box-sizing:border-box;
       padding: 0 calc(var(--u) * 1);
-    }
-
-    .stars{
-      display:block;
-      margin: 0 auto var(--cluster-gap);
-      height: var(--stars-h);
-      width: auto;
-    }
-
-    /* Cream band – content width only */
-    .band{
-      position:relative;
-      background:var(--cream);
-      padding: var(--band-pad-y) calc(var(--u) * 1);
-      display:inline-block;
       box-sizing:border-box;
     }
-    .band::before,
-    .band::after{
-      content:"";
-      position:absolute; left:0; right:0;
+    .stars{
+      display:block; margin:0 auto var(--cluster-gap);
+      height: var(--stars-h); width:auto;
+    }
+
+    /* Cream band */
+    .band{
+      position:relative; background:var(--cream);
+      padding: var(--band-pad-y) calc(var(--u) * 1);
+      display:inline-block; box-sizing:border-box;
+    }
+    .band::before, .band::after{
+      content:""; position:absolute; left:0; right:0;
       height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
       pointer-events:none;
     }
     .band::before{
-      top:0;
-      background:
-        linear-gradient(var(--black),var(--black)) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--black),var(--black)) bottom / 100% var(--rule-thickness) no-repeat;
+      top:0; background:
+        linear-gradient(var(--black),var(--black)) top/100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--black),var(--black)) bottom/100% var(--rule-thickness) no-repeat;
     }
     .band::after{
-      bottom:0;
-      background:
-        linear-gradient(var(--navy),var(--navy)) top    / 100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--navy),var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
+      bottom:0; background:
+        linear-gradient(var(--navy),var(--navy)) top/100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--navy),var(--navy)) bottom/100% var(--rule-thickness) no-repeat;
     }
 
     .logo{
       font-family:'Rubik Mono One',sans-serif;
       font-size: var(--logo-size);
-      margin:0;
-      letter-spacing:.5px;
-      white-space:nowrap;
+      margin:0; letter-spacing:.5px; white-space:nowrap;
     }
-
-    .subhead {
-      font-family: 'Josefin Sans', sans-serif;
+    .subhead{
+      font-family:'Josefin Sans',sans-serif;
       font-size: calc(var(--u) * 1.625);
       margin: calc(var(--u) * 0.5) 0 0;
-      font-weight: 400;
-      color: var(--navy);
+      font-weight: 400; color: var(--navy);
       white-space:nowrap;
     }
-    .subhead .caps {
-      color: var(--star-red);
-      font-weight: 600;
+    .subhead .caps{ color:var(--star-red); font-weight:600; }
+
+    /* Updates area */
+    .updates-wrap{
+      width:min(var(--wrap-width), 92vw);
+      margin: 16px auto 80px; text-align:left;
     }
 
-    /* Post styles */
-    .post {
+    /* Post card (rounded corners restored) */
+    .update-card{
       background: var(--pink);
       border: 2px solid var(--black);
-      padding: calc(var(--u) * 2);
-      margin-bottom: calc(var(--u) * 4);
-    }
-    .post-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: calc(var(--u) * 2.2);
-      font-weight: 700;
-      color: var(--star-blue);
-      text-align: center;
-      margin: 0;
-    }
-    .post-date {
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: calc(var(--u) * 1.5);
-      color: var(--star-red);
-      text-align: center;
-      margin: calc(var(--u) * 0.5) 0 calc(var(--u) * 2.5);
-    }
-    .post-subtitle {
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: calc(var(--u) * 1.4);
-      color: var(--black);
-      text-align: center;
-      margin: 0 0 calc(var(--u) * 2);
-    }
-    .gallery {
-      display: flex;
-      gap: calc(var(--u) * 2);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .gallery a {
-      border: 2px solid var(--black);
-      display: block;
-    }
-    .gallery img {
-      display: block;
-      max-width: 240px;
-      height: auto;
+      border-radius:14px;            /* rounded */
+      padding:16px;
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
+      margin-bottom: 32px;
     }
 
-    /* Hide arrows on mobile */
-    @media (max-width: 768px) {
-      .lg-prev, .lg-next {
-        display: none !important;
-      }
+    /* Title lines — back to Montserrat (navy) + Josefin (red) */
+    .u-title{ text-align:center; margin:0 0 28px; } /* full extra line before subtitle */
+    .u-title-line1{
+      font-family:'Montserrat',sans-serif; font-weight:800;
+      text-transform:uppercase; font-size:20px;
+      letter-spacing:.2px; color:var(--navy);  /* darker blue */
+    }
+    .u-title-line2{
+      font-family:'Josefin Sans',sans-serif; font-size:16px;
+      color:var(--star-red); margin-top:6px;
+    }
+
+    /* Subtitle (bullets) — back to Inter, black */
+    .u-sub{
+      margin:0 0 14px; color:var(--black);
+      font-size:11px; padding-left:18px;
+      font-family:'Inter',sans-serif;          /* Inter restored */
+    }
+    .u-sub li{ margin:4px 0; }
+
+    /* Responsive inline images, black-framed, rounded, still open in lightbox */
+    a.u-shot{
+      position:relative; display:block;
+      border:2px solid var(--black);
+      border-radius:10px;                 /* rounded frames restored */
+      overflow:hidden;
+      background:#f7f7f7; cursor:zoom-in; text-decoration:none;
+    }
+    .u-thumb{
+      width:100%; height:auto; display:block;
+      object-fit:contain; /* full image, scales with page */
+    }
+    /* subtle 'zoom' cue */
+    .u-shot::after{
+      content:""; position:absolute; right:10px; bottom:10px;
+      width:26px; height:26px; border:2px solid var(--black);
+      border-radius:6px;
+      background:radial-gradient(circle at center, transparent 8px, var(--black) 9px);
+      opacity:.28; pointer-events:none;
+    }
+    @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
+
+    /* Hide lightbox arrows on mobile (swipe instead) */
+    @media (max-width: 768px){
+      .lg-prev, .lg-next { display:none !important; }
     }
   </style>
 </head>
 <body>
+  <!-- Fixed side rails -->
+  <div class="rail rail-left"></div>
+  <div class="rail rail-right"></div>
+
+  <!-- Header with stars + band -->
   <div class="wrap">
     <img src="loladomeLOGOstars.png" alt="" class="stars" />
     <div class="band">
@@ -174,54 +190,83 @@
     </div>
   </div>
 
-  <!-- Posts -->
-  <div class="wrap">
-    <!-- Post 1 -->
-    <article class="post">
-      <h2 class="post-title">MATCHDAY XX</h2>
-      <div class="post-date">17 August 2025</div>
-      <div class="post-subtitle">Your black subtitle text goes here</div>
-      <div class="gallery" id="gallery1">
-        <a href="assets/000testfile.png">
-          <img src="assets/000testfile.png" alt="Preview 1">
-        </a>
-        <a href="assets/000testfile2.png">
-          <img src="assets/000testfile2.png" alt="Preview 2">
-        </a>
+  <!-- Updates (gallery root for lightGallery) -->
+  <main class="updates-wrap" id="page-gallery">
+    <!-- ⬇⬇⬇ NEW POSTS GO HERE (paste the next <article> above this comment) ⬇⬇⬇ -->
+
+    <!-- POST 1 -->
+    <article class="update-card">
+      <div class="u-title">
+        <div class="u-title-line1">MATCHDAY 01</div>
+        <div class="u-title-line2">17 August 2025</div>
       </div>
+
+      <ul class="u-sub">
+        <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
+        <li>everyone’s picks are above, good luck</li>
+      </ul>
+
+      <a class="u-shot lg-item"
+         href="assets/000testfile.png"
+         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 1)">
+        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 image 1">
+      </a>
+
+      <a class="u-shot lg-item"
+         href="assets/000testfile2.png"
+         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 2)"
+         style="margin-top:12px;">
+        <img class="u-thumb" src="assets/000testfile2.png" alt="Matchday 01 image 2">
+      </a>
     </article>
 
-    <!-- Post 2 -->
-    <article class="post">
-      <h2 class="post-title">MATCHDAY XX</h2>
-      <div class="post-date">17 August 2025</div>
-      <div class="post-subtitle">Your black subtitle text goes here</div>
-      <div class="gallery" id="gallery2">
-        <a href="assets/000testfile.png">
-          <img src="assets/000testfile.png" alt="Preview 1">
-        </a>
-        <a href="assets/000testfile2.png">
-          <img src="assets/000testfile2.png" alt="Preview 2">
-        </a>
+    <!-- POST 2 (duplicate for scroll test) -->
+    <article class="update-card">
+      <div class="u-title">
+        <div class="u-title-line1">MATCHDAY 01</div>
+        <div class="u-title-line2">17 August 2025</div>
       </div>
-    </article>
-  </div>
 
-  <!-- LightGallery JS -->
+      <ul class="u-sub">
+        <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
+        <li>everyone’s picks are above, good luck</li>
+      </ul>
+
+      <a class="u-shot lg-item"
+         href="assets/000testfile.png"
+         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 1)">
+        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 image 1">
+      </a>
+
+      <a class="u-shot lg-item"
+         href="assets/000testfile2.png"
+         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 2)"
+         style="margin-top:12px;">
+        <img class="u-thumb" src="assets/000testfile2.png" alt="Matchday 01 image 2">
+      </a>
+    </article>
+  </main>
+
+  <!-- lightGallery JS + plugins -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
 
   <script>
-    // Init each gallery
-    lightGallery(document.getElementById('gallery1'), {
-      plugins: [lgZoom],
-      speed: 300,
-      mobileSettings: { controls: false }
-    });
-    lightGallery(document.getElementById('gallery2'), {
-      plugins: [lgZoom],
-      speed: 300,
-      mobileSettings: { controls: false }
+    // One gallery for the whole page: collects all .lg-item links inside #page-gallery.
+    document.addEventListener('DOMContentLoaded', () => {
+      lightGallery(document.getElementById('page-gallery'), {
+        selector: '.lg-item',
+        plugins: [lgZoom],
+        speed: 300,
+        download: false,
+        swipeToClose: true,
+        mobileSettings: {
+          controls: true,
+          showCloseIcon: true,
+          showNext: false,   // hide arrows on mobile
+          showPrev: false
+        }
+      });
     });
   </script>
 </body>
