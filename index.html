@@ -24,7 +24,7 @@
 
       /* Measurements */
       --perimeter: calc(var(--u) * 3);          /* top border thickness */
-      --side-perimeter: calc(var(--u) * 6);     /* fixed side rail thickness (twice as thick as before) */
+      --side-perimeter: calc(var(--u) * 6);     /* fixed side rail thickness */
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -43,8 +43,7 @@
     body{
       background:var(--pink);
       color:#111;
-      /* Top border only; side rails are fixed elements */
-      border-top: var(--perimeter) solid var(--black);
+      border-top: var(--perimeter) solid var(--black); /* top border */
       box-sizing: border-box;
       min-height:100vh;
 
@@ -136,7 +135,7 @@
       text-align:left;
     }
     .update-card{
-      background: var(--pink);              /* pink background for posts */
+      background: var(--pink);
       color: #1f1f1f;
       border:1px solid var(--ring);
       border-radius:14px;
@@ -144,15 +143,15 @@
       box-shadow:0 6px 18px rgba(0,0,0,.08);
     }
 
-    /* Title is now two centered lines */
+    /* Title is two centered lines */
     .u-title{
-      margin:0 0 8px;
+      margin:0 0 14px;          /* increased spacing below title */
       text-align: center;
     }
     .u-title-line1{
       font-family: 'Montserrat', sans-serif;
-      font-weight: 800;                /* bold Montserrat */
-      text-transform: uppercase;       /* ALL CAPS */
+      font-weight: 800;          /* bold Montserrat */
+      text-transform: uppercase; /* ALL CAPS */
       font-size: 20px;
       letter-spacing: .2px;
       color: var(--navy);
@@ -164,12 +163,12 @@
       margin-top:2px;
     }
 
-    /* Subtitle / bullets in black */
+    /* Subtitle / bullets — black, slightly smaller */
     .u-sub{
       margin:0 0 14px;
       color:var(--black);
-      font-size:12px;
-      padding-left: 18px;  /* space for bullets */
+      font-size:11px;           /* one tick smaller than before */
+      padding-left: 18px;       /* space for bullets */
     }
     .u-sub li{ margin: 4px 0; }
 
@@ -197,7 +196,7 @@
     .lightbox{
       position:fixed; inset:0;
       background: rgba(5,6,10,0.86);
-      display:none; z-index:9998; /* just under rails so rails stay visible if you want that effect */
+      display:none; z-index:9998;
     }
     .lightbox[aria-hidden="false"]{display:block}
     .lb-stage{
