@@ -21,13 +21,12 @@
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
-      --navy:#0a3161;        /* darker blue you’re using in the band rules */
+      --navy:#0a3161;
       --star-red:#b50e12;
 
       /* Measurements */
       --top-border: calc(var(--u) * 3);
       --side-rail:  calc(var(--u) * 6);
-
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -36,8 +35,7 @@
       --cluster-gap:    calc(var(--u) * 0.6);
       --wrap-width:     calc(var(--u) * 36);
       --wrap-margin-top:calc(var(--u) * 3.7);
-
-      --ring:#e6e6e6; /* header band rules only */
+      --ring:#e6e6e6;
     }
 
     html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
@@ -47,13 +45,10 @@
       border-top: var(--top-border) solid var(--black);
       min-height:100vh;
       box-sizing:border-box;
-
-      /* keep content clear of fixed side rails */
       padding-left: var(--side-rail);
       padding-right: var(--side-rail);
     }
 
-    /* Fixed side rails that persist during scroll (infinite rails) */
     .rail{
       position:fixed; top:0; bottom:0;
       width: var(--side-rail); background: var(--black);
@@ -74,7 +69,6 @@
       height: var(--stars-h); width:auto;
     }
 
-    /* Cream band */
     .band{
       position:relative; background:var(--cream);
       padding: var(--band-pad-y) calc(var(--u) * 1);
@@ -110,55 +104,50 @@
     }
     .subhead .caps{ color:var(--star-red); font-weight:600; }
 
-    /* Updates area */
     .updates-wrap{
       width:min(var(--wrap-width), 92vw);
       margin: 16px auto 80px; text-align:left;
     }
 
-    /* Post card (rounded corners restored) */
+    /* Cream post cards */
     .update-card{
-      background: var(--pink);
+      background: var(--cream);
       border: 2px solid var(--black);
-      border-radius:14px;            /* rounded */
+      border-radius:14px;
       padding:16px;
       box-shadow:0 6px 18px rgba(0,0,0,.08);
       margin-bottom: 32px;
     }
 
-    /* Title lines — back to Montserrat (navy) + Josefin (red) */
-    .u-title{ text-align:center; margin:0 0 28px; } /* full extra line before subtitle */
+    .u-title{ text-align:center; margin:0 0 28px; }
     .u-title-line1{
       font-family:'Montserrat',sans-serif; font-weight:800;
       text-transform:uppercase; font-size:20px;
-      letter-spacing:.2px; color:var(--navy);  /* darker blue */
+      letter-spacing:.2px; color:var(--navy);
     }
     .u-title-line2{
       font-family:'Josefin Sans',sans-serif; font-size:16px;
       color:var(--star-red); margin-top:6px;
     }
 
-    /* Subtitle (bullets) — back to Inter, black */
     .u-sub{
       margin:0 0 14px; color:var(--black);
       font-size:11px; padding-left:18px;
-      font-family:'Inter',sans-serif;          /* Inter restored */
+      font-family:'Inter',sans-serif;
     }
     .u-sub li{ margin:4px 0; }
 
-    /* Responsive inline images, black-framed, rounded, still open in lightbox */
     a.u-shot{
       position:relative; display:block;
       border:2px solid var(--black);
-      border-radius:10px;                 /* rounded frames restored */
+      border-radius:10px;
       overflow:hidden;
       background:#f7f7f7; cursor:zoom-in; text-decoration:none;
     }
     .u-thumb{
       width:100%; height:auto; display:block;
-      object-fit:contain; /* full image, scales with page */
+      object-fit:contain;
     }
-    /* subtle 'zoom' cue */
     .u-shot::after{
       content:""; position:absolute; right:10px; bottom:10px;
       width:26px; height:26px; border:2px solid var(--black);
@@ -168,18 +157,13 @@
     }
     @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
 
-    /* Hide lightbox arrows on mobile (swipe instead) */
-    @media (max-width: 768px){
-      .lg-prev, .lg-next { display:none !important; }
-    }
+    video.u-thumb { display:block; width:100%; height:auto; }
   </style>
 </head>
 <body>
-  <!-- Fixed side rails -->
   <div class="rail rail-left"></div>
   <div class="rail rail-right"></div>
 
-  <!-- Header with stars + band -->
   <div class="wrap">
     <img src="loladomeLOGOstars.png" alt="" class="stars" />
     <div class="band">
@@ -190,84 +174,75 @@
     </div>
   </div>
 
-  <!-- Updates (gallery root for lightGallery) -->
   <main class="updates-wrap" id="page-gallery">
-    <!-- ⬇⬇⬇ NEW POSTS GO HERE (paste the next <article> above this comment) ⬇⬇⬇ -->
 
-    <!-- POST 1 -->
+    <!-- Example post -->
     <article class="update-card">
       <div class="u-title">
         <div class="u-title-line1">MATCHDAY 01</div>
         <div class="u-title-line2">17 August 2025</div>
       </div>
-
       <ul class="u-sub">
         <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
         <li>everyone’s picks are above, good luck</li>
       </ul>
-
       <a class="u-shot lg-item"
          href="assets/000testfile.png"
          data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 1)">
         <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 image 1">
       </a>
-
-      <a class="u-shot lg-item"
-         href="assets/000testfile2.png"
-         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 2)"
-         style="margin-top:12px;">
-        <img class="u-thumb" src="assets/000testfile2.png" alt="Matchday 01 image 2">
-      </a>
-    </article>
-
-    <!-- POST 2 (duplicate for scroll test) -->
-    <article class="update-card">
-      <div class="u-title">
-        <div class="u-title-line1">MATCHDAY 01</div>
-        <div class="u-title-line2">17 August 2025</div>
-      </div>
-
-      <ul class="u-sub">
-        <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
-        <li>everyone’s picks are above, good luck</li>
-      </ul>
-
-      <a class="u-shot lg-item"
-         href="assets/000testfile.png"
-         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 1)">
-        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 image 1">
-      </a>
-
-      <a class="u-shot lg-item"
-         href="assets/000testfile2.png"
-         data-sub-html="MATCHDAY 01 — 17 August 2025 (Image 2)"
-         style="margin-top:12px;">
-        <img class="u-thumb" src="assets/000testfile2.png" alt="Matchday 01 image 2">
+      <a class="u-shot lg-item" style="margin-top:12px;"
+         href="assets/sample.mp4"
+         data-sub-html="MATCHDAY 01 — Looping video example">
+        <video class="u-thumb" autoplay muted loop playsinline>
+          <source src="assets/sample.mp4" type="video/mp4">
+        </video>
       </a>
     </article>
   </main>
 
-  <!-- lightGallery JS + plugins -->
+  <!-- lightGallery JS -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
 
   <script>
-    // One gallery for the whole page: collects all .lg-item links inside #page-gallery.
     document.addEventListener('DOMContentLoaded', () => {
       lightGallery(document.getElementById('page-gallery'), {
         selector: '.lg-item',
         plugins: [lgZoom],
         speed: 300,
         download: false,
-        swipeToClose: true,
-        mobileSettings: {
-          controls: true,
-          showCloseIcon: true,
-          showNext: false,   // hide arrows on mobile
-          showPrev: false
-        }
+        swipeToClose: true
       });
     });
+
+    // Post generator — manual ID entry
+    function addPost(id, title1, title2, subs, media) {
+      const wrap = document.getElementById('page-gallery');
+      const card = document.createElement('article');
+      card.className = 'update-card';
+
+      const titleHTML = `
+        <div class="u-title">
+          <div class="u-title-line1">${title1}</div>
+          <div class="u-title-line2">${title2}</div>
+        </div>`;
+      const subsHTML = `<ul class="u-sub">${subs.map(s => `<li>${s}</li>`).join('')}</ul>`;
+      const mediaHTML = media.map(m =>
+        m.type === 'img'
+          ? `<a class="u-shot lg-item" href="${m.src}" data-sub-html="${m.caption}">
+               <img class="u-thumb" src="${m.src}" alt="${m.alt}">
+             </a>`
+          : `<a class="u-shot lg-item" href="${m.src}" data-sub-html="${m.caption}">
+               <video class="u-thumb" autoplay muted loop playsinline>
+                 <source src="${m.src}" type="video/mp4">
+               </video>
+             </a>`
+      ).join('');
+
+      card.innerHTML = titleHTML + subsHTML + mediaHTML;
+      wrap.insertBefore(card, wrap.firstChild);
+    }
   </script>
 </body>
 </html>
