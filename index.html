@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOLA</title>
 
-  <!-- Fonts -->
+  <!-- Fonts (Inter now includes 500) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <!-- lightGallery CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
@@ -116,7 +116,7 @@
       margin: 16px auto 80px; text-align:left;
     }
 
-    /* Post card (rounded corners restored) — now cream background */
+    /* Post card (rounded corners restored) — cream background */
     .update-card{
       background: var(--cream);
       border: 2px solid var(--black);
@@ -126,7 +126,7 @@
       margin-bottom: 32px;
     }
 
-    /* Title lines — back to Montserrat (navy) + Josefin (red) */
+    /* Title lines — Montserrat (navy) + Josefin (red) */
     .u-title{ text-align:center; margin:0 0 28px; } /* full extra line before subtitle */
     .u-title-line1{
       font-family:'Montserrat',sans-serif; font-weight:800;
@@ -138,13 +138,23 @@
       color:var(--star-red); margin-top:6px;
     }
 
-    /* Subtitle (bullets) — back to Inter, black */
+    /* Bulleted subtitle list (only when you choose bullets) */
     .u-sub{
       margin:0 0 14px; color:var(--black);
       font-size:11px; padding-left:18px;
-      font-family:'Inter',sans-serif;          /* Inter restored */
+      font-family:'Inter',sans-serif;
+      font-weight:500;                /* medium */
     }
     .u-sub li{ margin:4px 0; }
+
+    /* Non-bulleted, line-broken subtitle text */
+    .u-subtext{
+      margin:0 0 14px; color:var(--black);
+      font-size:11px;
+      font-family:'Inter',sans-serif;
+      font-weight:500;                /* medium */
+      display:grid; gap:4px;          /* one div per line */
+    }
 
     /* Responsive inline images, black-framed, rounded, still open in lightbox */
     a.u-shot{
@@ -197,22 +207,7 @@
   <main class="updates-wrap" id="page-gallery">
 
     <!-- FEFYFOFUM -->
-<article class="update-card" data-id="00000">
-  <div class="u-title">
-    <div class="u-title-line1">HELLOLA WORLD</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<ul class="u-sub">
-  <li>new season</li>
-  <li>new LOLA</li>
-  <li>same pink</li>
-</ul>
-  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD — 17 August 2025 (Item 1)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-</article>
+
   </main>
 
   <!-- lightGallery JS + plugins -->
@@ -236,18 +231,21 @@
         }
       });
 
-      // make any inline <video> behave like a GIF: loop + autoplay + muted + inline
+      // Make any inline <video> behave like a GIF: loop + autoplay + muted + inline
       document.querySelectorAll('#page-gallery video').forEach(v => {
         v.setAttribute('autoplay','');
         v.setAttribute('muted','');
         v.setAttribute('loop','');
         v.setAttribute('playsinline','');
-        // some browsers need an explicit play() after setting attrs
-        v.play().catch(() => {/* ignore autoplay blocking; muted usually allows it */});
+        v.play().catch(() => {});
+      });
+
+      // Keep images (incl. GIF) in lightbox; keep videos OUT (they play inline)
+      document.querySelectorAll('#page-gallery a.lg-item').forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        if (/\.(mp4|webm)$/.test(href)) a.classList.remove('lg-item');
       });
     });
   </script>
 </body>
 </html>
-
-
