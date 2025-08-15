@@ -300,8 +300,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.getElementById('page-gallery');
   if (!gallery) return;
 
-  const haveVideo = (typeof window.lgVideo === 'function');
+  // --- 1) Make sure video slides are wired the way LG expects ---
+  function normalizeVideoSlides(el) {
+    let fixed = 0;
+    el.querySelectorAll('a.u-shot').forEach(a => {
+      const hrefAttr = a.getAttribute('data-src') || a.getAttribute('href') || '';
+      const url = hrefAttr.split('#')[0].split('?')[0];
+      if (!/\.(mp4|webm)$/i.test(url)) return;
 
+      // Ensure this anchor participates in the lightbox
+      a.classList.add('lg-item');
+
+      // Ensure LG has a data-src to sniff
+      if (!a.hasAttribute('data-src')) a.setAttribute('data-src', hrefAttr);
+
+      // Ensure data-video JSON exists
+      if (!a.hasAttribute('data-video')) {
+        const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
+        const payload = {
+          source: [{ src: hrefAttr, type }],
+          attributes: { preload: 'metadata', playsinline: true, muted: true, autoplay: true, loop: true }
+        };
+        a.setAttribute('data-video', JSON.stringify(payload));
+      }
+      fixed++;
+    });
+    console.log('Video slides normalized:', fixed);
+  }
+  normalizeVideoSlides(gallery);
+
+  // --- 2) Init LightGallery (now that slides are normalized) ---
+  const haveVideo = (typeof window.lgVideo === 'function');
   lightGallery(gallery, {
     selector: '.lg-item',
     plugins: haveVideo ? [window.lgZoom, window.lgVideo] : [window.lgZoom],
@@ -311,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
   });
 
-  // Inline video previews keep looping on the page
+  // --- 3) Keep inline video previews looping on the page ---
   gallery.querySelectorAll('video').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
@@ -319,59 +348,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   console.log('LG plugins:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
-
-  /* ---------- FALLBACK if lgVideo still missing ---------- */
-  if (!haveVideo) {
-    // Simple overlay so MP4/WebM still open full-screen if the plugin is blocked
-    const overlay = document.createElement('div');
-    overlay.id = 'videoOverlay';
-    overlay.innerHTML = `
-      <div class="vo-backdrop"></div>
-      <div class="vo-frame">
-        <button class="vo-close" aria-label="Close video">&times;</button>
-        <video class="vo-player" controls autoplay muted loop playsinline></video>
-      </div>`;
-    document.body.appendChild(overlay);
-
-    const css = document.createElement('style');
-    css.textContent = `
-      #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center}
-      #videoOverlay.open{display:flex}
-      .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92)}
-      .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
-      .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
-      .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
-      @media (max-width:768px){.vo-close{top:-46px;right:0}}
-    `;
-    document.head.appendChild(css);
-
-    const player = overlay.querySelector('.vo-player');
-    const close = overlay.querySelector('.vo-close');
-    const shut = () => { player.pause(); overlay.classList.remove('open'); player.removeAttribute('src'); player.load(); };
-    close.addEventListener('click', shut);
-    overlay.querySelector('.vo-backdrop').addEventListener('click', shut);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) shut(); });
-
-    // Intercept clicks on video anchors to open overlay
-    gallery.addEventListener('click', e => {
-      const a = e.target.closest('a.u-shot');
-      if (!a) return;
-      const url = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
-      if (/\.(mp4|webm)(?:$|[?#])/.test(url)) {
-        e.preventDefault();
-        player.setAttribute('src', url);
-        overlay.classList.add('open');
-        player.play().catch(()=>{});
-      }
-    });
-  }
 });
 </script>
 
 
 
+
 </body>
 </html>
+
 
 
 
