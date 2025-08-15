@@ -18,7 +18,8 @@
       --cream:#fffcf3;
       --black:#000;
       --navy:#0a3161;
-      --red:#cc0000; /* same as stars' red */
+      --star-blue:#3b8edb; /* lighter blue from star */
+      --red:#cc0000;
 
       --perimeter: calc(var(--u) * 3);
       --band-pad-y: calc(var(--u) * 1.75);
@@ -60,7 +61,7 @@
     .band{
       position:relative;
       background:var(--cream);
-      padding: var(--band-pad-y) calc(var(--u) * 4); /* widened horizontal padding */
+      padding: var(--band-pad-y) calc(var(--u) * 4);
       display:inline-block;
       width:100%;
       box-sizing:border-box;
@@ -97,7 +98,7 @@
       font-size: calc(var(--u) * 1.4);
       margin: calc(var(--u) * 0.5) 0 0 0;
       font-weight: 600;
-      color: var(--navy);
+      color: var(--star-blue);
     }
 
     .subtitle span.cap {
