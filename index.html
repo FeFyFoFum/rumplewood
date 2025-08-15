@@ -60,13 +60,12 @@
       width: auto;
     }
 
+    /* Cream band – now hugs content width (removed width:100%) */
     .band{
       position:relative;
       background:var(--cream);
-      /* tighter left/right padding to crop the sides closer to the text */
-      padding: var(--band-pad-y) calc(var(--u) * 0.5);
+      padding: var(--band-pad-y) calc(var(--u) * 1); /* tighter sides */
       display:inline-block;
-      width:100%;
       box-sizing:border-box;
     }
     .band::before,
@@ -94,6 +93,7 @@
       font-size: var(--logo-size);
       margin:0;
       letter-spacing:.5px;
+      white-space:nowrap;
     }
 
     .subhead {
@@ -102,6 +102,7 @@
       margin: calc(var(--u) * 0.5) 0 0;
       font-weight: 400;
       color: var(--navy);
+      white-space:nowrap;
     }
     .subhead .caps {
       color: var(--star-red);
@@ -122,4 +123,3 @@
   </div>
 </body>
 </html>
-
