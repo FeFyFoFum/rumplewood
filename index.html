@@ -241,108 +241,72 @@
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/zoom/lg-zoom.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const root = document.getElementById('page-gallery');
-      if (!root) return;
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('page-gallery');
+  if (!root) return;
 
-      // 1) Normalize anchors so LG always gets ideal inputs (no edits to your generator needed)
-      function normalizeAnchors() {
-        root.querySelectorAll('a.u-shot').forEach(a => {
-          const href    = a.getAttribute('href') || '';
-          const dataSrc = a.getAttribute('data-src') || '';
-          const poster  = a.getAttribute('data-poster') || '';
-          const src     = (dataSrc || href).toLowerCase();
-          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src);
+  // --- 1) NORMALIZE YOUR EXISTING POSTS (no changes to your generator required) ---
+  // Goal: for any video link, ensure poster (or '#') is in href, MP4/WEBM in data-src, and data-video exists.
+  root.querySelectorAll('a.u-shot').forEach(a => {
+    const href    = a.getAttribute('href') || '';
+    const dataSrc = a.getAttribute('data-src') || '';
+    const poster  = a.getAttribute('data-poster') || '';
+    const src     = (dataSrc || href);
+    const isVideo = /\.(mp4|webm)(?:$|[?#])/.test((src || '').toLowerCase());
 
-          if (isVideo) {
-            // Prefer MP4/WEBM in data-src, poster (or #) in href
-            if (!dataSrc) a.setAttribute('data-src', href);
-            if (poster) {
-              a.setAttribute('href', poster);
-            } else {
-              a.setAttribute('href', '#'); // avoid navigating to raw mp4
-            }
-            if (!a.hasAttribute('data-lg-size')) {
-              a.setAttribute('data-lg-size', '1280-720');
-            }
-            // Ensure data-video exists
-            if (!a.hasAttribute('data-video')) {
-              const type = src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
-              a.setAttribute('data-video', JSON.stringify({
-                source: [{ src: (a.getAttribute('data-src') || href), type }],
-                attributes: { preload: 'metadata', playsinline: true, controls: true }
-              }));
-            }
-          }
-        });
-      }
+    if (!isVideo) return;
 
-      // 2) Build slides for dynamic LG
-      function buildSlides() {
-        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-        return anchors.map(a => {
-          const href    = a.getAttribute('href') || '';
-          const dataSrc = a.getAttribute('data-src') || '';
-          const subHtml = a.getAttribute('data-sub-html') || '';
-          const poster  = a.getAttribute('data-poster') || '';
-          const src     = (dataSrc || href);
-          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+    // Put the real video in data-src (LG looks here first for video)
+    if (!dataSrc) a.setAttribute('data-src', href);
 
-          if (isVideo) {
-            let video = null;
-            const raw = a.getAttribute('data-video');
-            if (raw) { try { video = JSON.parse(raw); } catch {} }
-            if (!video) {
-              const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
-              video = { source: [{ src, type }], attributes: { preload: 'metadata', playsinline: true, controls: true } };
-            }
-            return { src, poster, subHtml, video };
-          } else {
-            return { src: href, thumb: href, subHtml };
-          }
-        });
-      }
+    // Put a poster (or #) in href so the browser doesn't navigate away
+    if (poster) a.setAttribute('href', poster);
+    else a.setAttribute('href', '#');
 
-      normalizeAnchors();
+    // Size hint helps LG lay out the slide immediately
+    if (!a.hasAttribute('data-lg-size')) a.setAttribute('data-lg-size', '1280-720');
 
-      let slides = buildSlides();
-      const lg = lightGallery(root, {
-        dynamic: true,
-        dynamicEl: slides,
-        plugins: [lgZoom, lgVideo],
-        selector: '', // using dynamic mode
-        speed: 300,
-        download: false,
-        swipeToClose: true,
-        mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
-      });
+    // Ensure data-video JSON exists
+    if (!a.hasAttribute('data-video')) {
+      const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+      a.setAttribute('data-video', JSON.stringify({
+        source: [{ src: a.getAttribute('data-src'), type }],
+        attributes: { preload: 'metadata', playsinline: true, controls: true }
+      }));
+    }
+  });
 
-      // Intercept clicks and open the matching slide
-      root.addEventListener('click', (e) => {
-        const a = e.target.closest('a.u-shot');
-        if (!a) return;
-        e.preventDefault();
+  // --- 2) INIT LIGHTGALLERY (STATIC SELECTOR MODE) ---
+  // This is more tolerant than dynamic mode for mixed image/video anchors.
+  const lg = lightGallery(root, {
+    selector: '.lg-item',
+    plugins: [lgZoom, lgVideo],
+    speed: 300,
+    download: false,
+    swipeToClose: true,
+    mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+  });
 
-        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-        // Re-run normalization in case you pasted new posts
-        normalizeAnchors();
-        const fresh = buildSlides();
-        if (fresh.length !== slides.length) {
-          lg.updateSlides(fresh);
-          slides = fresh;
-        }
-        const index = anchors.indexOf(a);
-        if (index >= 0) lg.openGallery(index);
-      });
+  // --- 3) KEEP INLINE THUMBS LOOPING (cosmetic) ---
+  root.querySelectorAll('video.u-thumb').forEach(v => {
+    v.setAttribute('autoplay',''); v.setAttribute('muted','');
+    v.setAttribute('loop','');     v.setAttribute('playsinline','');
+    v.play().catch(()=>{});
+  });
 
-      // Keep inline video thumbs looping on the page
-      root.querySelectorAll('video.u-thumb').forEach(v => {
-        v.setAttribute('autoplay',''); v.setAttribute('muted','');
-        v.setAttribute('loop','');     v.setAttribute('playsinline','');
-        v.play().catch(()=>{});
-      });
-    });
-  </script>
+  // --- 4) DIAGNOSTIC (optional but helpful): one-time console ping on first video click ---
+  root.addEventListener('click', (e) => {
+    const a = e.target.closest('a.u-shot');
+    if (!a) return;
+    const src = a.getAttribute('data-src') || a.getAttribute('href') || '';
+    if (/\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase())) {
+      console.log('[LOLA] Opening video in LG:', { href: a.getAttribute('href'), dataSrc: a.getAttribute('data-src'), poster: a.getAttribute('data-poster') });
+    }
+  }, { once:true });
+});
+</script>
+
 </body>
 </html>
+
