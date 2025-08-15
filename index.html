@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOLA</title>
 
-  <!-- Fonts (Inter now includes 500) -->
+  <!-- Fonts (Inter now includes 500 for darker subtitle weight) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
-      --navy:#0a3161;        /* darker blue you’re using in the band rules */
+      --navy:#0a3161;        /* darker blue used in the band rules */
       --star-red:#b50e12;
 
       /* Measurements */
@@ -53,7 +53,7 @@
       padding-right: var(--side-rail);
     }
 
-    /* Fixed side rails that persist during scroll (infinite rails) */
+    /* Fixed side rails (infinite rails) */
     .rail{
       position:fixed; top:0; bottom:0;
       width: var(--side-rail); background: var(--black);
@@ -116,34 +116,34 @@
       margin: 16px auto 80px; text-align:left;
     }
 
-    /* Post card (rounded corners restored) — cream background */
+    /* Post card (cream background) */
     .update-card{
       background: var(--cream);
       border: 2px solid var(--black);
-      border-radius:14px;            /* rounded */
+      border-radius:14px;
       padding:16px;
       box-shadow:0 6px 18px rgba(0,0,0,.08);
       margin-bottom: 32px;
     }
 
     /* Title lines — Montserrat (navy) + Josefin (red) */
-    .u-title{ text-align:center; margin:0 0 28px; } /* full extra line before subtitle */
+    .u-title{ text-align:center; margin:0 0 28px; }
     .u-title-line1{
       font-family:'Montserrat',sans-serif; font-weight:800;
       text-transform:uppercase; font-size:20px;
-      letter-spacing:.2px; color:var(--navy);  /* darker blue */
+      letter-spacing:.2px; color:var(--navy);
     }
     .u-title-line2{
       font-family:'Josefin Sans',sans-serif; font-size:16px;
       color:var(--star-red); margin-top:6px;
     }
 
-    /* Bulleted subtitle list (only when you choose bullets) */
+    /* Bulleted subtitle list (only when you type bullet markers) */
     .u-sub{
       margin:0 0 14px; color:var(--black);
       font-size:11px; padding-left:18px;
       font-family:'Inter',sans-serif;
-      font-weight:500;                /* medium */
+      font-weight:500;   /* Medium for darker look */
     }
     .u-sub li{ margin:4px 0; }
 
@@ -152,23 +152,19 @@
       margin:0 0 14px; color:var(--black);
       font-size:11px;
       font-family:'Inter',sans-serif;
-      font-weight:500;                /* medium */
-      display:grid; gap:4px;          /* one div per line */
+      font-weight:500;   /* Medium weight */
+      white-space:pre-line; /* render \n as line breaks, no extra spacing */
     }
 
-    /* Responsive inline images, black-framed, rounded, still open in lightbox */
+    /* Media frames */
     a.u-shot{
       position:relative; display:block;
       border:2px solid var(--black);
-      border-radius:10px;                 /* rounded frames restored */
+      border-radius:10px;
       overflow:hidden;
       background:#f7f7f7; cursor:zoom-in; text-decoration:none;
     }
-    .u-thumb{
-      width:100%; height:auto; display:block;
-      object-fit:contain; /* full image, scales with page */
-    }
-    /* Make videos match images */
+    .u-thumb{ width:100%; height:auto; display:block; object-fit:contain; }
     video.u-thumb { display:block; width:100%; height:auto; }
 
     /* subtle 'zoom' cue */
@@ -181,7 +177,7 @@
     }
     @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
 
-    /* Hide lightbox arrows on mobile (swipe instead) */
+    /* Hide lightbox arrows on mobile */
     @media (max-width: 768px){
       .lg-prev, .lg-next { display:none !important; }
     }
@@ -192,7 +188,7 @@
   <div class="rail rail-left"></div>
   <div class="rail rail-right"></div>
 
-  <!-- Header with stars + band -->
+  <!-- Header -->
   <div class="wrap">
     <img src="loladomeLOGOstars.png" alt="" class="stars" />
     <div class="band">
@@ -203,8 +199,12 @@
     </div>
   </div>
 
-  <!-- Updates (gallery root for lightGallery) -->
+  <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
+
+
+
+
 
 
 
@@ -214,41 +214,15 @@
 
     
     <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="00001">
-  <div class="u-title">
-    <div class="u-title-line1">MATCHDAY 00</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">
-  <div>Now I&#39;m pretty much testing to see what happens with this text. Some say the world will end in fire, some say in ice. From what I&#39;ve tasted of desire</div>
-  <div>I hold with those who favor fire</div>
-  <div>#But if it had to perish twice</div>
-  <div>★ to say that for destruction ice</div>
-  <div>IS ALSO GREAT</div>
-  <div>𝜔 and would suffice</div>
-</div>
-<ul class="u-sub">
-  <li>I think I know enough of hate</li>
-</ul>
-  <a class="u-shot lg-item" href="assets/0000hellolaWorld.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 1)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="MATCHDAY 00 image 1">
-  </a>
-
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/000testfile2.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 2)">
-    <img class="u-thumb" src="assets/000testfile2.png" alt="MATCHDAY 00 image 2">
-  </a>
-</article>
 <article class="update-card" data-id="0000">
   <div class="u-title">
     <div class="u-title-line1">HELLOLA WORLD!</div>
-    <div class="u-title-line2">17 August 20205</div>
+    <div class="u-title-line2">17 August 2025</div>
   </div>
-<div class="u-subtext">
-  <div>new season</div>
-  <div>new LOLA</div>
-  <div>same pink</div>
-</div>
-  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD! — 17 August 20205 (Item 1)">
+<div class="u-subtext">new season
+new LOLA
+same pink</div>
+  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
     <video class="u-thumb" autoplay muted loop playsinline>
       <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
     </video>
@@ -256,43 +230,49 @@
 </article>
   </main>
 
-  <!-- lightGallery JS + plugins -->
+  <!-- lightGallery JS -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
 
   <script>
-    // One gallery for the whole page: collects all .lg-item links inside #page-gallery.
-    document.addEventListener('DOMContentLoaded', () => {
-      lightGallery(document.getElementById('page-gallery'), {
-        selector: '.lg-item',
-        plugins: [lgZoom],
-        speed: 300,
-        download: false,
-        swipeToClose: true,
-        mobileSettings: {
-          controls: true,
-          showCloseIcon: true,
-          showNext: false,   // hide arrows on mobile
-          showPrev: false
-        }
-      });
+  document.addEventListener('DOMContentLoaded', () => {
+    const gallery = document.getElementById('page-gallery');
 
-      // Make any inline <video> behave like a GIF: loop + autoplay + muted + inline
-      document.querySelectorAll('#page-gallery video').forEach(v => {
-        v.setAttribute('autoplay','');
-        v.setAttribute('muted','');
-        v.setAttribute('loop','');
-        v.setAttribute('playsinline','');
-        v.play().catch(() => {});
-      });
-
-      // Keep images (incl. GIF) in lightbox; keep videos OUT (they play inline)
-      document.querySelectorAll('#page-gallery a.lg-item').forEach(a => {
-        const href = (a.getAttribute('href') || '').toLowerCase();
-        if (/\.(mp4|webm)$/.test(href)) a.classList.remove('lg-item');
-      });
+    /* 1) Remove videos from the lightbox BEFORE LG initializes */
+    Array.from(gallery.querySelectorAll('a.lg-item')).forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase().split('#')[0].split('?')[0];
+      if (/\.(mp4|webm)$/.test(href)) a.classList.remove('lg-item');
     });
+
+    /* 2) Init LG for images/GIFs only */
+    lightGallery(gallery, {
+      selector: '.lg-item',
+      plugins: [lgZoom],
+      speed: 300,
+      download: false,
+      swipeToClose: true,
+      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+    });
+
+    /* 3) Make inline videos behave like GIFs */
+    gallery.querySelectorAll('video').forEach(v => {
+      v.setAttribute('autoplay','');
+      v.setAttribute('muted','');
+      v.setAttribute('loop','');
+      v.setAttribute('playsinline','');
+      v.play().catch(() => {});
+    });
+
+    /* 4) If a video anchor is tapped, don't navigate */
+    gallery.addEventListener('click', e => {
+      const a = e.target.closest('a.u-shot');
+      if (!a) return;
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (/\.(mp4|webm)(?:$|[?#])/.test(href) && !a.classList.contains('lg-item')) {
+        e.preventDefault();
+      }
+    });
+  });
   </script>
 </body>
 </html>
-
