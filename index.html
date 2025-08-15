@@ -8,7 +8,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -22,9 +22,9 @@
       --star-blue:#1155cc;
       --star-red:#b50e12;
 
-      /* Derived sizes */
-      --perimeter: calc(var(--u) * 3);         /* top border thickness */
-      --side-perimeter: calc(var(--u) * 6);    /* double thickness for sides */
+      /* Measurements */
+      --perimeter: calc(var(--u) * 3);          /* top border thickness */
+      --side-perimeter: calc(var(--u) * 6);     /* fixed side rail thickness (twice as thick as before) */
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -43,12 +43,27 @@
     body{
       background:var(--pink);
       color:#111;
-      border-style: solid;
-      border-color: var(--black);
-      border-width: var(--perimeter) var(--side-perimeter) 0 var(--side-perimeter);
+      /* Top border only; side rails are fixed elements */
+      border-top: var(--perimeter) solid var(--black);
       box-sizing: border-box;
       min-height:100vh;
+
+      /* Make room so content doesn't sit under the fixed side rails */
+      padding-left: var(--side-perimeter);
+      padding-right: var(--side-perimeter);
     }
+
+    /* Fixed side rails that persist during scroll */
+    .rail{
+      position:fixed;
+      top:0; bottom:0;
+      width: var(--side-perimeter);
+      background: var(--black);
+      z-index: 9999;
+      pointer-events: none; /* never block clicks */
+    }
+    .rail-left{ left:0; }
+    .rail-right{ right:0; }
 
     .wrap{
       width: min(var(--wrap-width), 92vw);
@@ -121,21 +136,26 @@
       text-align:left;
     }
     .update-card{
-      background: var(--pink);
+      background: var(--pink);              /* pink background for posts */
       color: #1f1f1f;
       border:1px solid var(--ring);
       border-radius:14px;
       padding:16px;
       box-shadow:0 6px 18px rgba(0,0,0,.08);
     }
+
+    /* Title is now two centered lines */
     .u-title{
       margin:0 0 8px;
+      text-align: center;
     }
     .u-title-line1{
-      font-family:'Rubik Mono One',sans-serif;
-      font-size:20px;
-      letter-spacing:.2px;
-      color:var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;                /* bold Montserrat */
+      text-transform: uppercase;       /* ALL CAPS */
+      font-size: 20px;
+      letter-spacing: .2px;
+      color: var(--navy);
     }
     .u-title-line2{
       font-family:'Josefin Sans',sans-serif;
@@ -143,11 +163,13 @@
       color:var(--star-red);
       margin-top:2px;
     }
+
+    /* Subtitle / bullets in black */
     .u-sub{
       margin:0 0 14px;
-      color:var(--black); /* black text for subtitle */
+      color:var(--black);
       font-size:12px;
-      padding-left: 18px;
+      padding-left: 18px;  /* space for bullets */
     }
     .u-sub li{ margin: 4px 0; }
 
@@ -166,8 +188,8 @@
     .u-thumb{
       width:100%;
       height:auto;
-      max-height:320px;
-      object-fit:cover;
+      max-height:320px;    /* preview window height */
+      object-fit:cover;    /* crops tall/wide previews nicely */
       display:block;
     }
 
@@ -175,7 +197,7 @@
     .lightbox{
       position:fixed; inset:0;
       background: rgba(5,6,10,0.86);
-      display:none; z-index:9999;
+      display:none; z-index:9998; /* just under rails so rails stay visible if you want that effect */
     }
     .lightbox[aria-hidden="false"]{display:block}
     .lb-stage{
@@ -197,6 +219,10 @@
   </style>
 </head>
 <body>
+  <!-- Fixed side rails -->
+  <div class="rail rail-left"></div>
+  <div class="rail rail-right"></div>
+
   <div class="wrap">
     <img src="loladomeLOGOstars.png" alt="" class="stars" />
     <div class="band">
@@ -214,6 +240,7 @@
         <div class="u-title-line1">MATCHDAY 01</div>
         <div class="u-title-line2">17 August 2025</div>
       </div>
+
       <ul class="u-sub">
         <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
         <li>everyone’s picks are above, good luck</li>
@@ -262,6 +289,7 @@
       lbImg.src = '';
     }
 
+    // Open lightbox
     document.addEventListener('click', (e)=>{
       const trigger = e.target.closest('.open-lightbox');
       if (trigger) {
@@ -271,6 +299,7 @@
       }
     });
 
+    // Close actions
     lb.addEventListener('click', (e)=>{
       if (e.target === lb || e.target === stage) closeLB();
     });
@@ -279,6 +308,7 @@
       if (e.key === 'Escape') closeLB();
     });
 
+    // Zoom with wheel / trackpad (centered around cursor)
     stage.addEventListener('wheel', (e)=>{
       if (lb.getAttribute('aria-hidden')==='true') return;
       e.preventDefault();
@@ -292,6 +322,7 @@
       applyTransform();
     }, {passive:false});
 
+    // Drag to pan
     stage.addEventListener('pointerdown', (e)=>{
       if (lb.getAttribute('aria-hidden')==='true') return;
       drag = true;
@@ -311,6 +342,7 @@
       stage.releasePointerCapture(e.pointerId);
     });
 
+    // Double-click / double-tap to toggle zoom
     stage.addEventListener('dblclick', ()=>{
       scale = (scale === 1 ? 2 : 1);
       offsetX = 0; offsetY = 0;
@@ -319,4 +351,3 @@
   </script>
 </body>
 </html>
-
