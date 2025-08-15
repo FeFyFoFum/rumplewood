@@ -1,66 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOLADOME</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LOLADOME</title>
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;900&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rubik+Mono+One&display=swap" rel="stylesheet">
 
-<style>
-/* Base colors */
-:root {
-    --cream: #fdfaf2;
-    --pink: #f8cdd8;
-    --red: #b32424;
-    --blue: #0056d6;
-}
+  <style>
+    :root{
+      /* Base scale unit: everything derives from this.
+         It scales with viewport width, then clamps so all parts stop together. */
+      --u: clamp(6px, 1.1vw, 14px);
 
-/* Page background and base font */
-body {
-    margin: 0;
-    background-color: var(--pink);
-    font-family: 'Josefin Sans', Arial, sans-serif;
-    text-align: center;
-}
+      /* Colors */
+      --pink:#fbd3de;
+      --cream:#fffcf3;
+      --black:#000;
+      --navy:#0a3161;
 
-/* Cream box container */
-.header {
-    display: inline-block;
-    padding: 20px 30px;
-    background-color: var(--cream);
+      /* Derived “design tokens” (all tied to --u) */
+      --perimeter: calc(var(--u) * 3);         /* top/side border thickness */
+      --band-pad-y: calc(var(--u) * 1.75);     /* vertical padding inside cream band */
+      --rule-thickness: max(1px, calc(var(--u) * 0.35)); /* each line thickness */
+      --rule-gap:       max(1px, calc(var(--u) * 0.30)); /* gap between the two lines */
+      --logo-size:      calc(var(--u) * 2.6);  /* Rubik Mono One size */
+      --stars-h:        calc(var(--u) * 1.8);  /* PNG star height, tracks logo proportion */
+      --cluster-gap:    calc(var(--u) * 0.6);  /* space between stars and band */
+      --wrap-width:     calc(var(--u) * 36);   /* overall block width */
+      --wrap-margin-top:calc(var(--u) * 3.7);  /* distance from top border to cluster */
+    }
 
-    /* Double border effect */
-    border: 4px double var(--red);
-    outline: 4px double var(--blue);
-    outline-offset: -12px;
+    html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
+    body{
+      background:var(--pink);
+      color:#111;
+      border-style: solid;
+      border-color: var(--black);
+      border-width: var(--perimeter) var(--perimeter) 0 var(--perimeter); /* no bottom border */
+      box-sizing: border-box;
+      min-height:100vh;
+    }
 
-    max-width: 90%;
-}
+    /* Container for stars + band + logo */
+    .wrap{
+      width: min(var(--wrap-width), 92vw);   /* scales with --u but won’t overflow small screens */
+      margin: var(--wrap-margin-top) auto 64px;
+      text-align:center;
+      box-sizing:border-box;
+      padding: 0 calc(var(--u) * 1);        /* tiny horizontal breathing room on phones */
+    }
 
-/* Logo image */
-.logo-stars {
-    width: clamp(60px, 10vw, 120px);
-    display: block;
-    margin: 0 auto 8px auto;
-}
+    /* Stars PNG: sits in the pink, scales with --u, keeps aspect */
+    .stars{
+      display:block;
+      margin: 0 auto var(--cluster-gap);
+      height: var(--stars-h);
+      width: auto;
+    }
 
-/* Site title styling */
-.site-title {
-    font-weight: 900;
-    font-size: clamp(18px, 4vw, 40px);
-    letter-spacing: 0.05em; /* Kerning tweak */
-    margin: 0;
-}
-</style>
+    /* Cream band with custom double rules (top black, bottom navy), all tied to --u */
+    .band{
+      position:relative;
+      background:var(--cream);
+      padding: var(--band-pad-y) calc(var(--u) * 2);
+      display:inline-block;
+      width:100%;
+      box-sizing:border-box;
+    }
+    .band::before,
+    .band::after{
+      content:"";
+      position:absolute; left:0; right:0;
+      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
+      pointer-events:none;
+    }
+    .band::before{
+      top:0;
+      background:
+        linear-gradient(var(--black),var(--black)) top    / 100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--black),var(--black)) bottom / 100% var(--rule-thickness) no-repeat;
+    }
+    .band::after{
+      bottom:0;
+      background:
+        linear-gradient(var(--navy),var(--navy)) top    / 100% var(--rule-thickness) no-repeat,
+        linear-gradient(var(--navy),var(--navy)) bottom / 100% var(--rule-thickness) no-repeat;
+    }
+
+    .logo{
+      font-family:'Rubik Mono One',sans-serif;
+      font-size: var(--logo-size);
+      margin:0;
+      letter-spacing:.5px;
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <!-- Stars image in the pink. Make sure this filename matches your upload. -->
+    <img src="loladomeLOGOstars.png" alt="" class="stars" />
 
-<header class="header">
-    <img src="loladomeLOGOstars.png" alt="LOLADOME Stars Logo" class="logo-stars">
-    <h1 class="site-title">LOLADOME</h1>
-</header>
-
+    <!-- Cream band with double rules and centered logo -->
+    <div class="band">
+      <h1 class="logo">LOLADOME</h1>
+    </div>
+  </div>
 </body>
 </html>
