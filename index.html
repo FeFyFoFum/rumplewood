@@ -197,52 +197,14 @@
 
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
-
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="000099">
-  <div class="u-title">
-    <div class="u-title-line1">MATCHDAY TEST</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">Well at least we&#39;ll see if this works</div>
-  <a class="u-shot lg-item" href="assets/0000hellolaWorld.png" data-sub-html="MATCHDAY TEST — 17 August 2025 (Item 1)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="MATCHDAY TEST image 1">
-  </a>
-
-  <a class="u-shot lg-item" style="margin-top:12px;"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-       data-sub-html="MATCHDAY TEST — 17 August 2025 (Item 2)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-</article>
     <article class="update-card" data-id="00002">
       <div class="u-title">
         <div class="u-title-line1">HELLOLA WORLD!</div>
         <div class="u-title-line2">17 August 2025</div>
       </div>
-
       <div class="u-subtext">testing</div>
 
-      <!-- VIDEO 1 -->
       <a class="u-shot lg-item"
          href="assets/0000HELLOLAworld.mp4"
          data-src="assets/0000HELLOLAworld.mp4"
@@ -254,14 +216,12 @@
         </video>
       </a>
 
-      <!-- IMAGE 1 -->
       <a class="u-shot lg-item" style="margin-top:12px;"
          href="assets/0000hellolaWorld.png"
          data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 2)">
         <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 2">
       </a>
 
-      <!-- VIDEO 2 -->
       <a class="u-shot lg-item" style="margin-top:12px;"
          href="assets/0000HELLOLAworld.mp4"
          data-src="assets/0000HELLOLAworld.mp4"
@@ -273,31 +233,49 @@
         </video>
       </a>
 
-      <!-- IMAGE 2 -->
       <a class="u-shot lg-item" style="margin-top:12px;"
          href="assets/0000hellolaWorld.png"
          data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 4)">
         <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 4">
       </a>
     </article>
-
   </main>
 
-  <!-- LightGallery core + plugins (matching version) -->
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/zoom/lg-zoom.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
-
+  <!-- LightGallery core + plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/zoom/lg-zoom.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('page-gallery');
     if (!gallery) return;
 
-    // We now allow BOTH images and videos in LG (no exclusion).
-    // Optional: if an <a> points to an MP4 but is missing data-video, add it.
-    Array.from(gallery.querySelectorAll('a.u-shot')).forEach(a => {
+    // Ensure all media are LG items
+    gallery.querySelectorAll('a.u-shot').forEach(a => {
+      a.classList.add('lg-item');
+      a.removeAttribute('target');
+      a.removeAttribute('rel');
       const href = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
-      const isVideo = /\.(mp4|webm)(?:$|[?#])
+      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(href);
+      if (isVideo && !a.hasAttribute('data-video')) {
+        a.setAttribute('data-video', JSON.stringify({
+          source: [{ src: href, type: href.endsWith('.webm') ? 'video/webm' : 'video/mp4' }],
+          attributes: { preload: 'metadata', playsinline: true, controls: true }
+        }));
+      }
+    });
 
+    lightGallery(gallery, {
+      selector: '.lg-item',
+      plugins: [lgZoom, lgVideo],
+      speed: 300,
+      download: false,
+      swipeToClose: true,
+      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+    });
+  });
+  </script>
 
+</body>
+</html>
