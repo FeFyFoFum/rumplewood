@@ -145,7 +145,7 @@
 
     /* Title is two centered lines */
     .u-title{
-      margin:0 0 14px;          /* increased spacing below title */
+      margin:0 0 14px;          /* extra spacing below title */
       text-align: center;
     }
     .u-title-line1{
@@ -160,14 +160,14 @@
       font-family:'Josefin Sans',sans-serif;
       font-size:16px;
       color:var(--star-red);
-      margin-top:2px;
+      margin-top:6px;            /* a smidge more space under MATCHDAY */
     }
 
     /* Subtitle / bullets — black, slightly smaller */
     .u-sub{
       margin:0 0 14px;
       color:var(--black);
-      font-size:11px;           /* one tick smaller than before */
+      font-size:11px;           /* one tick smaller */
       padding-left: 18px;       /* space for bullets */
     }
     .u-sub li{ margin: 4px 0; }
@@ -196,7 +196,7 @@
     .lightbox{
       position:fixed; inset:0;
       background: rgba(5,6,10,0.86);
-      display:none; z-index:9998;
+      display:none; z-index:9998; /* rails remain above if desired */
     }
     .lightbox[aria-hidden="false"]{display:block}
     .lb-stage{
@@ -209,11 +209,34 @@
       overflow:hidden; border-radius:12px;
       background:#0a0b10;
       box-shadow: 0 2px 60px rgba(0,0,0,0.5);
+      position: relative;
     }
     .lb-img{
       display:block; max-width:100%; max-height:100%;
       object-fit:contain; transform-origin:center center;
       user-select:none; pointer-events:none;
+    }
+
+    /* Gallery arrows */
+    .lb-arrow{
+      position:absolute;
+      top:50%;
+      transform: translateY(-50%);
+      border:none;
+      background: rgba(20,22,32,0.8);
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lb-prev{ left: 10px; }
+    .lb-next{ right: 10px; }
+    .lb-arrow:active{ transform: translateY(-50%) scale(0.98); }
+    @media (hover:hover){
+      .lb-arrow:hover{ background: rgba(20,22,32,0.92); }
     }
   </style>
 </head>
@@ -245,21 +268,33 @@
         <li>everyone’s picks are above, good luck</li>
       </ul>
 
+      <!-- Image 1 -->
       <button class="u-shot open-lightbox"
               type="button"
               data-full="assets/000testfile.png"
-              aria-label="Open screenshot">
-        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 standings preview">
+              aria-label="Open screenshot 1">
+        <img class="u-thumb" src="assets/000testfile.png" alt="Matchday 01 standings preview 1">
+      </button>
+
+      <!-- Image 2 -->
+      <button class="u-shot open-lightbox"
+              type="button"
+              data-full="assets/000testfile2.png"
+              aria-label="Open screenshot 2"
+              style="margin-top:12px;">
+        <img class="u-thumb" src="assets/000testfile2.png" alt="Matchday 01 standings preview 2">
       </button>
     </article>
   </main>
 
-  <!-- Lightbox (minimal) -->
+  <!-- Lightbox (global gallery) -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lb-stage" id="lbStage" aria-label="Screenshot viewer (tap/click background or press Esc to close)">
+      <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Previous image">‹</button>
       <div class="lb-img-wrap">
         <img id="lbImg" class="lb-img" alt="">
       </div>
+      <button class="lb-arrow lb-next" id="lbNext" aria-label="Next image">›</button>
     </div>
   </div>
 
@@ -267,17 +302,34 @@
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
     const stage = document.getElementById('lbStage');
+    const btnPrev = document.getElementById('lbPrev');
+    const btnNext = document.getElementById('lbNext');
 
     let scale = 1, offsetX = 0, offsetY = 0;
     let drag = false, startX = 0, startY = 0;
+    let gallery = [];    // [{el, src, alt}]
+    let index = 0;
 
     function applyTransform(){
       lbImg.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
     }
     function resetTransform(){ scale=1; offsetX=0; offsetY=0; applyTransform(); }
 
-    function openLB(src){
-      lbImg.src = src;
+    function buildGallery(){
+      gallery = Array.from(document.querySelectorAll('.open-lightbox')).map(el=>{
+        const img = el.querySelector('img');
+        const src = el.dataset.full || img?.src;
+        const alt = img?.alt || 'Screenshot';
+        return { el, src, alt };
+      }).filter(item=>!!item.src);
+    }
+
+    function openLBAt(i){
+      if (!gallery.length) return;
+      index = (i + gallery.length) % gallery.length;
+      const item = gallery[index];
+      lbImg.src = item.src;
+      lbImg.alt = item.alt;
       lb.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
       resetTransform();
@@ -287,38 +339,56 @@
       document.body.style.overflow = '';
       lbImg.src = '';
     }
+    function next(){ openLBAt(index + 1); }
+    function prev(){ openLBAt(index - 1); }
 
-    // Open lightbox
+    // Open when any trigger is clicked
     document.addEventListener('click', (e)=>{
       const trigger = e.target.closest('.open-lightbox');
-      if (trigger) {
-        e.preventDefault();
-        const src = trigger.dataset.full || trigger.querySelector('img')?.src;
-        if (src) openLB(src);
-      }
+      if (!trigger) return;
+      e.preventDefault();
+      if (!gallery.length) buildGallery();
+      const i = gallery.findIndex(g => g.el === trigger);
+      openLBAt(i === -1 ? 0 : i);
     });
 
-    // Close actions
+    // Close on backdrop click
     lb.addEventListener('click', (e)=>{
       if (e.target === lb || e.target === stage) closeLB();
     });
+
+    // Keyboard: Esc/Left/Right, +/- zoom, 0 reset
     window.addEventListener('keydown', (e)=>{
       if (lb.getAttribute('aria-hidden') === 'true') return;
       if (e.key === 'Escape') closeLB();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === '+' || e.key === '=') zoomBy(1.2);
+      if (e.key === '-') zoomBy(0.83);
+      if (e.key === '0') resetTransform();
     });
 
-    // Zoom with wheel / trackpad (centered around cursor)
+    // Buttons
+    btnNext.addEventListener('click', (e)=>{ e.stopPropagation(); next(); });
+    btnPrev.addEventListener('click', (e)=>{ e.stopPropagation(); prev(); });
+
+    // Zoom around cursor center
+    function zoomBy(factor, cx = window.innerWidth/2, cy = window.innerHeight/2){
+      const prev = scale;
+      scale = Math.min(8, Math.max(0.5, scale * factor));
+      const rect = lbImg.getBoundingClientRect();
+      const dx = cx - (rect.left + rect.width/2);
+      const dy = cy - (rect.top + rect.height/2);
+      offsetX -= dx * (scale/prev - 1);
+      offsetY -= dy * (scale/prev - 1);
+      applyTransform();
+    }
+
+    // Wheel zoom
     stage.addEventListener('wheel', (e)=>{
       if (lb.getAttribute('aria-hidden')==='true') return;
       e.preventDefault();
-      const prev = scale;
-      scale = Math.min(8, Math.max(0.5, scale * (e.deltaY < 0 ? 1.1 : 0.9)));
-      const rect = lbImg.getBoundingClientRect();
-      const cx = e.clientX - (rect.left + rect.width/2);
-      const cy = e.clientY - (rect.top + rect.height/2);
-      offsetX -= cx * (scale/prev - 1);
-      offsetY -= cy * (scale/prev - 1);
-      applyTransform();
+      zoomBy(e.deltaY < 0 ? 1.1 : 0.9, e.clientX, e.clientY);
     }, {passive:false});
 
     // Drag to pan
@@ -341,12 +411,18 @@
       stage.releasePointerCapture(e.pointerId);
     });
 
-    // Double-click / double-tap to toggle zoom
-    stage.addEventListener('dblclick', ()=>{
-      scale = (scale === 1 ? 2 : 1);
-      offsetX = 0; offsetY = 0;
-      applyTransform();
-    });
+    // Swipe left/right to navigate (basic)
+    let touchX = null;
+    stage.addEventListener('touchstart', (e)=>{ touchX = e.touches[0].clientX; }, {passive:true});
+    stage.addEventListener('touchend', (e)=>{
+      if (touchX == null) return;
+      const dx = (e.changedTouches[0].clientX - touchX);
+      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
+      touchX = null;
+    }, {passive:true});
+
+    // Build gallery initially (for existing posts)
+    document.addEventListener('DOMContentLoaded', buildGallery);
   </script>
 </body>
 </html>
