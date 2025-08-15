@@ -289,64 +289,38 @@ same pink</div>
 <!-- lightGallery JS (core first, then plugins) -->
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/video/lg-video.umd.min.js"
-  onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/lightgallery@2/plugins/video/lg-video.umd.js';document.head.appendChild(s);})();">
-</script>
+<!-- Load the video plugin LOCALLY (so extensions/CDNs can't block it) -->
+<script src="vendor/lg-video.umd.min.js"></script>
 
 <script>
-(function () {
-  function initLG() {
-    const gallery = document.getElementById('page-gallery');
-    if (!gallery) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const gallery = document.getElementById('page-gallery');
+  if (!gallery) return;
 
-    // Use whatever plugins actually loaded
-    const plugins = [window.lgZoom];
-    if (typeof window.lgVideo === 'function') plugins.push(window.lgVideo);
+  lightGallery(gallery, {
+    selector: '.lg-item',
+    plugins: [window.lgZoom, window.lgVideo], // zoom + local video plugin
+    speed: 300,
+    download: false,
+    swipeToClose: true,
+    mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+  });
 
-    lightGallery(gallery, {
-      selector: '.lg-item',
-      plugins,
-      speed: 300,
-      download: false,
-      swipeToClose: true,
-      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
-    });
+  // Keep inline videos looping on the page as previews
+  gallery.querySelectorAll('video').forEach(v => {
+    v.setAttribute('autoplay',''); v.setAttribute('muted','');
+    v.setAttribute('loop','');     v.setAttribute('playsinline','');
+    v.play().catch(() => {});
+  });
 
-    // Keep inline video previews looping on the page
-    gallery.querySelectorAll('video').forEach(v => {
-      v.setAttribute('autoplay',''); v.setAttribute('muted','');
-      v.setAttribute('loop','');     v.setAttribute('playsinline','');
-      v.play().catch(() => {});
-    });
-
-    console.log('LG plugins loaded:', {
-      lgZoom: typeof window.lgZoom,
-      lgVideo: typeof window.lgVideo
-    });
-  }
-
-  // If the video plugin still didn't attach (blocked by an extension/CDN), try fallback then init.
-  function startWithFallbackIfNeeded() {
-    if (typeof window.lgVideo === 'function') { initLG(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://unpkg.com/lightgallery@2/plugins/video/lg-video.umd.js';
-    s.onload = initLG;
-    s.onerror = initLG; // still init so images work even if fallback fails
-    document.head.appendChild(s);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startWithFallbackIfNeeded, { once: true });
-  } else {
-    startWithFallbackIfNeeded();
-  }
-})();
+  console.log('LG plugins loaded:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
+});
 </script>
 
 
 </body>
 </html>
+
 
 
 
