@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOLA</title>
 
-  <!-- Fonts (Inter now includes 500 for darker subtitle weight) -->
+  <!-- Fonts (Inter includes 500 for darker subtitle weight) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
@@ -202,40 +202,35 @@
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
 
-
-
-
-
-
-
-
-
-
-
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="0001">
+    <article class="update-card" data-id="00001">
   <div class="u-title">
     <div class="u-title-line1">MATCHDAY 00</div>
     <div class="u-title-line2">17 August 2025</div>
   </div>
-<div class="u-subtext">now we&#39;re testing linebreaks and I think the way to do this is first to not have a linebreak and SEE what happens and hopefully it even wraps at the &quot;see&quot;
-And that was one linebreak
-And that is two</div>
-<ul class="u-sub">
-  <li>and that&#39;s a bulletpoint which brings us to this to-do list:</li>
-</ul>
-<div class="u-subtext">we don&#39;t actually have to do that much I think it&#39;s pretty much good to go. Name the first working one, then on the 17th send the post, and explain how the updates are going to drop every other tuesday, and you will include the schedules in there with them?
-★★★★★ pretty straightforward tbh</div>
-  <a class="u-shot lg-item" href="assets/0000hellolaWorld.png" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 1">
+<div class="u-subtext">this is a test
+this is only a test
+the day he died, the sun was a balloon</div>
+  <a class="u-shot lg-item" href="assets/0000hellolaWorld.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 1)">
+    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="MATCHDAY 00 image 1">
   </a>
 
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/000testfile2.png" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 2)">
-    <img class="u-thumb" src="assets/000testfile2.png" alt="HELLOLA WORLD! image 2">
+  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/000testfile2.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 2)">
+    <img class="u-thumb" src="assets/000testfile2.png" alt="MATCHDAY 00 image 2">
   </a>
 </article>
-<article class="update-card" data-id="0000">
+<article class="update-card" data-id="00000">
   <div class="u-title">
     <div class="u-title-line1">HELLOLA WORLD!</div>
     <div class="u-title-line2">17 August 2025</div>
@@ -243,7 +238,7 @@ And that is two</div>
 <div class="u-subtext">new season
 new LOLA
 same pink</div>
-  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
+  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)" data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'>
     <video class="u-thumb" autoplay muted loop playsinline>
       <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
     </video>
@@ -254,28 +249,23 @@ same pink</div>
   <!-- lightGallery JS -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/video/lg-video.umd.min.js"></script>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('page-gallery');
 
-    /* 1) Remove videos from the lightbox BEFORE LG initializes */
-    Array.from(gallery.querySelectorAll('a.lg-item')).forEach(a => {
-      const href = (a.getAttribute('href') || '').toLowerCase().split('#')[0].split('?')[0];
-      if (/\.(mp4|webm)$/.test(href)) a.classList.remove('lg-item');
-    });
-
-    /* 2) Init LG for images/GIFs only */
+    /* Init LG for images + GIFs + videos */
     lightGallery(gallery, {
       selector: '.lg-item',
-      plugins: [lgZoom],
+      plugins: [lgZoom, lgVideo],
       speed: 300,
       download: false,
       swipeToClose: true,
       mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
     });
 
-    /* 3) Make inline videos behave like GIFs */
+    /* Keep inline videos looping on the page too (preview) */
     gallery.querySelectorAll('video').forEach(v => {
       v.setAttribute('autoplay','');
       v.setAttribute('muted','');
@@ -283,19 +273,7 @@ same pink</div>
       v.setAttribute('playsinline','');
       v.play().catch(() => {});
     });
-
-    /* 4) If a video anchor is tapped, don't navigate */
-    gallery.addEventListener('click', e => {
-      const a = e.target.closest('a.u-shot');
-      if (!a) return;
-      const href = (a.getAttribute('href') || '').toLowerCase();
-      if (/\.(mp4|webm)(?:$|[?#])/.test(href) && !a.classList.contains('lg-item')) {
-        e.preventDefault();
-      }
-    });
   });
   </script>
 </body>
 </html>
-
-
