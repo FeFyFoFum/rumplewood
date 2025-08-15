@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- lightGallery CSS -->
+  <!-- lightGallery CSS (match JS version) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/css/lightgallery-bundle.min.css">
 
   <style>
@@ -137,12 +137,7 @@
     }
 
     /* Bulleted subtitle list (only when you type bullet markers) */
-    .u-sub{
-      margin:0 0 14px; color:var(--black);
-      font-size:11px; padding-left:18px;
-      font-family:'Inter',sans-serif;
-      font-weight:500;
-    }
+    .u-sub{ margin:0 0 14px; color:var(--black); font-size:11px; padding-left:18px; font-family:'Inter',sans-serif; font-weight:500; }
     .u-sub li{ margin:4px 0; }
 
     /* Non-bulleted, line-broken subtitle text */
@@ -197,54 +192,39 @@
 
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
-    <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="00002">
+    <!-- No posts yet. Add your first post inside this <main>. -->
+
+    <!--
+    TEMPLATE (keep commented; copy/paste and edit when ready)
+
+    <article class="update-card" data-id="00001">
       <div class="u-title">
-        <div class="u-title-line1">HELLOLA WORLD!</div>
-        <div class="u-title-line2">17 August 2025</div>
+        <div class="u-title-line1">YOUR POST TITLE</div>
+        <div class="u-title-line2">DATE HERE</div>
       </div>
-      <div class="u-subtext">testing</div>
 
-      <!-- VIDEO 1 -->
-<a class="u-shot lg-item"
-   href="assets/0000hellolaWorld.png"        <!-- poster or # -->
-   data-src="assets/0000HELLOLAworld.mp4"    <!-- the actual video -->
-   data-poster="assets/0000hellolaWorld.png" <!-- optional but nice -->
-   data-lg-size="1280-720"
-   data-video='{"source":[{"src":"assets/0000HELLOLAworld.mp4","type":"video/mp4"}],
-                "attributes":{"preload":"metadata","playsinline":true,"controls":true}}'
-   data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
-  <video class="u-thumb" autoplay muted loop playsinline>
-    <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-  </video>
-</a>
+      <div class="u-subtext">optional subtitle text</div>
 
-      <a class="u-shot lg-item" style="margin-top:12px;"
-         href="assets/0000hellolaWorld.png"
-         data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 2)">
-        <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 2">
+      <!-- IMAGE example -->
+      <a class="u-shot lg-item" href="assets/examplePoster.png" data-sub-html="Caption for the image">
+        <img class="u-thumb" src="assets/examplePoster.png" alt="Example image">
       </a>
 
-     <!-- VIDEO 2 -->
-<a class="u-shot lg-item" style="margin-top:12px;"
-   href="assets/0000hellolaWorld.png"
-   data-src="assets/0000HELLOLAworld.mp4"
-   data-poster="assets/0000hellolaWorld.png"
-   data-lg-size="1280-720"
-   data-video='{"source":[{"src":"assets/0000HELLOLAworld.mp4","type":"video/mp4"}],
-                "attributes":{"preload":"metadata","playsinline":true,"controls":true}}'
-   data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 3)">
-  <video class="u-thumb" autoplay muted loop playsinline>
-    <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-  </video>
-</a>
-
+      <!-- VIDEO example (recommended pattern for MP4) -->
       <a class="u-shot lg-item" style="margin-top:12px;"
-         href="assets/0000hellolaWorld.png"
-         data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 4)">
-        <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 4">
+         href="assets/examplePoster.png"                      <!-- poster or # -->
+         data-src="assets/exampleVideo.mp4"                   <!-- the actual video -->
+         data-poster="assets/examplePoster.png"
+         data-lg-size="1280-720"
+         data-video='{"source":[{"src":"assets/exampleVideo.mp4","type":"video/mp4"}],
+                      "attributes":{"preload":"metadata","playsinline":true,"controls":true}}'
+         data-sub-html="Caption for the video">
+        <video class="u-thumb" autoplay muted loop playsinline>
+          <source src="assets/exampleVideo.mp4" type="video/mp4">
+        </video>
       </a>
     </article>
+    -->
   </main>
 
   <!-- LightGallery core + plugins -->
@@ -257,20 +237,35 @@
     const gallery = document.getElementById('page-gallery');
     if (!gallery) return;
 
-    // Ensure all media are LG items
-    gallery.querySelectorAll('a.u-shot').forEach(a => {
-      a.classList.add('lg-item');
-      a.removeAttribute('target');
-      a.removeAttribute('rel');
-      const href = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
-      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(href);
-      if (isVideo && !a.hasAttribute('data-video')) {
-        a.setAttribute('data-video', JSON.stringify({
-          source: [{ src: href, type: href.endsWith('.webm') ? 'video/webm' : 'video/mp4' }],
-          attributes: { preload: 'metadata', playsinline: true, controls: true }
-        }));
+    // Ensure all media anchors will be handled by LightGallery
+    gallery.addEventListener('click', (e) => {
+      const a = e.target.closest('a.u-shot');
+      if (!a) return;
+      // If LG fails to init for any reason, prevent hard navigation away
+      if (!a.classList.contains('lg-item')) {
+        e.preventDefault();
       }
     });
+
+    // Make any anchors you add work out of the box
+    const primeAnchors = () => {
+      gallery.querySelectorAll('a.u-shot').forEach(a => {
+        a.classList.add('lg-item');
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+
+        const href = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
+        const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(href);
+        if (isVideo && !a.hasAttribute('data-video')) {
+          a.setAttribute('data-video', JSON.stringify({
+            source: [{ src: href, type: href.endsWith('.webm') ? 'video/webm' : 'video/mp4' }],
+            attributes: { preload: 'metadata', playsinline: true, controls: true }
+          }));
+        }
+      });
+    };
+
+    primeAnchors();
 
     lightGallery(gallery, {
       selector: '.lg-item',
@@ -285,4 +280,3 @@
 
 </body>
 </html>
-
