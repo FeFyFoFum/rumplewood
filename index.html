@@ -289,37 +289,94 @@ same pink</div>
 <!-- lightGallery JS (core first, then plugins) -->
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
-<!-- Load the video plugin LOCALLY (so extensions/CDNs can't block it) -->
-<script src="vendor/lg-video.umd.min.js"></script>
+<!-- Load the video plugin LOCALLY so extensions/CDNs can't block it -->
+<script src="./vendor/lg-video.umd.min.js"
+        onload="console.log('lg-video loaded:', typeof window.lgVideo)"
+        onerror="console.warn('lg-video local file NOT found');"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.getElementById('page-gallery');
   if (!gallery) return;
 
+  const haveVideo = typeof window.lgVideo === 'function';
+
   lightGallery(gallery, {
     selector: '.lg-item',
-    plugins: [window.lgZoom, window.lgVideo], // zoom + local video plugin
+    plugins: haveVideo ? [window.lgZoom, window.lgVideo] : [window.lgZoom],
     speed: 300,
     download: false,
     swipeToClose: true,
     mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
   });
 
-  // Keep inline videos looping on the page as previews
+  // Inline video previews keep looping on the page
   gallery.querySelectorAll('video').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(() => {});
   });
 
-  console.log('LG plugins loaded:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
+  console.log('LG plugins:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
+
+  /* -------------------------
+     FALLBACK: if lgVideo missing, open MP4/WebM in a simple overlay.
+     This activates ONLY when the video plugin isn't present.
+  ------------------------- */
+  if (!haveVideo) {
+    // Build overlay once
+    const overlay = document.createElement('div');
+    overlay.id = 'videoOverlay';
+    overlay.innerHTML = `
+      <div class="vo-backdrop"></div>
+      <div class="vo-frame">
+        <button class="vo-close" aria-label="Close video">&times;</button>
+        <video class="vo-player" controls autoplay muted loop playsinline></video>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    // Styles for overlay
+    const css = document.createElement('style');
+    css.textContent = `
+      #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;}
+      #videoOverlay.open{display:flex;}
+      #videoOverlay .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92);}
+      #videoOverlay .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
+      #videoOverlay .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
+      #videoOverlay .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;
+                              width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
+      @media (max-width:768px){#videoOverlay .vo-close{top:-46px;right:0}}
+    `;
+    document.head.appendChild(css);
+
+    const player = overlay.querySelector('.vo-player');
+    const close = overlay.querySelector('.vo-close');
+    const shut = () => { player.pause(); overlay.classList.remove('open'); player.removeAttribute('src'); player.load(); };
+    close.addEventListener('click', shut);
+    overlay.querySelector('.vo-backdrop').addEventListener('click', shut);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) shut(); });
+
+    // Intercept clicks on video anchors to open overlay instead of LG
+    gallery.addEventListener('click', e => {
+      const a = e.target.closest('a.u-shot');
+      if (!a) return;
+      const mp4 = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
+      if (/\.(mp4|webm)(?:$|[?#])/.test(mp4)) {
+        e.preventDefault();
+        player.setAttribute('src', mp4);
+        overlay.classList.add('open');
+        player.play().catch(()=>{});
+      }
+    });
+  }
 });
 </script>
 
 
+
 </body>
 </html>
+
 
 
 
