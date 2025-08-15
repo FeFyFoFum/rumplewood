@@ -63,7 +63,8 @@
     .band{
       position:relative;
       background:var(--cream);
-      padding: var(--band-pad-y) calc(var(--u) * 2);
+      /* tighter left/right padding to crop the sides closer to the text */
+      padding: var(--band-pad-y) calc(var(--u) * 1);
       display:inline-block;
       width:100%;
       box-sizing:border-box;
@@ -97,14 +98,14 @@
 
     .subhead {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: calc(var(--u) * 1.625);
+      font-size: calc(var(--u) * 1.625); /* ~25% larger than original */
       margin: calc(var(--u) * 0.5) 0 0;
       font-weight: 400;
       color: var(--navy);
     }
     .subhead .caps {
       color: var(--star-red);
-      font-weight: 600;
+      font-weight: 600; /* subtle emphasis on L, O, L, A */
     }
   </style>
 </head>
