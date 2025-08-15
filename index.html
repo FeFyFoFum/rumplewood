@@ -1,83 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOLDOME</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOLADOME</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,400&display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;900&display=swap" rel="stylesheet">
 
-    <style>
-        /* Base colors */
-        :root {
-            --cream: #fdfaf2;
-            --pink: #f8cdda;
-            --red: #b32424;
-            --blue: #0056d6;
-        }
+<style>
+/* Base colors */
+:root {
+    --cream: #fdfaf2;
+    --pink: #f8cdd8;
+    --red: #b32424;
+    --blue: #0056d6;
+}
 
-        body {
-            margin: 0;
-            background-color: var(--pink);
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+/* Page background and base font */
+body {
+    margin: 0;
+    background-color: var(--pink);
+    font-family: 'Josefin Sans', Arial, sans-serif;
+    text-align: center;
+}
 
-        .header {
-            padding-top: 30px; /* breathing room above stars */
-        }
+/* Cream box container */
+.header {
+    display: inline-block;
+    padding: 20px 30px;
+    background-color: var(--cream);
 
-        .logo-stars {
-            width: clamp(40px, 6vw, 70px);
-            display: block;
-            margin: 0 auto 10px auto; /* breathing room under stars */
-        }
+    /* Double border effect */
+    border: 4px double var(--red);
+    outline: 4px double var(--blue);
+    outline-offset: -12px;
 
-        .site-title {
-            font-weight: 900;
-            font-size: clamp(14px, 2.5vw, 28px);
-            margin: 0;
-        }
+    max-width: 90%;
+}
 
-        .tagline {
-            font-family: 'Josefin Sans', sans-serif;
-            font-size: clamp(14px, 2.5vw, 28px);
-            font-style: italic;
-            margin: 15px 0;
-            letter-spacing: 1px;
-        }
+/* Logo image */
+.logo-stars {
+    width: clamp(60px, 10vw, 120px);
+    display: block;
+    margin: 0 auto 8px auto;
+}
 
-        .tagline .red {
-            color: var(--red);
-        }
-
-        .tagline .blue {
-            color: var(--blue);
-        }
-
-        .cream-box {
-            background-color: var(--cream);
-            display: inline-block;
-            padding: 20px 40px; /* more breathing room in box */
-            border-top: 2px solid black;
-            border-bottom: 2px solid var(--blue);
-            box-shadow: 0 2px 0 black;
-        }
-    </style>
+/* Site title styling */
+.site-title {
+    font-weight: 900;
+    font-size: clamp(18px, 4vw, 40px);
+    letter-spacing: 0.05em; /* Kerning tweak */
+    margin: 0;
+}
+</style>
 </head>
 <body>
-    <header class="header">
-        <img src="loladomeLOGOstars.png" alt="Three Stars" class="logo-stars">
-        <div class="cream-box">
-            <h1 class="site-title">LOLDOME</h1>
-            <div class="tagline">
-                <span class="red">L</span><span class="blue">eague's</span>
-                <span class="red"> O</span><span class="blue">fficial</span>
-                <span class="red"> L</span><span class="blue">eague</span>
-                <span class="red"> A</span><span class="blue">cronym</span>
-            </div>
-        </div>
-    </header>
+
+<header class="header">
+    <img src="loladomeLOGOstars.png" alt="LOLADOME Stars Logo" class="logo-stars">
+    <h1 class="site-title">LOLADOME</h1>
+</header>
+
 </body>
 </html>
