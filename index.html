@@ -164,8 +164,6 @@
     }
     .u-thumb{ width:100%; height:auto; display:block; object-fit:contain; }
     video.u-thumb { display:block; width:100%; height:auto; }
-
-    /* subtle 'zoom' cue */
     .u-shot::after{
       content:""; position:absolute; right:10px; bottom:10px;
       width:26px; height:26px; border:2px solid var(--black);
@@ -200,114 +198,61 @@
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <!-- FEFYFOFUM -->
-<article class="update-card" data-id="00002">
-  <div class="u-title">
-    <div class="u-title-line1">HELLOLA WORLD!</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">testing</div>
-  <a class="u-shot lg-item"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-       data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
 
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/0000hellolaWorld.png" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 2)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 2">
-  </a>
-
-  <a class="u-shot lg-item" style="margin-top:12px;"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-       data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 3)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/0000hellolaWorld.png" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 4)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="HELLOLA WORLD! image 4">
-  </a>
-</article>
   </main>
 
   <!-- lightGallery JS (core then plugins) -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
-  <!-- Local video plugin (to avoid CDN/extension blocking). Make sure this file exists in /vendor next to index.html -->
+  <!-- Local video plugin (to avoid CDN/extension blocking). Make sure this exists: /vendor/lg-video.umd.min.js -->
   <script src="./vendor/lg-video.umd.min.js"></script>
 
-  <!-- Dynamic LG init: builds slides from your anchors so MP4/WebM play inside LG -->
+  <!-- Standard LG init, with auto-normalization of video anchors -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('page-gallery');
     if (!gallery) return;
 
-    // Collect all anchors that represent media cards
-    const anchors = Array.from(gallery.querySelectorAll('a.u-shot'));
-
-    // Build dynamic slide list once from the DOM
-    const items = anchors.map(a => {
+    // 1) Normalize slides so LG recognizes images AND videos
+    let fixed = 0;
+    gallery.querySelectorAll('a.u-shot').forEach(a => {
       const raw = a.getAttribute('data-src') || a.getAttribute('href') || '';
       const url = raw.split('#')[0].split('?')[0];
-      const sub = a.getAttribute('data-sub-html') || '';
-      const imgThumb = a.querySelector('img')?.getAttribute('src') || '';
-      const vidThumb = a.querySelector('video source')?.getAttribute('src') || '';
-      const thumb = imgThumb || vidThumb || url;
 
+      // every card participates
+      a.classList.add('lg-item');
+
+      // video-specific wiring
       if (/\.(mp4|webm)$/i.test(url)) {
-        const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
-        return {
-          video: { source: [{ src: raw, type }] },
-          thumb,
-          subHtml: sub
-        };
+        if (!a.hasAttribute('data-src')) a.setAttribute('data-src', raw);
+        if (!a.hasAttribute('data-video')) {
+          const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
+          const payload = {
+            source: [{ src: raw, type }],
+            attributes: { preload: 'metadata', playsinline: true, muted: true, autoplay: true, loop: true }
+          };
+          a.setAttribute('data-video', JSON.stringify(payload));
+        }
+        fixed++;
       }
-      // image-like
-      return { src: raw, thumb, subHtml: sub };
+    });
+    // console.log('Normalized video anchors:', fixed);
+
+    // 2) Init LG (images + video)
+    const plugins = [window.lgZoom];
+    if (typeof window.lgVideo === 'function') plugins.push(window.lgVideo);
+
+    lightGallery(gallery, {
+      selector: '.lg-item',
+      plugins,
+      speed: 300,
+      download: false,
+      swipeToClose: true,
+      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
     });
 
-    // Click → open LightGallery dynamically starting at clicked item
-    gallery.addEventListener('click', (e) => {
-      const a = e.target.closest('a.u-shot');
-      if (!a) return;
-      e.preventDefault();
-
-      const startIndex = anchors.indexOf(a);
-      try { if (gallery.lg) gallery.lg.destroy(true); } catch(e) {}
-
-      lightGallery(gallery, {
-        dynamic: true,
-        dynamicEl: items,
-        index: Math.max(0, startIndex),
-        plugins: [window.lgZoom, window.lgVideo].filter(Boolean),
-        download: false,
-        speed: 300,
-        swipeToClose: true,
-        mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
-      });
-    });
-
-    // Keep inline video thumbnails looping on the page
+    // 3) Keep inline <video> previews looping on the page
     gallery.querySelectorAll('video').forEach(v => {
       v.setAttribute('autoplay',''); v.setAttribute('muted','');
       v.setAttribute('loop','');     v.setAttribute('playsinline','');
@@ -317,5 +262,3 @@
   </script>
 </body>
 </html>
-
-
