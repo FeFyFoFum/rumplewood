@@ -19,18 +19,19 @@
       --cream:#fffcf3;
       --black:#000;
       --navy:#0a3161;
+      --star-blue:#1155cc;
       --star-red:#b50e12;
 
-      /* Derived units */
+      /* Derived sizes */
       --perimeter: calc(var(--u) * 3);
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
-      --rule-gap: max(1px, calc(var(--u) * 0.30));
-      --logo-size: calc(var(--u) * 2.6);
-      --stars-h: calc(var(--u) * 1.8);
-      --cluster-gap: calc(var(--u) * 0.6);
-      --wrap-width: calc(var(--u) * 36);
-      --wrap-margin-top: calc(var(--u) * 3.7);
+      --rule-gap:       max(1px, calc(var(--u) * 0.30));
+      --logo-size:      calc(var(--u) * 2.6);
+      --stars-h:        calc(var(--u) * 1.8);
+      --cluster-gap:    calc(var(--u) * 0.6);
+      --wrap-width:     calc(var(--u) * 36);
+      --wrap-margin-top:calc(var(--u) * 3.7);
     }
 
     html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
@@ -96,15 +97,13 @@
 
     .subhead {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: calc(var(--u) * 1.3);
+      font-size: calc(var(--u) * 1.95); /* increased from 1.3 */
       margin: calc(var(--u) * 0.5) 0 0;
       font-weight: 400;
+      color: var(--navy);
     }
     .subhead .caps {
       color: var(--star-red);
-    }
-    .subhead .lower {
-      color: var(--navy);
     }
   </style>
 </head>
@@ -115,10 +114,7 @@
     <div class="band">
       <h1 class="logo">LOLADOME</h1>
       <div class="subhead">
-        <span class="caps">L</span><span class="lower">eague's </span>
-        <span class="caps">O</span><span class="lower">fficial </span>
-        <span class="caps">L</span><span class="lower">eague </span>
-        <span class="caps">A</span><span class="lower">cronym</span>
+        <span class="caps">L</span>eague's <span class="caps">O</span>fficial <span class="caps">L</span>eague <span class="caps">A</span>cronym
       </div>
     </div>
   </div>
