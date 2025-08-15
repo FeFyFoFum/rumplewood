@@ -23,7 +23,8 @@
       --star-red:#b50e12;
 
       /* Derived sizes */
-      --perimeter: calc(var(--u) * 3);
+      --perimeter: calc(var(--u) * 3);         /* top border thickness */
+      --side-perimeter: calc(var(--u) * 6);    /* double thickness for sides */
       --band-pad-y: calc(var(--u) * 1.75);
       --rule-thickness: max(1px, calc(var(--u) * 0.35));
       --rule-gap:       max(1px, calc(var(--u) * 0.30));
@@ -44,7 +45,7 @@
       color:#111;
       border-style: solid;
       border-color: var(--black);
-      border-width: var(--perimeter) var(--perimeter) 0 var(--perimeter);
+      border-width: var(--perimeter) var(--side-perimeter) 0 var(--side-perimeter);
       box-sizing: border-box;
       min-height:100vh;
     }
@@ -102,7 +103,7 @@
 
     .subhead {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: calc(var(--u) * 1.625); /* ~25% larger than original */
+      font-size: calc(var(--u) * 1.625);
       margin: calc(var(--u) * 0.5) 0 0;
       font-weight: 400;
       color: var(--navy);
@@ -110,7 +111,7 @@
     }
     .subhead .caps {
       color: var(--star-red);
-      font-weight: 600; /* subtle emphasis on L, O, L, A */
+      font-weight: 600;
     }
 
     /* Updates area */
@@ -120,7 +121,7 @@
       text-align:left;
     }
     .update-card{
-      background: var(--pink);              /* your pink background for posts */
+      background: var(--pink);
       color: #1f1f1f;
       border:1px solid var(--ring);
       border-radius:14px;
@@ -129,16 +130,24 @@
     }
     .u-title{
       margin:0 0 8px;
-      font-family:'Rubik Mono One',sans-serif;  /* title in Rubik Mono One */
+    }
+    .u-title-line1{
+      font-family:'Rubik Mono One',sans-serif;
       font-size:20px;
       letter-spacing:.2px;
       color:var(--navy);
     }
+    .u-title-line2{
+      font-family:'Josefin Sans',sans-serif;
+      font-size:16px;
+      color:var(--star-red);
+      margin-top:2px;
+    }
     .u-sub{
       margin:0 0 14px;
-      color:var(--muted);
-      font-size:12px;                        /* smaller subtitle/bullets */
-      padding-left: 18px;                    /* space for bullets */
+      color:var(--black); /* black text for subtitle */
+      font-size:12px;
+      padding-left: 18px;
     }
     .u-sub li{ margin: 4px 0; }
 
@@ -157,8 +166,8 @@
     .u-thumb{
       width:100%;
       height:auto;
-      max-height:320px;    /* preview window height */
-      object-fit:cover;    /* crops tall/wide previews nicely */
+      max-height:320px;
+      object-fit:cover;
       display:block;
     }
 
@@ -201,13 +210,15 @@
   <!-- Updates -->
   <main class="updates-wrap">
     <article class="update-card">
-      <h2 class="u-title">MATCHDAY 01 — 17 August 2025</h2>
+      <div class="u-title">
+        <div class="u-title-line1">MATCHDAY 01</div>
+        <div class="u-title-line2">17 August 2025</div>
+      </div>
       <ul class="u-sub">
         <li>I’ll update the standings here every other <strong>TUESDAY</strong></li>
         <li>everyone’s picks are above, good luck</li>
       </ul>
 
-      <!-- Lightbox-only preview (no download / no new-tab buttons) -->
       <button class="u-shot open-lightbox"
               type="button"
               data-full="assets/000testfile.png"
@@ -251,7 +262,6 @@
       lbImg.src = '';
     }
 
-    // Robust click handler (works for the button or any future triggers)
     document.addEventListener('click', (e)=>{
       const trigger = e.target.closest('.open-lightbox');
       if (trigger) {
@@ -261,7 +271,6 @@
       }
     });
 
-    // Close actions
     lb.addEventListener('click', (e)=>{
       if (e.target === lb || e.target === stage) closeLB();
     });
@@ -270,7 +279,6 @@
       if (e.key === 'Escape') closeLB();
     });
 
-    // Zoom with wheel / trackpad (centered around cursor)
     stage.addEventListener('wheel', (e)=>{
       if (lb.getAttribute('aria-hidden')==='true') return;
       e.preventDefault();
@@ -284,7 +292,6 @@
       applyTransform();
     }, {passive:false});
 
-    // Drag to pan
     stage.addEventListener('pointerdown', (e)=>{
       if (lb.getAttribute('aria-hidden')==='true') return;
       drag = true;
@@ -304,7 +311,6 @@
       stage.releasePointerCapture(e.pointerId);
     });
 
-    // Double-click / double-tap to toggle zoom
     stage.addEventListener('dblclick', ()=>{
       scale = (scale === 1 ? 2 : 1);
       offsetX = 0; offsetY = 0;
@@ -313,3 +319,4 @@
   </script>
 </body>
 </html>
+
