@@ -71,7 +71,7 @@
       height: var(--stars-h); width:auto;
     }
 
-    /* Cream band with twin rules restored */
+    /* Cream band with twin rules */
     .band{
       position:relative; background:var(--cream);
       padding: var(--band-pad-y) calc(var(--u) * 1);
@@ -197,7 +197,7 @@
   <!-- Posts (empty on purpose) -->
   <main class="updates-wrap" id="page-gallery">
     <!-- Paste generated <article> blocks from your stand-alone LOLA Post Generator under this line. -->
-   
+    
     
     
     
@@ -241,21 +241,53 @@
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/zoom/lg-zoom.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
 
-  <!-- LightGallery init (works with generator output: href can be MP4, data-video present) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const galleryRoot = document.getElementById('page-gallery');
-      if (!galleryRoot) return;
+      const root = document.getElementById('page-gallery');
+      if (!root) return;
 
-      function buildDynamicEl() {
-        const anchors = Array.from(galleryRoot.querySelectorAll('a.u-shot'));
+      // 1) Normalize anchors so LG always gets ideal inputs (no edits to your generator needed)
+      function normalizeAnchors() {
+        root.querySelectorAll('a.u-shot').forEach(a => {
+          const href    = a.getAttribute('href') || '';
+          const dataSrc = a.getAttribute('data-src') || '';
+          const poster  = a.getAttribute('data-poster') || '';
+          const src     = (dataSrc || href).toLowerCase();
+          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src);
+
+          if (isVideo) {
+            // Prefer MP4/WEBM in data-src, poster (or #) in href
+            if (!dataSrc) a.setAttribute('data-src', href);
+            if (poster) {
+              a.setAttribute('href', poster);
+            } else {
+              a.setAttribute('href', '#'); // avoid navigating to raw mp4
+            }
+            if (!a.hasAttribute('data-lg-size')) {
+              a.setAttribute('data-lg-size', '1280-720');
+            }
+            // Ensure data-video exists
+            if (!a.hasAttribute('data-video')) {
+              const type = src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+              a.setAttribute('data-video', JSON.stringify({
+                source: [{ src: (a.getAttribute('data-src') || href), type }],
+                attributes: { preload: 'metadata', playsinline: true, controls: true }
+              }));
+            }
+          }
+        });
+      }
+
+      // 2) Build slides for dynamic LG
+      function buildSlides() {
+        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
         return anchors.map(a => {
-          const href   = a.getAttribute('href') || '';
-          const dataSrc= a.getAttribute('data-src') || '';
-          const subHtml= a.getAttribute('data-sub-html') || '';
-          const poster = a.getAttribute('data-poster') || '';
-          const src    = dataSrc || href;
-          const isVideo= /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+          const href    = a.getAttribute('href') || '';
+          const dataSrc = a.getAttribute('data-src') || '';
+          const subHtml = a.getAttribute('data-sub-html') || '';
+          const poster  = a.getAttribute('data-poster') || '';
+          const src     = (dataSrc || href);
+          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
 
           if (isVideo) {
             let video = null;
@@ -272,43 +304,45 @@
         });
       }
 
-      let dynamicEl = buildDynamicEl();
-      const lg = lightGallery(galleryRoot, {
+      normalizeAnchors();
+
+      let slides = buildSlides();
+      const lg = lightGallery(root, {
         dynamic: true,
-        dynamicEl,
+        dynamicEl: slides,
         plugins: [lgZoom, lgVideo],
-        selector: '',  // using dynamic mode
+        selector: '', // using dynamic mode
         speed: 300,
         download: false,
         swipeToClose: true,
         mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
       });
 
-      galleryRoot.addEventListener('click', (e) => {
+      // Intercept clicks and open the matching slide
+      root.addEventListener('click', (e) => {
         const a = e.target.closest('a.u-shot');
         if (!a) return;
         e.preventDefault();
 
-        // If posts changed since load, refresh slides
-        const fresh = buildDynamicEl();
-        if (fresh.length !== dynamicEl.length) {
+        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+        // Re-run normalization in case you pasted new posts
+        normalizeAnchors();
+        const fresh = buildSlides();
+        if (fresh.length !== slides.length) {
           lg.updateSlides(fresh);
-          dynamicEl = fresh;
+          slides = fresh;
         }
-
-        const anchors = Array.from(galleryRoot.querySelectorAll('a.u-shot'));
         const index = anchors.indexOf(a);
         if (index >= 0) lg.openGallery(index);
       });
 
-      // Keep inline video thumbnails looping
-      galleryRoot.querySelectorAll('video.u-thumb').forEach(v => {
+      // Keep inline video thumbs looping on the page
+      root.querySelectorAll('video.u-thumb').forEach(v => {
         v.setAttribute('autoplay',''); v.setAttribute('muted','');
         v.setAttribute('loop','');     v.setAttribute('playsinline','');
         v.play().catch(()=>{});
       });
     });
   </script>
-
 </body>
 </html>
