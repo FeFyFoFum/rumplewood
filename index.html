@@ -292,30 +292,60 @@ same pink</div>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/video/lg-video.umd.min.js"></script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
+(function () {
+  function initLG() {
     const gallery = document.getElementById('page-gallery');
+    if (!gallery) return;
 
-    /* Init LG for images + GIFs + videos */
+    // Use whatever plugins successfully loaded
+    const plugins = [window.lgZoom];
+    if (typeof window.lgVideo === 'function') plugins.push(window.lgVideo);
+
     lightGallery(gallery, {
       selector: '.lg-item',
-      plugins: [lgZoom, lgVideo],
+      plugins,
       speed: 300,
       download: false,
       swipeToClose: true,
       mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
     });
 
-    /* Keep inline videos looping on the page too (preview) */
+    // Keep inline videos looping on the page as previews
     gallery.querySelectorAll('video').forEach(v => {
-      v.setAttribute('autoplay','');
-      v.setAttribute('muted','');
-      v.setAttribute('loop','');
-      v.setAttribute('playsinline','');
+      v.setAttribute('autoplay',''); v.setAttribute('muted','');
+      v.setAttribute('loop',''); v.setAttribute('playsinline','');
       v.play().catch(() => {});
     });
-  });
-  </script>
+
+    console.log('LG plugins loaded:', {
+      lgZoom: typeof window.lgZoom,
+      lgVideo: typeof window.lgVideo
+    });
+  }
+
+  function start() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLG, { once:true });
+    } else {
+      initLG();
+    }
+  }
+
+  // If the video plugin didn't attach (blocked by an extension/CDN hiccup), load a fallback then init.
+  if (typeof window.lgVideo !== 'function') {
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/lightgallery@2.7.2/plugins/video/lg-video.umd.js';
+    s.onload = start;
+    s.onerror = start; // even if fallback fails, images still work
+    document.head.appendChild(s);
+  } else {
+    start();
+  }
+})();
+</script>
+
 </body>
 </html>
+
 
 
