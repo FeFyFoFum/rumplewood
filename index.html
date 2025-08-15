@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LOLA</title>
 
-  <!-- Fonts (Inter includes 500 for darker subtitle weight) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
@@ -136,7 +136,7 @@
       color:var(--star-red); margin-top:6px;
     }
 
-    /* Bulleted subtitle list (only when you type bullet markers) */
+    /* Bulleted subtitle list */
     .u-sub{ margin:0 0 14px; color:var(--black); font-size:11px; padding-left:18px; font-family:'Inter',sans-serif; font-weight:500; }
     .u-sub li{ margin:4px 0; }
 
@@ -192,39 +192,8 @@
 
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
-    <!-- No posts yet. Add your first post inside this <main>. -->
-
-    <!--
-    TEMPLATE (keep commented; copy/paste and edit when ready)
-
-    <article class="update-card" data-id="00001">
-      <div class="u-title">
-        <div class="u-title-line1">YOUR POST TITLE</div>
-        <div class="u-title-line2">DATE HERE</div>
-      </div>
-
-      <div class="u-subtext">optional subtitle text</div>
-
-      <!-- IMAGE example -->
-      <a class="u-shot lg-item" href="assets/examplePoster.png" data-sub-html="Caption for the image">
-        <img class="u-thumb" src="assets/examplePoster.png" alt="Example image">
-      </a>
-
-      <!-- VIDEO example (recommended pattern for MP4) -->
-      <a class="u-shot lg-item" style="margin-top:12px;"
-         href="assets/examplePoster.png"                      <!-- poster or # -->
-         data-src="assets/exampleVideo.mp4"                   <!-- the actual video -->
-         data-poster="assets/examplePoster.png"
-         data-lg-size="1280-720"
-         data-video='{"source":[{"src":"assets/exampleVideo.mp4","type":"video/mp4"}],
-                      "attributes":{"preload":"metadata","playsinline":true,"controls":true}}'
-         data-sub-html="Caption for the video">
-        <video class="u-thumb" autoplay muted loop playsinline>
-          <source src="assets/exampleVideo.mp4" type="video/mp4">
-        </video>
-      </a>
-    </article>
-    -->
+    <!-- Intentionally empty. Add posts below this comment. -->
+    <!-- FEFYFOFUM -->
   </main>
 
   <!-- LightGallery core + plugins -->
@@ -237,17 +206,7 @@
     const gallery = document.getElementById('page-gallery');
     if (!gallery) return;
 
-    // Ensure all media anchors will be handled by LightGallery
-    gallery.addEventListener('click', (e) => {
-      const a = e.target.closest('a.u-shot');
-      if (!a) return;
-      // If LG fails to init for any reason, prevent hard navigation away
-      if (!a.classList.contains('lg-item')) {
-        e.preventDefault();
-      }
-    });
-
-    // Make any anchors you add work out of the box
+    // Helper to prime any anchors you add later so they "just work"
     const primeAnchors = () => {
       gallery.querySelectorAll('a.u-shot').forEach(a => {
         a.classList.add('lg-item');
