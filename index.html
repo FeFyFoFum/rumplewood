@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <!-- lightGallery CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/css/lightgallery-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2/css/lightgallery-bundle.min.css">
 
   <style>
     :root{
@@ -21,7 +21,7 @@
       --pink:#fbd3de;
       --cream:#fffcf3;
       --black:#000;
-      --navy:#0a3161;        /* darker blue used in the band rules */
+      --navy:#0a3161;
       --star-red:#b50e12;
 
       /* Measurements */
@@ -37,7 +37,7 @@
       --wrap-width:     calc(var(--u) * 36);
       --wrap-margin-top:calc(var(--u) * 3.7);
 
-      --ring:#e6e6e6; /* header band rules only */
+      --ring:#e6e6e6;
     }
 
     html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
@@ -47,13 +47,11 @@
       border-top: var(--top-border) solid var(--black);
       min-height:100vh;
       box-sizing:border-box;
-
-      /* keep content clear of fixed side rails */
       padding-left: var(--side-rail);
       padding-right: var(--side-rail);
     }
 
-    /* Fixed side rails (infinite rails) */
+    /* Fixed side rails */
     .rail{
       position:fixed; top:0; bottom:0;
       width: var(--side-rail); background: var(--black);
@@ -126,7 +124,7 @@
       margin-bottom: 32px;
     }
 
-    /* Title lines — Montserrat (navy) + Josefin (red) */
+    /* Title lines */
     .u-title{ text-align:center; margin:0 0 28px; }
     .u-title-line1{
       font-family:'Montserrat',sans-serif; font-weight:800;
@@ -143,7 +141,7 @@
       margin:0 0 14px; color:var(--black);
       font-size:11px; padding-left:18px;
       font-family:'Inter',sans-serif;
-      font-weight:500;   /* Medium for darker look */
+      font-weight:500;
     }
     .u-sub li{ margin:4px 0; }
 
@@ -152,8 +150,8 @@
       margin:0 0 14px; color:var(--black);
       font-size:11px;
       font-family:'Inter',sans-serif;
-      font-weight:500;   /* Medium weight */
-      white-space:pre-line; /* render \n as line breaks, no extra spacing */
+      font-weight:500;
+      white-space:pre-line;
     }
 
     /* Media frames */
@@ -202,229 +200,74 @@
   <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
 
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="00015">
-  <div class="u-title">
-    <div class="u-title-line1">TEST TEST TEST</div>
-    <div class="u-title-line2">17 August TEST</div>
-  </div>
-<div class="u-subtext">testing
-test
-ing
-t
-e
-s
-t
-ing</div>
-  <a class="u-shot lg-item"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-       data-sub-html="TEST TEST TEST — 17 August TEST (Item 1)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-</article>
-    <article class="update-card" data-id="00011">
-  <div class="u-title">
-    <div class="u-title-line1">HOPE THIS WORKS</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">testing
-testing
-TESTING</div>
-  <a class="u-shot lg-item"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-sub-html="HOPE THIS WORKS — 17 August 2025 (Item 1)">
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-</article>
-    <article class="update-card" data-id="00001">
-  <div class="u-title">
-    <div class="u-title-line1">MATCHDAY 00</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">this is a test
-this is only a test
-the day he died, the sun was a balloon</div>
-  <a class="u-shot lg-item" href="assets/0000hellolaWorld.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 1)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="MATCHDAY 00 image 1">
-  </a>
 
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/000testfile2.png" data-sub-html="MATCHDAY 00 — 17 August 2025 (Item 2)">
-    <img class="u-thumb" src="assets/000testfile2.png" alt="MATCHDAY 00 image 2">
-  </a>
-</article>
-<article class="update-card" data-id="00000">
-  <div class="u-title">
-    <div class="u-title-line1">HELLOLA WORLD!</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">new season
-new LOLA
-same pink</div>
-  <a class="u-shot lg-item" href="assets/0000HELLOLAworld.mp4" data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)" data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/0000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'>
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-</article>
   </main>
 
-<!-- lightGallery JS (core first, then plugins) -->
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
+  <!-- lightGallery JS (core then plugins) -->
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
+  <!-- Local video plugin (to avoid CDN/extension blocking). Make sure this file exists in /vendor next to index.html -->
+  <script src="./vendor/lg-video.umd.min.js"></script>
 
-<!-- Load the VIDEO plugin LOCALLY so nothing can block it -->
-<script src="./vendor/lg-video.umd.min.js?v=1"
-        onload="console.log('lg-video loaded:', typeof window.lgVideo)"
-        onerror="console.warn('lg-video local file NOT found');"></script>
+  <!-- Dynamic LG init: builds slides from your anchors so MP4/WebM play inside LG -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const gallery = document.getElementById('page-gallery');
+    if (!gallery) return;
 
-<!-- lightGallery JS (core then plugins) -->
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
-<!-- Local video plugin (to avoid CDN/extension blocking) -->
-<script src="./vendor/lg-video.umd.min.js?v=2"></script>
+    // Collect all anchors that represent media cards
+    const anchors = Array.from(gallery.querySelectorAll('a.u-shot'));
 
-<script>
-/* ======= DEBUG HOOKS ======= */
-console.log('[LG] init block inserted');
-window.addEventListener('error', e => console.error('[LG] window error:', e.message));
+    // Build dynamic slide list once from the DOM
+    const items = anchors.map(a => {
+      const raw = a.getAttribute('data-src') || a.getAttribute('href') || '';
+      const url = raw.split('#')[0].split('?')[0];
+      const sub = a.getAttribute('data-sub-html') || '';
+      const imgThumb = a.querySelector('img')?.getAttribute('src') || '';
+      const vidThumb = a.querySelector('video source')?.getAttribute('src') || '';
+      const thumb = imgThumb || vidThumb || url;
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('[LG] DOMContentLoaded start. lgVideo =', typeof window.lgVideo);
-
-  const gallery = document.getElementById('page-gallery');
-  if (!gallery) { console.warn('[LG] #page-gallery not found'); return; }
-
-  /* 1) Normalize any video slides so LG recognizes them */
-  let fixed = 0;
-  gallery.querySelectorAll('a.u-shot').forEach(a => {
-    const raw = a.getAttribute('data-src') || a.getAttribute('href') || '';
-    const url = raw.split('#')[0].split('?')[0];
-    if (!/\.(mp4|webm)$/i.test(url)) return;
-
-    // ensure it participates in LG
-    a.classList.add('lg-item');
-
-    // ensure LG can sniff the source
-    if (!a.hasAttribute('data-src')) a.setAttribute('data-src', raw);
-
-    // ensure a playable video payload exists
-    if (!a.hasAttribute('data-video')) {
-      const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
-      const payload = {
-        source: [{ src: raw, type }],
-        attributes: { preload: 'metadata', playsinline: true, muted: true, autoplay: true, loop: true }
-      };
-      a.setAttribute('data-video', JSON.stringify(payload));
-    }
-    fixed++;
-  });
-  console.log('[LG] normalized video anchors:', fixed);
-
-  /* 2) Initialize LightGallery (video plugin if present) */
-  try {
-    const haveVideo = (typeof window.lgVideo === 'function');
-    const plugins = haveVideo ? [window.lgZoom, window.lgVideo] : [window.lgZoom];
-
-    lightGallery(gallery, {
-      selector: '.lg-item',
-      plugins,
-      speed: 300,
-      download: false,
-      swipeToClose: true,
-      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+      if (/\.(mp4|webm)$/i.test(url)) {
+        const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
+        return {
+          video: { source: [{ src: raw, type }] },
+          thumb,
+          subHtml: sub
+        };
+      }
+      // image-like
+      return { src: raw, thumb, subHtml: sub };
     });
 
-    console.log('[LG] initialized. plugins =', plugins.map(p => p && (p.name || 'plugin')));
+    // Click → open LightGallery dynamically starting at clicked item
+    gallery.addEventListener('click', (e) => {
+      const a = e.target.closest('a.u-shot');
+      if (!a) return;
+      e.preventDefault();
 
-    // 3) Keep inline <video> previews looping on the page
+      const startIndex = anchors.indexOf(a);
+      try { if (gallery.lg) gallery.lg.destroy(true); } catch(e) {}
+
+      lightGallery(gallery, {
+        dynamic: true,
+        dynamicEl: items,
+        index: Math.max(0, startIndex),
+        plugins: [window.lgZoom, window.lgVideo].filter(Boolean),
+        download: false,
+        speed: 300,
+        swipeToClose: true,
+        mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+      });
+    });
+
+    // Keep inline video thumbnails looping on the page
     gallery.querySelectorAll('video').forEach(v => {
       v.setAttribute('autoplay',''); v.setAttribute('muted','');
       v.setAttribute('loop','');     v.setAttribute('playsinline','');
-      v.play().catch(()=>{});
+      v.play().catch(() => {});
     });
-
-    /* 4) Fallback overlay ONLY if video plugin missing */
-    if (!haveVideo) {
-      console.warn('[LG] lgVideo missing — enabling fallback overlay for MP4/WebM');
-      const overlay = document.createElement('div');
-      overlay.id = 'videoOverlay';
-      overlay.innerHTML = `
-        <div class="vo-backdrop"></div>
-        <div class="vo-frame">
-          <button class="vo-close" aria-label="Close video">&times;</button>
-          <video class="vo-player" controls autoplay muted loop playsinline></video>
-        </div>`;
-      document.body.appendChild(overlay);
-
-      const css = document.createElement('style');
-      css.textContent = `
-        #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center}
-        #videoOverlay.open{display:flex}
-        .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92)}
-        .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
-        .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
-        .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
-        @media (max-width:768px){.vo-close{top:-46px;right:0}}
-      `;
-      document.head.appendChild(css);
-
-      const player = overlay.querySelector('.vo-player');
-      const closeBtn = overlay.querySelector('.vo-close');
-      const close = () => { try { player.pause(); } catch(e){}; overlay.classList.remove('open'); player.removeAttribute('src'); player.load(); };
-      closeBtn.addEventListener('click', close);
-      overlay.querySelector('.vo-backdrop').addEventListener('click', close);
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
-
-      gallery.addEventListener('click', e => {
-        const a = e.target.closest('a.u-shot');
-        if (!a) return;
-        const src = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
-        if (/\.(mp4|webm)(?:$|[?#])/.test(src)) {
-          e.preventDefault();
-          player.setAttribute('src', src);
-          overlay.classList.add('open');
-          player.play().catch(()=>{});
-        }
-      });
-    }
-  } catch (err) {
-    console.error('[LG] init error:', err);
-  }
-});
-</script>
-
-
-
-
-
-
+  });
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
