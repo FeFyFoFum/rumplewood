@@ -289,8 +289,9 @@ same pink</div>
 <!-- lightGallery JS (core first, then plugins) -->
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
-<!-- Load the video plugin LOCALLY so extensions/CDNs can't block it -->
-<script src="./vendor/lg-video.umd.min.js"
+
+<!-- Load the VIDEO plugin LOCALLY so nothing can block it -->
+<script src="./vendor/lg-video.umd.min.js?v=1"
         onload="console.log('lg-video loaded:', typeof window.lgVideo)"
         onerror="console.warn('lg-video local file NOT found');"></script>
 
@@ -299,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.getElementById('page-gallery');
   if (!gallery) return;
 
-  const haveVideo = typeof window.lgVideo === 'function';
+  const haveVideo = (typeof window.lgVideo === 'function');
 
   lightGallery(gallery, {
     selector: '.lg-item',
@@ -319,12 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('LG plugins:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
 
-  /* -------------------------
-     FALLBACK: if lgVideo missing, open MP4/WebM in a simple overlay.
-     This activates ONLY when the video plugin isn't present.
-  ------------------------- */
+  /* ---------- FALLBACK if lgVideo still missing ---------- */
   if (!haveVideo) {
-    // Build overlay once
+    // Simple overlay so MP4/WebM still open full-screen if the plugin is blocked
     const overlay = document.createElement('div');
     overlay.id = 'videoOverlay';
     overlay.innerHTML = `
@@ -335,17 +333,15 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
     document.body.appendChild(overlay);
 
-    // Styles for overlay
     const css = document.createElement('style');
     css.textContent = `
-      #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;}
-      #videoOverlay.open{display:flex;}
-      #videoOverlay .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92);}
-      #videoOverlay .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
-      #videoOverlay .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
-      #videoOverlay .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;
-                              width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
-      @media (max-width:768px){#videoOverlay .vo-close{top:-46px;right:0}}
+      #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center}
+      #videoOverlay.open{display:flex}
+      .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92)}
+      .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
+      .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
+      .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
+      @media (max-width:768px){.vo-close{top:-46px;right:0}}
     `;
     document.head.appendChild(css);
 
@@ -356,14 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.querySelector('.vo-backdrop').addEventListener('click', shut);
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) shut(); });
 
-    // Intercept clicks on video anchors to open overlay instead of LG
+    // Intercept clicks on video anchors to open overlay
     gallery.addEventListener('click', e => {
       const a = e.target.closest('a.u-shot');
       if (!a) return;
-      const mp4 = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
-      if (/\.(mp4|webm)(?:$|[?#])/.test(mp4)) {
+      const url = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
+      if (/\.(mp4|webm)(?:$|[?#])/.test(url)) {
         e.preventDefault();
-        player.setAttribute('src', mp4);
+        player.setAttribute('src', url);
         overlay.classList.add('open');
         player.play().catch(()=>{});
       }
@@ -376,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
