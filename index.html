@@ -309,7 +309,57 @@
     });
   });
   </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const gallery = document.getElementById('page-gallery');
+  if (!gallery) return;
+
+  // Build a tiny overlay once
+  const overlay = document.createElement('div');
+  overlay.id = 'videoOverlay';
+  overlay.innerHTML = `
+    <div class="vo-backdrop"></div>
+    <div class="vo-frame">
+      <button class="vo-close" aria-label="Close video">&times;</button>
+      <video class="vo-player" controls autoplay muted loop playsinline></video>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const css = document.createElement('style');
+  css.textContent = `
+    #videoOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center}
+    #videoOverlay.open{display:flex}
+    .vo-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92)}
+    .vo-frame{position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
+    .vo-player{max-width:92vw;max-height:92vh;outline:none;border:2px solid #000;border-radius:10px;background:#000}
+    .vo-close{position:absolute;top:-40px;right:-6px;background:#fff;border:2px solid #000;border-radius:999px;width:32px;height:32px;font-size:22px;line-height:26px;cursor:pointer}
+    @media (max-width:768px){.vo-close{top:-46px;right:0}}
+  `;
+  document.head.appendChild(css);
+
+  const player = overlay.querySelector('.vo-player');
+  const close = () => { try { player.pause(); } catch(e){} overlay.classList.remove('open'); player.removeAttribute('src'); player.load(); };
+  overlay.querySelector('.vo-backdrop').addEventListener('click', close);
+  overlay.querySelector('.vo-close').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+
+  // Intercept clicks on video cards only; images still go to LightGallery
+  gallery.addEventListener('click', e => {
+    const a = e.target.closest('a.u-shot');
+    if (!a) return;
+    const url = (a.getAttribute('data-src') || a.getAttribute('href') || '').toLowerCase();
+    if (/\.(mp4|webm)(?:$|[?#])/.test(url)) {
+      e.preventDefault();
+      player.src = url;
+      overlay.classList.add('open');
+      player.play().catch(()=>{});
+    }
+  });
+});
+</script>
+
 </body>
 </html>
+
 
 
