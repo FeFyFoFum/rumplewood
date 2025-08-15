@@ -298,64 +298,60 @@ same pink</div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const gallery = document.getElementById('page-gallery');
-  if (!gallery) return;
+  if (!gallery) { console.log('[LG] no #page-gallery'); return; }
+  console.log('[LG] DOM ready. lgVideo:', typeof window.lgVideo);
 
-  // --- 1) Make sure video slides are wired the way LG expects ---
-  function normalizeVideoSlides(el) {
-    let fixed = 0;
-    el.querySelectorAll('a.u-shot').forEach(a => {
-      const hrefAttr = a.getAttribute('data-src') || a.getAttribute('href') || '';
-      const url = hrefAttr.split('#')[0].split('?')[0];
-      if (!/\.(mp4|webm)$/i.test(url)) return;
+  // 1) Normalize video slides so LG definitely recognizes them
+  let fixed = 0;
+  gallery.querySelectorAll('a.u-shot').forEach(a => {
+    const raw = a.getAttribute('data-src') || a.getAttribute('href') || '';
+    const url = raw.split('#')[0].split('?')[0];
+    if (!/\.(mp4|webm)$/i.test(url)) return;
 
-      // Ensure this anchor participates in the lightbox
-      a.classList.add('lg-item');
+    a.classList.add('lg-item');
+    if (!a.hasAttribute('data-src')) a.setAttribute('data-src', raw);
+    if (!a.hasAttribute('data-video')) {
+      const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
+      const payload = {
+        source: [{ src: raw, type }],
+        attributes: { preload:'metadata', playsinline:true, muted:true, autoplay:true, loop:true }
+      };
+      a.setAttribute('data-video', JSON.stringify(payload));
+    }
+    fixed++;
+  });
+  console.log('[LG] Video slides normalized:', fixed);
 
-      // Ensure LG has a data-src to sniff
-      if (!a.hasAttribute('data-src')) a.setAttribute('data-src', hrefAttr);
+  // 2) Init LightGallery (zoom always, video if present)
+  const plugins = [window.lgZoom];
+  if (typeof window.lgVideo === 'function') plugins.push(window.lgVideo);
 
-      // Ensure data-video JSON exists
-      if (!a.hasAttribute('data-video')) {
-        const type = /\.webm$/i.test(url) ? 'video/webm' : 'video/mp4';
-        const payload = {
-          source: [{ src: hrefAttr, type }],
-          attributes: { preload: 'metadata', playsinline: true, muted: true, autoplay: true, loop: true }
-        };
-        a.setAttribute('data-video', JSON.stringify(payload));
-      }
-      fixed++;
-    });
-    console.log('Video slides normalized:', fixed);
-  }
-  normalizeVideoSlides(gallery);
-
-  // --- 2) Init LightGallery (now that slides are normalized) ---
-  const haveVideo = (typeof window.lgVideo === 'function');
   lightGallery(gallery, {
     selector: '.lg-item',
-    plugins: haveVideo ? [window.lgZoom, window.lgVideo] : [window.lgZoom],
+    plugins,
     speed: 300,
     download: false,
     swipeToClose: true,
-    mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+    mobileSettings: { controls:true, showCloseIcon:true, showNext:false, showPrev:false }
   });
+  console.log('[LG] Initialized with plugins ->', plugins.map(p => p.name || 'plugin'));
 
-  // --- 3) Keep inline video previews looping on the page ---
+  // 3) Keep inline videos looping on the page
   gallery.querySelectorAll('video').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
-    v.play().catch(() => {});
+    v.play().catch(()=>{});
   });
-
-  console.log('LG plugins:', { lgZoom: typeof window.lgZoom, lgVideo: typeof window.lgVideo });
 });
 </script>
 
 
 
 
+
 </body>
 </html>
+
 
 
 
