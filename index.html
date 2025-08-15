@@ -286,18 +286,21 @@ same pink</div>
 </article>
   </main>
 
-  <!-- lightGallery JS -->
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/lightgallery.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/zoom/lg-zoom.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.2/plugins/video/lg-video.umd.min.js"></script>
+<!-- lightGallery JS (core first, then plugins) -->
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/lightgallery.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/zoom/lg-zoom.umd.min.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/lightgallery@2/plugins/video/lg-video.umd.min.js"
+  onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/lightgallery@2/plugins/video/lg-video.umd.js';document.head.appendChild(s);})();">
+</script>
 
-  <script>
+<script>
 (function () {
   function initLG() {
     const gallery = document.getElementById('page-gallery');
     if (!gallery) return;
 
-    // Use whatever plugins successfully loaded
+    // Use whatever plugins actually loaded
     const plugins = [window.lgZoom];
     if (typeof window.lgVideo === 'function') plugins.push(window.lgVideo);
 
@@ -310,10 +313,10 @@ same pink</div>
       mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
     });
 
-    // Keep inline videos looping on the page as previews
+    // Keep inline video previews looping on the page
     gallery.querySelectorAll('video').forEach(v => {
       v.setAttribute('autoplay',''); v.setAttribute('muted','');
-      v.setAttribute('loop',''); v.setAttribute('playsinline','');
+      v.setAttribute('loop','');     v.setAttribute('playsinline','');
       v.play().catch(() => {});
     });
 
@@ -323,29 +326,28 @@ same pink</div>
     });
   }
 
-  function start() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLG, { once:true });
-    } else {
-      initLG();
-    }
+  // If the video plugin still didn't attach (blocked by an extension/CDN), try fallback then init.
+  function startWithFallbackIfNeeded() {
+    if (typeof window.lgVideo === 'function') { initLG(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/lightgallery@2/plugins/video/lg-video.umd.js';
+    s.onload = initLG;
+    s.onerror = initLG; // still init so images work even if fallback fails
+    document.head.appendChild(s);
   }
 
-  // If the video plugin didn't attach (blocked by an extension/CDN hiccup), load a fallback then init.
-  if (typeof window.lgVideo !== 'function') {
-    const s = document.createElement('script');
-    s.src = 'https://unpkg.com/lightgallery@2.7.2/plugins/video/lg-video.umd.js';
-    s.onload = start;
-    s.onerror = start; // even if fallback fails, images still work
-    document.head.appendChild(s);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startWithFallbackIfNeeded, { once: true });
   } else {
-    start();
+    startWithFallbackIfNeeded();
   }
 })();
 </script>
 
+
 </body>
 </html>
+
 
 
 
