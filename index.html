@@ -158,48 +158,32 @@
     font-family:'Josefin Sans',sans-serif; font-size:16px;
     color:var(--star-red); margin-top:6px;
   }
-
-  .u-sub{
-    margin:0 0 14px; color:var(--black);
-    font-size:11px; padding-left:18px;
-    font-family:'Inter',sans-serif;
-    font-weight:500;
-  }
-  .u-sub li{ margin:4px 0; }
-
+/* --- Lead text & bullet lists: unified rhythm --- */
   .u-sub,
-  .u-subtext { margin-bottom: 1em; }
-
   .u-subtext{
-    margin:0 0 14px; color:var(--black);
-    font-size:11px;
-    font-family:'Inter',sans-serif;
-    font-weight:500;
-    white-space:pre-line;
+    margin: 0 0 14px;                 /* identical buffer below the block */
+    color: var(--black);
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    line-height: 1.2;                  /* tighter, consistent line spacing */
   }
-    /* Consistent list & line spacing for update intros + consistent buffer before media */
+
+  /* Bulleted variant */
   .u-sub{
-    margin: 0 0 14px;            /* same buffer as no-bullet version */
-    padding-left: 1.1em;         /* modest indent for bullets */
-    list-style-position: outside;
-    line-height: 1.35;           /* unified line height for bullets */
+    padding-left: 18px;                /* keep your bullet indent */
+    list-style: disc outside;          /* no extra vertical space from bullets */
   }
   .u-sub li{
-    margin: 0;                   /* remove extra gaps between items */
-    line-height: inherit;        /* match .u-sub line-height exactly */
+    margin: 0;                         /* remove extra gaps between items */
+    line-height: inherit;              /* match the block line-height */
   }
 
-  /* If you ever use plain subtext instead of bullets, keep it in lockstep */
+  /* Plain-line variant (newline-delimited) */
   .u-subtext{
-    margin: 0 0 14px;            /* already present above; reaffirm for clarity */
-    line-height: 1.35;
+    white-space: pre-line;             /* preserve manual line breaks */
   }
 
-  /* Ensure identical buffer before media whether previous block is bullets or plain text */
-  .u-sub + a.u-shot,
-  .u-subtext + a.u-shot{
-    margin-top: 0;               /* the 14px comes from the block above */
-  }
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
     background: var(--black);
@@ -528,6 +512,7 @@
   </script>
 </body>
 </html>
+
 
 
 
