@@ -177,6 +177,29 @@
     font-weight:500;
     white-space:pre-line;
   }
+    /* Consistent list & line spacing for update intros + consistent buffer before media */
+  .u-sub{
+    margin: 0 0 14px;            /* same buffer as no-bullet version */
+    padding-left: 1.1em;         /* modest indent for bullets */
+    list-style-position: outside;
+    line-height: 1.35;           /* unified line height for bullets */
+  }
+  .u-sub li{
+    margin: 0;                   /* remove extra gaps between items */
+    line-height: inherit;        /* match .u-sub line-height exactly */
+  }
+
+  /* If you ever use plain subtext instead of bullets, keep it in lockstep */
+  .u-subtext{
+    margin: 0 0 14px;            /* already present above; reaffirm for clarity */
+    line-height: 1.35;
+  }
+
+  /* Ensure identical buffer before media whether previous block is bullets or plain text */
+  .u-sub + a.u-shot,
+  .u-subtext + a.u-shot{
+    margin-top: 0;               /* the 14px comes from the block above */
+  }
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
     background: var(--black);
@@ -314,26 +337,7 @@
     
     <!-- FEFYFOFUM -->
   
-<article class="update-card" data-id="00001">
-  <div class="u-title">
-    <div class="u-title-line1">HELLOLA WORLD!</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<ul class="u-sub" style="list-style:none;margin:0.4em 0 0.6em 0;padding:0">
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new season</span></li>
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new LOLA</span></li>
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>same pink</span></li>
-</ul>
-<a class="u-shot lg-item"
-   href="assets/00001HELLOLAworld.mp4"
-   data-src="assets/00001HELLOLAworld.mp4"
-   data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/00001HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-   data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
-  <video class="u-thumb" autoplay muted loop playsinline>
-    <source src="assets/00001HELLOLAworld.mp4" type="video/mp4">
-  </video>
-</a>
-</article>
+
     
     <!-- END FEFYFOFUM -->
   </main>
@@ -500,6 +504,7 @@
   </script>
 </body>
 </html>
+
 
 
 
