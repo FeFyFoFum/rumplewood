@@ -53,6 +53,9 @@
     padding-left: var(--side-rail);
     padding-right: var(--side-rail);
     overflow-x:hidden; /* keep vertical scrolling available */
+        padding-bottom: calc(var(--side-rail) + var(--u) * 6); /* reserve space for the fixed footer + pink gap */
+
+    
   }
 
   /* Fixed side rails */
@@ -176,6 +179,12 @@
   /* Terminal footer band matching side rails */
   .page-end{
     background: var(--black);
+        position: fixed;            /* stick to viewport bottom */
+    left: 0; right: 0; bottom: 0;
+    height: var(--side-rail);   /* same thickness as side rails */
+    z-index: 900;               /* below the side rails (z=1000), above content */
+    width: 100%;
+
     height: var(--side-rail);      /* same thickness as the side rails */
     width: 100%;
     margin-top: calc(var(--u) * 6); /* pink breathing room before the band */
@@ -354,6 +363,8 @@ Step 17: their loss is our gain: welcome to rumplewood
     </article>
     <!-- END FEFYFOFUM -->
   </main>
+    <footer class="page-end"></footer>
+
 
   <!-- Lightweight LOLA overlay gallery -->
   <div id="lglb" aria-hidden="true">
@@ -515,4 +526,5 @@ Step 17: their loss is our gain: welcome to rumplewood
   </script>
 </body>
 </html>
+
 
