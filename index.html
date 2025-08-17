@@ -183,7 +183,13 @@
     }
     .u-sub li{ margin:4px 0; }
 
-    /* Non-bulleted, line-broken subtitle text */
+  /* === rumplewood subtitle-to-media spacing === */
+.u-sub,
+.u-subtext {
+  margin-bottom: 1em;   /* one line of space before any following media */
+}
+/* === end rumplewood subtitle-to-media spacing === */
+
     .u-subtext{
       margin:0 0 14px; color:var(--black);
       font-size:11px;
@@ -461,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
