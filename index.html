@@ -236,6 +236,14 @@
   .wrap,
   .updates-wrap {
     width: min(var(--wrap-width), 100vw);
+    /* === rumplewood flank pink micro-adjust === */
+@media (max-width: 520px) {
+  :root {
+    --wrap-width: 91.5vw;   /* was 92vw — tiny nudge narrower for more pink */
+  }
+}
+/* === end rumplewood flank pink micro-adjust === */
+
   }
 
   /* v3 header polish that looked right */
@@ -469,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
