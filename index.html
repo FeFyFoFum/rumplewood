@@ -25,12 +25,12 @@
   --star-red:#b50e12;
 
   /* Measurements */
-  --top-border: calc(var(--u) * 3);
+   --top-border: calc(var(--u) * 3);
   --side-rail:  calc(var(--u) * 6);
   --band-pad-y: calc(var(--u) * 1.75);
 
-  /* Twin rule sizing (perfect symmetry) */
-  --rule-size: calc(var(--u) * 0.17);  /* thickness and gap all equal */
+  /* Twin rule sizing (perfect symmetry, forced whole-pixel) */
+  --rule-size: 1px;   /* try 1px, 1.5px, 2px etc. */
 
   --rule-thickness: var(--rule-size);
   --rule-gap:       var(--rule-size);
@@ -40,6 +40,7 @@
   --cluster-gap:    calc(var(--u) * 0.6);
   --wrap-width:     calc(var(--u) * 36);
   --wrap-margin-top:calc(var(--u) * 3.7);
+
 
   --ring:#e6e6e6;
 }
@@ -393,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
