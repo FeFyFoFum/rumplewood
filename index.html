@@ -183,7 +183,8 @@
     display: grid !important;                  /* beats inline display:flex */
     grid-template-columns: 0.9em 1fr;
     column-gap: 0.22em;
-    align-items: center !important;            /* consistent vertical feel */
+     /* top-align the bullet for wrapped lines (no other spacing changed) */
+    align-items: start !important;
     line-height: var(--lead-lh) !important;
     min-block-size: var(--line);
   }
@@ -533,6 +534,7 @@ so now we&#39;re gonna see HOW I say <strong>HOW</strong> I say [how](rumplewood
   </script>
 </body>
 </html>
+
 
 
 
