@@ -158,39 +158,37 @@
     font-family:'Josefin Sans',sans-serif; font-size:16px;
     color:var(--star-red); margin-top:6px;
   }
-/* --- Subtitle lines: one rhythm for bullets & plain text, plus a hard double-space before media --- */
-  :root { --lead-lh: 1.20; } /* tweak 1.15–1.25 to taste */
-  .u-sub, .u-subtext{
-    margin:0;
-    color:var(--black);
-    font-size:11px;
-    font-family:'Inter',sans-serif;
-    font-weight:500;
-    line-height:var(--lead-lh);
+
+ /* --- Uniform subtitle rhythm (bullets & plain lines), plus fixed double-space before media --- */
+  :root { --lead-lh: 1.20; --lead-gap: calc(2 * var(--lead-lh) * 1em); }
+
+  /* Make each subtitle “line block” identical; defeat inline margins */
+  .update-card > .u-sub,
+  .update-card > .u-subtext{
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--black);
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    line-height: var(--lead-lh);
   }
 
-  /* Remove UA list behavior; draw the bullet ourselves so line boxes match */
-  .u-sub{ list-style:none; padding:0; }
-  .u-sub li{
-    position:relative;
-    margin:0;
-    padding-left:18px;            /* indent */
-    line-height:inherit;          /* identical line height */
-  }
-  .u-sub li::before{
-    content:"•";
-    position:absolute;
-    left:0;
-    top:0;                         /* sits inside the same line box */
-    line-height:inherit;
+  /* Bullet lines: no native markers, same line box as plain lines */
+  .update-card > .u-sub{ list-style: none !important; }
+  .update-card > .u-sub li{
+    margin: 0;
+    line-height: inherit;
+    display: flex;                 /* keep your nice bullet spacing look */
+    gap: 0.22em;
+    align-items: baseline;
   }
 
-  /* Plain multi-line variant */
-  .u-subtext{ white-space:pre-line; }
+  /* Plain multi-line variant (your generator already sets pre-wrap inline) */
+  .update-card > .u-subtext{ white-space: pre-line; }
 
-  /* Exact “double space” before media, regardless of bullets/plain lines */
-  :is(.u-sub,.u-subtext) + a.u-shot{ margin-top: calc(2 * var(--lead-lh) * 1em); }
-
+  /* Hard “double space” before media, regardless of what precedes it */
+  .update-card > a.u-shot{ margin-top: var(--lead-gap); }
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
@@ -520,6 +518,7 @@
   </script>
 </body>
 </html>
+
 
 
 
