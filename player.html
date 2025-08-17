@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LOLA Player</title>
+<style>
+  html,body{height:100%;margin:0;background:#000;display:flex;align-items:center;justify-content:center}
+  video{max-width:96vw;max-height:90vh;background:#000;outline:0}
+</style>
+</head>
+<body>
+<script>
+  // read ?src=...&poster=...
+  const p = new URLSearchParams(location.search);
+  const src = p.get('src') || '';
+  const poster = p.get('poster') || '';
+
+  // only allow same-origin sources for safety
+  try {
+    const u = new URL(src, location.origin);
+    if (u.origin !== location.origin) throw new Error('cross-origin not allowed');
+  } catch {
+    document.body.textContent = 'Invalid source';
+    throw new Error('Invalid source');
+  }
+
+  const v = document.createElement('video');
+  v.setAttribute('controls','');
+  v.setAttribute('playsinline','');
+  v.setAttribute('preload','metadata');
+  if (poster) v.setAttribute('poster', poster);
+
+  const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+  v.innerHTML = `<source src="${src}" type="${type}">Sorry, your browser doesn't support video.`;
+  document.body.appendChild(v);
+</script>
+</body>
+</html>
