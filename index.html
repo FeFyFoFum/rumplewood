@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- LightGallery CSS (match JS version) -->
+  <!-- LightGallery CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/css/lightgallery-bundle.min.css">
 
   <style>
@@ -194,140 +194,144 @@
     </div>
   </div>
 
-  <!-- Posts (empty on purpose) -->
+  <!-- Posts -->
   <main class="updates-wrap" id="page-gallery">
-    <!-- Paste generated <article> blocks from your stand-alone LOLA Post Generator under this line. -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <!-- FEFYFOFUM -->
     <article class="update-card" data-id="00000">
-  <div class="u-title">
-    <div class="u-title-line1">TEST</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext">here goes nothing</div>
-  <a class="u-shot lg-item"
+      <div class="u-title">
+        <div class="u-title-line1">TEST</div>
+        <div class="u-title-line2">17 August 2025</div>
+      </div>
+      <div class="u-subtext">here goes nothing</div>
+
+      <!-- FIXED: removed duplicate "<a" and added data-poster -->
       <a class="u-shot lg-item"
-       href="assets/0000HELLOLAworld.mp4"
-       data-src="assets/0000HELLOLAworld.mp4"
-       data-poster="assets/0000hellolaWorld.png"
-       data-video='{"source":[{"src":"assets/0000HELLOLAworld.mp4","type":"video/mp4"}],"attributes":{"preload":"metadata","playsinline":true,"muted":true,"autoplay":true,"loop":true}}'
-       data-sub-html="TEST — 17 August 2025 (Item 1)">
+         href="assets/0000HELLOLAworld.mp4"
+         data-src="assets/0000HELLOLAworld.mp4"
+         data-poster="assets/0000hellolaWorld.png"
+         data-video='{"source":[{"src":"assets/0000HELLOLAworld.mp4","type":"video/mp4"}],"attributes":{"preload":"metadata","playsinline":true,"muted":true,"autoplay":true,"loop":true}}'
+         data-sub-html="TEST — 17 August 2025 (Item 1)">
+        <video class="u-thumb" autoplay muted loop playsinline>
+          <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
+        </video>
+      </a>
 
-    <video class="u-thumb" autoplay muted loop playsinline>
-      <source src="assets/0000HELLOLAworld.mp4" type="video/mp4">
-    </video>
-  </a>
-
-  <a class="u-shot lg-item" style="margin-top:12px;" href="assets/0000hellolaWorld.png" data-sub-html="TEST — 17 August 2025 (Item 2)">
-    <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="TEST image 2">
-  </a>
-</article>
+      <a class="u-shot lg-item" style="margin-top:12px;"
+         href="assets/0000hellolaWorld.png"
+         data-sub-html="TEST — 17 August 2025 (Item 2)">
+        <img class="u-thumb" src="assets/0000hellolaWorld.png" alt="TEST image 2">
+      </a>
+    </article>
   </main>
 
-  <!-- LightGallery core + plugins -->
+  <!-- LightGallery core + iframe plugin -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/iframe/lg-iframe.umd.min.js"></script>
 
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('page-gallery');
+    if (!root) return;
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('page-gallery');
-  if (!root) return;
-
-  // keep inline video thumbs looping on the page
-  root.querySelectorAll('video.u-thumb').forEach(v => {
-    v.setAttribute('autoplay',''); v.setAttribute('muted','');
-    v.setAttribute('loop','');     v.setAttribute('playsinline','');
-    v.play().catch(()=>{});
-  });
-
-  // Build slides:
-  //  - Images: open directly
-  //  - Videos: open /player.html?src=...&poster=... inside an iframe (autoplay/muted/loop included)
-  function buildSlides() {
-    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-    return anchors.map(a => {
-      const href    = a.getAttribute('href') || '';
-      const dataSrc = a.getAttribute('data-src') || '';
-      const poster  = a.getAttribute('data-poster') || '';
-      const subHtml = a.getAttribute('data-sub-html') || '';
-      const src     = dataSrc || href;
-      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
-
-      if (!isVideo) {
-        return { src: href, thumb: href, subHtml };
-      }
-
-      const params = new URLSearchParams({
-        src,
-        poster: poster || '',
-        autoplay: '1', // start playing on open
-        muted:    '1', // required for autoplay on mobile
-        loop:     '1'  // infinite loop
-      });
-      const iframeSrc = `player.html?${params.toString()}`;
-
-      return { src: iframeSrc, iframe: true, subHtml };
+    // Keep inline video thumbnails looping on the page
+    root.querySelectorAll('video.u-thumb').forEach(v => {
+      v.setAttribute('autoplay',''); v.setAttribute('muted','');
+      v.setAttribute('loop','');     v.setAttribute('playsinline','');
+      v.play().catch(()=>{});
     });
-  }
 
-  let lgInstance = null;
-  function openGalleryAt(index) {
-    const items = buildSlides();
-    if (!lgInstance) {
-      lgInstance = lightGallery(root, {
-        dynamic: true,
-        dynamicEl: items,
-        selector: '',
-        plugins: [lgIframe],   // use iframe plugin
-        speed: 300,
-        download: false,
-        swipeToClose: true,
-        mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+    const hasIframePlugin = typeof window.lgIframe !== 'undefined';
+
+    function buildSlides() {
+      const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+      return anchors.map(a => {
+        const href    = a.getAttribute('href') || '';
+        const dataSrc = a.getAttribute('data-src') || '';
+        const poster  = a.getAttribute('data-poster') || '';
+        const subHtml = a.getAttribute('data-sub-html') || '';
+        const src     = dataSrc || href;
+        const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+
+        if (!isVideo) {
+          return { src: href, thumb: href, subHtml };
+        }
+
+        if (hasIframePlugin) {
+          const params = new URLSearchParams({
+            src,
+            poster: poster || '',
+            autoplay: '1',
+            muted: '1',
+            loop: '1'
+          });
+          const iframeSrc = `player.html?${params.toString()}`;
+          return { src: iframeSrc, iframe: true, subHtml };
+        } else {
+          // Fallback: pure HTML slide with native <video>
+          const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+          const html = `
+            <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+              <video style="max-width:90vw;max-height:80vh;outline:0"
+                     controls playsinline preload="metadata"
+                     ${poster ? `poster="${poster}"` : ''} autoplay muted loop>
+                <source src="${src}" type="${type}">
+                Sorry, your browser doesn't support embedded video.
+              </video>
+            </div>`;
+          return { html, subHtml };
+        }
       });
-    } else {
-      lgInstance.updateSlides(items);
     }
-    lgInstance.openGallery(index);
-  }
 
-  // Intercept clicks and open matching slide
-  root.addEventListener('click', (e) => {
-    const a = e.target.closest('a.u-shot');
-    if (!a) return;
-    e.preventDefault();
+    let lgInstance = null;
+    function openGalleryAt(index) {
+      const items = buildSlides();
+      try {
+        if (!lgInstance) {
+          lgInstance = lightGallery(root, {
+            dynamic: true,
+            dynamicEl: items,
+            selector: '',
+            plugins: hasIframePlugin ? [lgIframe] : [],
+            speed: 300,
+            download: false,
+            swipeToClose: true,
+            mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+          });
+        } else {
+          lgInstance.updateSlides(items);
+        }
+        lgInstance.openGallery(index);
+      } catch (e) {
+        // Last-resort: open content in a new tab so you're never stuck
+        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+        const a = anchors[index];
+        if (a) {
+          const href    = a.getAttribute('href') || '';
+          const dataSrc = a.getAttribute('data-src') || '';
+          const poster  = a.getAttribute('data-poster') || '';
+          const src     = dataSrc || href;
+          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+          if (isVideo) {
+            const q = new URLSearchParams({ src, poster: poster || '', autoplay: '1', muted: '1', loop: '1' });
+            window.open(`player.html?${q.toString()}`, '_blank', 'noopener');
+          } else {
+            window.open(href, '_blank', 'noopener');
+          }
+        }
+      }
+    }
 
-    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-    const index = anchors.indexOf(a);
-    if (index >= 0) openGalleryAt(index);
+    // Intercept clicks and open matching slide
+    root.addEventListener('click', (e) => {
+      const a = e.target.closest('a.u-shot');
+      if (!a) return;
+      e.preventDefault();
+      const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+      const index = anchors.indexOf(a);
+      if (index >= 0) openGalleryAt(index);
+    });
   });
-});
-</script>
-
-
-
-
-
+  </script>
 </body>
 </html>
-
-
-
-
-
-
