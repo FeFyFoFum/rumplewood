@@ -52,7 +52,7 @@
     box-sizing:border-box;
     padding-left: var(--side-rail);
     padding-right: var(--side-rail);
-    overflow-x:hidden; /* never block vertical scrolling */
+    overflow-x:hidden; /* keep vertical scrolling available */
   }
 
   /* Fixed side rails */
@@ -120,4 +120,391 @@
     margin:0; letter-spacing:.5px; white-space:nowrap;
   }
   .subhead{
-    font-family:'Josef
+    font-family:'Josefin Sans',sans-serif;
+    font-size: calc(var(--u) * 1.625);
+    margin: calc(var(--u) * 0.4) 0 0;
+    font-weight: 400; color: var(--navy);
+    white-space:nowrap;
+  }
+  .subhead .caps{ color:var(--star-red); font-weight:600; }
+
+  /* Updates area */
+  .updates-wrap{
+    width:min(var(--wrap-width), 92vw);
+    margin: 16px auto 80px; text-align:left;
+  }
+
+  .update-card{
+    background: var(--cream);
+    border: 2px solid var(--black);
+    border-radius:14px;
+    padding:16px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    margin-bottom: 32px;
+  }
+
+  /* Title lines */
+  .u-title{ text-align:center; margin:0 0 28px; }
+  .u-title-line1{
+    font-family:'Montserrat',sans-serif; font-weight:800;
+    text-transform:uppercase; font-size:20px;
+    letter-spacing:.2px; color:var(--navy);
+  }
+  .u-title-line2{
+    font-family:'Josefin Sans',sans-serif; font-size:16px;
+    color:var(--star-red); margin-top:6px;
+  }
+
+  .u-sub{
+    margin:0 0 14px; color:var(--black);
+    font-size:11px; padding-left:18px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+  }
+  .u-sub li{ margin:4px 0; }
+
+  .u-sub,
+  .u-subtext { margin-bottom: 1em; }
+
+  .u-subtext{
+    margin:0 0 14px; color:var(--black);
+    font-size:11px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    white-space:pre-line;
+  }
+
+  /* Media frames */
+  a.u-shot{
+    position:relative; display:block;
+    border:2px solid var(--black);
+    border-radius:10px;
+    overflow:hidden;
+    background:#f7f7f7; cursor:zoom-in; text-decoration:none;
+  }
+  .u-thumb{ width:100%; height:auto; display:block; object-fit:contain; }
+  video.u-thumb { display:block; width:100%; height:auto; }
+  .u-shot::after{
+    content:""; position:absolute; right:10px; bottom:10px;
+    width:26px; height:26px; border:2px solid var(--black);
+    border-radius:6px;
+    background:radial-gradient(circle at center, transparent 8px, var(--black) 9px);
+    opacity:.28; pointer-events:none;
+  }
+  @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
+
+  /* MOBILE — single, clean block */
+  @media (max-width: 520px) {
+    :root {
+      --wrap-width: 92vw;                 /* wide post column */
+      --side-rail: max(12px, 3.4vw);      /* slim but visible rails */
+      --rule-size: 3px;                   /* lighter twin rules */
+    }
+    /* Tiny symmetric pink gutter inside rails */
+    body {
+      padding-left:  calc(var(--side-rail) + 6px);
+      padding-right: calc(var(--side-rail) + 6px);
+    }
+    .wrap, .updates-wrap {
+      width: min(var(--wrap-width), 100%);
+      margin-left:auto; margin-right:auto;
+    }
+    .band {
+      padding-top:    calc(var(--band-pad-y) * 1.45);
+      padding-bottom: calc(var(--band-pad-y) * 1.45);
+      padding-left:   calc(var(--u) * 0.9);
+      padding-right:  calc(var(--u) * 0.9);
+    }
+    .logo {
+      font-size: clamp(22px, 8.2vw, var(--logo-size));
+      line-height: 1.06;
+      margin:0;
+    }
+  }
+
+  /* --------- Lightweight Overlay Gallery (CSS in stylesheet, not injected) --------- */
+  #lglb{
+    position:fixed; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    background:#000; z-index:2000;
+  }
+  #lglb.show{ display:flex; }
+  #lglb .lb-frame{
+    position:relative;
+    max-width:96vw; max-height:90vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #lglb img, #lglb video{
+    max-width:96vw; max-height:90vh;
+    border:0; background:#000; display:block;
+  }
+  #lglb .lb-cap{
+    position:absolute; left:18px; bottom:16px;
+    color:#fff; font:14px/1.4 'Inter',sans-serif; opacity:.9;
+  }
+  #lglb .lb-count{
+    position:absolute; right:18px; bottom:16px;
+    color:#fff; font:14px/1.4 'Inter',sans-serif; opacity:.8;
+  }
+  #lglb .lb-close, #lglb .lb-prev, #lglb .lb-next{
+    position:absolute; border:0; background:transparent; color:#fff;
+    font-size:28px; line-height:1; cursor:pointer; padding:8px 12px; opacity:.9; z-index:1;
+  }
+  #lglb .lb-close{ top:12px; right:12px; }
+  #lglb .lb-prev{  top:50%; left:12px;  transform:translateY(-50%); }
+  #lglb .lb-next{  top:50%; right:12px; transform:translateY(-50%); }
+  @media (hover:hover){
+    #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{opacity:.8}
+    #lglb .lb-close:hover,#lglb .lb-prev:hover,#lglb .lb-next:hover{opacity:1}
+  }
+  </style>
+</head>
+<body>
+  <!-- Fixed side rails -->
+  <div class="rail rail-left"></div>
+  <div class="rail rail-right"></div>
+
+  <!-- Header -->
+  <div class="wrap">
+    <img src="loladomeLOGOstars.png" alt="" class="stars" />
+    <div class="band">
+      <h1 class="logo">LOLA</h1>
+      <div class="subhead">
+        <span class="caps">L</span>eague's <span class="caps">O</span>fficial <span class="caps">L</span>eague <span class="caps">A</span>cronym
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts -->
+  <main class="updates-wrap" id="page-gallery">
+    <!-- FEFYFOFUM -->
+    <article class="update-card" data-id="00002">
+      <div class="u-title">
+        <div class="u-title-line1">WHY RUMPLEWOOD?</div>
+        <div class="u-title-line2">17 August 2025</div>
+      </div>
+      <div class="u-subtext" style="white-space:pre-wrap !important">
+I&#39;ve never made a website and I thought it would be a fun learning experience
+
+Step 01: last week I visited lola.com just to see what was there
+
+Step 02: lola.com turned out to be a crappy dating website that by a crazy coincidence had folded their business <em>that week</em> and were putting their domain name lola.com FOR SALE THE VERY NEXT DAY. This was obviously a sign from god that my destiny was to own lola.com
+
+Step 03: I wrote lola.com a short email asking what the price is. I opened negotiations by offering $350
+
+Step 04: while waiting for them to respond, I started looking into other website names as a backup
+
+Step 05: I saw that lolaworld.com was also for sale, and I eagerly clicked through to the price
+
+Step 06: I saw that the price was $8749.99
+
+Step 07: I continued to research, and quickly realized that the price for lola.com was going to be well over one hundred thousand dollars. This was far more than I was willing to pay
+
+Step 08: I remembered, again, that we live in a fallen world---an obscene world
+
+Step 09: I made a new plan: I bought a domain name! I bought LOLA DOME dot com for nine dollars. I just liked how it sounded. It was like, welcome to the Lola Dome!
+
+Step 10: I then spent <em>an amount of time</em> learning how to make a website
+
+Step 11: I made the website and then realized---very suddenly---that loladome.com wouldn&#39;t work as a name. This happened when my eyes and brain finally worked together and figured out that loladome.com smooshed together into one word looks like &quot;LOLA, DO ME!!&quot; and that I now owned LOLA DO ME dot com
+
+Step 12: I quickly invested in a new domain name: I bought lola17.com, for nine dollars
+
+Step 13: then last night I was out for a beer, and I told a friend the happy news. I told her that I had built a new website, and it was called lola17.com. She replied, &quot;lola17? that&#39;s awesome! is it a porn site? is 17 even legal?&quot;
+
+Step 14: I finally hear back from lola.com. They have rejected my offer of $350
+
+Step 15: I scrap all ideas of having a domain name with the word LOLA in it
+
+Step 16: I close my eyes and think back to a simpler time, ten years ago, when a buddy of mine asked me to name his big house that is in the hills and trees of California. I guess he wanted it to have a name like big houses do in Jane Austen books. I thought about it for a whole day and then suggested a name. His family was thrilled and said thank you for the suggestion, but we are going to go in a different direction
+
+Step 17: their loss is our gain: welcome to rumplewood
+      </div>
+      <a class="u-shot" href="assets/00001LOLA.com.png" data-sub-html="WHY RUMPLEWOOD? — 17 August 2025 (Item 1)" data-src="assets/00001LOLA.com.png">
+        <img class="u-thumb" src="assets/00001LOLA.com.png" alt="WHY RUMPLEWOOD? image 1">
+      </a>
+    </article>
+
+    <article class="update-card" data-id="00001">
+      <div class="u-title">
+        <div class="u-title-line1">HELLOLA WORLD!</div>
+        <div class="u-title-line2">17 August 2025</div>
+      </div>
+      <ul class="u-sub" style="list-style:none;margin:0.4em 0 0.6em 0;padding:0">
+        <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new season</span></li>
+        <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new LOLA</span></li>
+        <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>same pink</span></li>
+      </ul>
+      <a class="u-shot"
+         href="assets/00000HELLOLAworld.mp4"
+         data-src="assets/00000HELLOLAworld.mp4"
+         data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
+        <video class="u-thumb" autoplay muted loop playsinline>
+          <source src="assets/00000HELLOLAworld.mp4" type="video/mp4">
+        </video>
+      </a>
+    </article>
+    <!-- END FEFYFOFUM -->
+  </main>
+
+  <!-- Lightweight LOLA overlay gallery -->
+  <div id="lglb" aria-hidden="true">
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-prev"  aria-label="Previous">‹</button>
+    <div class="lb-frame"></div>
+    <button class="lb-next"  aria-label="Next">›</button>
+    <div class="lb-cap"></div>
+    <div class="lb-count"></div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('page-gallery');
+    const lb   = document.getElementById('lglb');
+    if (!root || !lb) return;
+
+    // Keep inline thumbnails looping
+    root.querySelectorAll('video.u-thumb').forEach(v => {
+      v.setAttribute('autoplay',''); v.setAttribute('muted','');
+      v.setAttribute('loop','');     v.setAttribute('playsinline','');
+      v.play().catch(()=>{});
+    });
+
+    // Collect anchors and neutralize navigation
+    function getAnchors(){
+      const as = Array.from(root.querySelectorAll('a.u-shot'));
+      as.forEach(a => {
+        const href = a.getAttribute('href') || '';
+        if (!a.hasAttribute('data-src')) a.setAttribute('data-src', href);
+        a.setAttribute('href', '#');     // never navigate away
+      });
+      return as;
+    }
+    function toItems(as){
+      return as.map(a => {
+        const src     = a.getAttribute('data-src') || '';
+        const poster  = a.getAttribute('data-poster') || '';
+        const caption = a.getAttribute('data-sub-html') || '';
+        const isVideo = /\.(mp4|webm)(?:$|[?#])/i.test(src.toLowerCase());
+        return { isVideo, src, poster, caption };
+      });
+    }
+
+    const frame = lb.querySelector('.lb-frame');
+    const cap   = lb.querySelector('.lb-cap');
+    const btnX  = lb.querySelector('.lb-close');
+    const btnP  = lb.querySelector('.lb-prev');
+    const btnN  = lb.querySelector('.lb-next');
+    const count = lb.querySelector('.lb-count');
+
+    let idx = 0, anchors = getAnchors(), items = toItems(anchors);
+    let savedScrollTop = 0;
+
+    // Scroll lock helpers (only while overlay is open)
+    const lockScroll = () => {
+      savedScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollTop}px`;
+      document.body.style.width = '100%';
+    };
+    const unlockScroll = () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, savedScrollTop);
+    };
+
+    function render(i){
+      anchors = getAnchors();
+      items   = toItems(anchors);
+      if (items.length === 0) return;
+
+      idx = (i + items.length) % items.length;
+      const it = items[idx];
+      frame.innerHTML = '';
+
+      if (it.isVideo) {
+        const vid = document.createElement('video');
+        vid.setAttribute('playsinline','');
+        vid.setAttribute('autoplay','');
+        vid.setAttribute('muted','');
+        vid.setAttribute('loop','');
+        vid.setAttribute('controls','');
+        if (it.poster) vid.setAttribute('poster', it.poster);
+        const type = /\.webm(?:$|[?#])/i.test(it.src) ? 'video/webm' : 'video/mp4';
+        const srcEl = document.createElement('source');
+        srcEl.src = it.src;
+        srcEl.type = type;
+        vid.appendChild(srcEl);
+        frame.appendChild(vid);
+        setTimeout(() => { vid.play().catch(()=>{}); }, 0);
+      } else {
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = it.src;
+        img.alt = 'Image';
+        frame.appendChild(img);
+        // Preload neighbors (images only)
+        const next = new Image(), prev = new Image();
+        const nextIt = items[(idx+1)%items.length], prevIt = items[(idx-1+items.length)%items.length];
+        if (nextIt && !nextIt.isVideo) next.src = nextIt.src;
+        if (prevIt && !prevIt.isVideo) prev.src = prevIt.src;
+      }
+
+      cap.innerHTML = it.caption || '';
+      count.textContent = `${idx+1} / ${items.length}`;
+    }
+
+    function open(i){
+      lb.classList.add('show');
+      lb.setAttribute('aria-hidden','false');
+      lockScroll();
+      render(i);
+    }
+    function close(){
+      lb.classList.remove('show');
+      lb.setAttribute('aria-hidden','true');
+      frame.innerHTML = '';
+      unlockScroll();
+    }
+
+    // Capture clicks so the browser never navigates away
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a.u-shot');
+      if (!a || !root.contains(a)) return;
+      if (e.metaKey || e.ctrlKey) return;
+      e.preventDefault(); e.stopPropagation();
+      const i = anchors.indexOf(a);
+      open(i >= 0 ? i : 0);
+    }, true);
+
+    // Buttons + keyboard
+    btnX.addEventListener('click', close);
+    btnP.addEventListener('click', () => render(idx - 1));
+    btnN.addEventListener('click', () => render(idx + 1));
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('show')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') render(idx - 1);
+      if (e.key === 'ArrowRight') render(idx + 1);
+    });
+
+    // Simple swipe
+    let sx=0, sy=0;
+    lb.addEventListener('touchstart', (e) => { const t=e.touches[0]; sx=t.clientX; sy=t.clientY; }, {passive:true});
+    lb.addEventListener('touchend',   (e) => {
+      if (!sx && !sy) return;
+      const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+      if (Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>30) { if (dx>0) render(idx-1); else render(idx+1); }
+      sx=sy=0;
+    }, {passive:true});
+  });
+  </script>
+</body>
+</html>
