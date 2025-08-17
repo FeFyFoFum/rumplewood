@@ -159,10 +159,9 @@
     color:var(--star-red); margin-top:6px;
   }
 
- /* --- Uniform subtitle rhythm (bullets & plain lines), plus fixed double-space before media --- */
-  :root { --lead-lh: 1.20; --lead-gap: calc(2 * var(--lead-lh) * 1em); }
+  /* --- Subtitle rhythm + precise gap before media --- */
+  :root { --lead-lh: 1.22; --lead-gap: calc(2 * var(--lead-lh) * 1em - 0.40em); }
 
-  /* Make each subtitle “line block” identical; defeat inline margins */
   .update-card > .u-sub,
   .update-card > .u-subtext{
     margin: 0 !important;
@@ -171,23 +170,21 @@
     font-size: 11px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    line-height: var(--lead-lh);
+    line-height: var(--lead-lh);   /* slightly looser than before */
   }
 
-  /* Bullet lines: no native markers, same line box as plain lines */
   .update-card > .u-sub{ list-style: none !important; }
   .update-card > .u-sub li{
     margin: 0;
     line-height: inherit;
-    display: flex;                 /* keep your nice bullet spacing look */
+    display: flex;
     gap: 0.22em;
     align-items: baseline;
   }
 
-  /* Plain multi-line variant (your generator already sets pre-wrap inline) */
   .update-card > .u-subtext{ white-space: pre-line; }
 
-  /* Hard “double space” before media, regardless of what precedes it */
+  /* exact “two-line” feel (pulled back from previous, which was too tall) */
   .update-card > a.u-shot{ margin-top: var(--lead-gap); }
     
     /* Terminal footer band matching side rails (in document flow) */
@@ -518,6 +515,7 @@
   </script>
 </body>
 </html>
+
 
 
 
