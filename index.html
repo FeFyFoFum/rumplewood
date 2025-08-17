@@ -51,9 +51,10 @@
     min-height:100vh;
     box-sizing:border-box;
     padding-left: var(--side-rail);
-    padding-right: var(--side-rail);
+    padding-right: var(--side-rail);    
+    
     overflow-x:hidden; /* keep vertical scrolling available */
-        padding-bottom: calc(var(--side-rail) + var(--u) * 6); /* reserve space for the fixed footer + pink gap */
+
 
     
   }
@@ -176,19 +177,14 @@
     font-weight:500;
     white-space:pre-line;
   }
-  /* Terminal footer band matching side rails */
+    /* Terminal footer band matching side rails (in document flow) */
   .page-end{
     background: var(--black);
-        position: fixed;            /* stick to viewport bottom */
-    left: 0; right: 0; bottom: 0;
-    height: var(--side-rail);   /* same thickness as side rails */
-    z-index: 900;               /* below the side rails (z=1000), above content */
+    height: var(--side-rail);        /* same thickness as side rails */
     width: 100%;
-
-    height: var(--side-rail);      /* same thickness as the side rails */
-    width: 100%;
-    margin-top: calc(var(--u) * 6); /* pink breathing room before the band */
+    margin-top: calc(var(--u) * 6);  /* guaranteed pink breathing room above */
   }
+
 
   /* Media frames */
   a.u-shot{
@@ -526,5 +522,6 @@ Step 17: their loss is our gain: welcome to rumplewood
   </script>
 </body>
 </html>
+
 
 
