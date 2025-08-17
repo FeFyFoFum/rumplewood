@@ -238,22 +238,24 @@
 
   <!-- LightGallery core + plugins -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
- <script>
+  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/iframe/lg-iframe.umd.min.js"></script>
+
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('page-gallery');
   if (!root) return;
 
-  // Keep inline video thumbnails looping on the page
+  // keep inline video thumbs looping on the page
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(()=>{});
   });
 
-  // Build LightGallery "dynamicEl" items from the current DOM.
-  // For IMAGES: provide src
-  // For VIDEOS: provide an HTML <video> element (bypasses LG's video plugin completely)
-  function buildItems() {
+  // build slides:
+  //  - images: open directly
+  //  - videos: open /player.html?src=...&poster=... inside an iframe (rock-solid on Vercel)
+  function buildSlides() {
     const anchors = Array.from(root.querySelectorAll('a.u-shot'));
     return anchors.map(a => {
       const href    = a.getAttribute('href') || '';
@@ -264,45 +266,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
 
       if (!isVideo) {
-        // image
         return { src: href, thumb: href, subHtml };
       }
 
-      // video (HTML slide)
-      const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
-      const html = `
-        <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
-          <video style="max-width:90vw;max-height:80vh;outline:0" controls playsinline preload="metadata" ${poster ? `poster="${poster}"` : ''}>
-            <source src="${src}" type="${type}">
-            Sorry, your browser doesn't support embedded video.
-          </video>
-        </div>`;
-      return { html, subHtml };
+      const params = new URLSearchParams({ src, poster: poster || '' });
+      const iframeSrc = `player.html?${params.toString()}`;  // file you’ll add in step 3
+
+      return { src: iframeSrc, iframe: true, subHtml };
     });
   }
 
-  // Create one LG instance in dynamic mode. We'll open it on demand.
   let lgInstance = null;
   function openGalleryAt(index) {
-    const items = buildItems();
+    const items = buildSlides();
     if (!lgInstance) {
       lgInstance = lightGallery(root, {
         dynamic: true,
         dynamicEl: items,
-        selector: '',           // dynamic mode (no selector scanning)
+        selector: '',
+        plugins: [lgIframe],   // IMPORTANT: use iframe plugin
         speed: 300,
         download: false,
         swipeToClose: true,
         mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
       });
     } else {
-      // If items changed (you pasted a new post), refresh slides
       lgInstance.updateSlides(items);
     }
     lgInstance.openGallery(index);
   }
 
-  // Intercept clicks and open the matching slide
   root.addEventListener('click', (e) => {
     const a = e.target.closest('a.u-shot');
     if (!a) return;
@@ -317,8 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
 </body>
 </html>
+
 
 
 
