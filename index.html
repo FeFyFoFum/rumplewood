@@ -217,11 +217,29 @@
     }
     @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
 
-   /* === rumplewood subtitle→media gap (exactly one line) === */
-.u-sub + a.u-shot,
-.u-subtext + a.u-shot {
-  margin-top: 1em;   /* ~one line of the current subtitle font */
+  /* === rumplewood mobile flank pink gutter + width (clean, pre-broken block) === */
+@media (max-width: 520px) {
+  /* Keep your wide column + visible rails */
+  :root {
+    --wrap-width: 91vw;                /* subtle narrow for a hair more pink */
+    --side-rail: max(12px, 3.4vw);     /* slim but present rails */
+    --rule-size: 3px;                  /* lighter twin rules */
+  }
+
+  /* Add a tiny pink gutter inside the rails */
+  body {
+    padding-left:  calc(var(--side-rail) + 4px);
+    padding-right: calc(var(--side-rail) + 4px);
+  }
+
+  /* Ensure wrappers respect the target width */
+  .wrap,
+  .updates-wrap {
+    width: min(var(--wrap-width), 100vw);
+  }
 }
+/* === end rumplewood mobile flank pink gutter + width === */
+
 /* === end rumplewood subtitle→media gap === */
 
 @media (max-width: 520px) {
@@ -478,20 +496,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
