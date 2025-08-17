@@ -56,9 +56,9 @@
     border-top: var(--top-border) solid var(--black);
     min-height:100vh;
     box-sizing:border-box;
-    /* Sticky footer: body stacks content top→bottom and lets the footer sit at the bottom */
-    display: flex;
-    flex-direction: column;
+    display:flex;
+    flex-direction:column;
+    min-height:100dvh; /* mobile-safe viewport height */
     padding-left: var(--side-rail);
     padding-right: var(--side-rail);    
     
@@ -146,7 +146,10 @@
     width:min(var(--wrap-width), 92vw);
     margin: 16px auto 80px; text-align:left;
   }
-
+  /* Desktop: ensure a comfortable pink gap before the terminal bar */
+  @media (min-width: 521px){
+    .updates-wrap{ margin-bottom: calc(var(--u) * 8); }
+  }
   .update-card{
     background: var(--cream);
     border: 2px solid var(--black);
@@ -552,6 +555,7 @@ so now we&#39;re gonna see HOW I say <strong>HOW</strong> I say [how](rumplewood
   </script>
 </body>
 </html>
+
 
 
 
