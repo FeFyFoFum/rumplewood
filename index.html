@@ -55,6 +55,9 @@
     color:#111;
     border-top: var(--top-border) solid var(--black);
     min-height:100vh;
+    display:flex;                 /* sticky-footer layout */
+    flex-direction:column;
+    min-height:100dvh;            /* mobile-safe viewport height */
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
@@ -214,10 +217,17 @@
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
-      background: var(--black);
-    height: var(--side-rail);        /* desktop thickness */
+    margin-top: auto;                      /* push to bottom; cannot overlap */
+    padding-top: calc(var(--u) * 6);       /* guaranteed pink gap above bar */
     width: 100%;
-    margin-top: auto;                 /* push footer to bottom; no pink below */
+    background: transparent;               /* let the page pink show above */
+  }
+  .page-end::after{
+    content: "";
+    display: block;
+    height: var(--side-rail);              /* desktop bar thickness */
+    width: 100%;
+    background: var(--black);              /* the actual black bar */
   }
 
   /* Media frames */
@@ -274,15 +284,19 @@
       line-height: 1.06;
       margin:0;
     }
-       /* Make terminal band full-bleed and slightly thicker on mobile; always bottoms out */
+      /* Mobile: full-bleed, thicker bar, still bottoms out with no pink below */
     .page-end{
       position: relative;
-      width: 100vw;          /* span entire viewport */
+      width: 100vw;                     /* ignore body side padding */
       left: 50%; right: 50%;
       margin-left: -50vw;
       margin-right: -50vw;
-      height: 22px;          /* thicker mobile bar */
-      margin-top: auto;      /* sticky-footer: no pink below */
+      padding-top: calc(var(--u) * 6);  /* keep the same pink gap above bar */
+      margin-top: auto;                 /* participates in sticky layout */
+      background: transparent;
+    }
+    .page-end::after{
+      height: 22px;                     /* thicker mobile bar */
     }
 
   }
@@ -555,6 +569,7 @@ so now we&#39;re gonna see HOW I say <strong>HOW</strong> I say [how](rumplewood
   </script>
 </body>
 </html>
+
 
 
 
