@@ -158,32 +158,42 @@
     font-family:'Josefin Sans',sans-serif; font-size:16px;
     color:var(--star-red); margin-top:6px;
   }
-/* --- Lead text & bullet lists: unified rhythm --- */
+ /* --- Subtitle lines: identical rhythm for bullets & plain text --- */
   .u-sub,
   .u-subtext{
-    margin: 0 0 14px;                 /* identical buffer below the block */
+    /* shared text styling */
     color: var(--black);
     font-size: 11px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    line-height: 1.2;                  /* tighter, consistent line spacing */
+
+    /* tight, consistent line spacing */
+    --lead-lh: 1.20;
+    line-height: var(--lead-lh);
+
+    /* no extra vertical gap between consecutive lines/blocks */
+    margin: 0;
   }
 
-  /* Bulleted variant */
+  /* Bulleted variant (keeps your horizontal indent & bullet spacing) */
   .u-sub{
-    padding-left: 18px;                /* keep your bullet indent */
-    list-style: disc outside;          /* no extra vertical space from bullets */
+    padding-left: 18px;
+    list-style: disc outside;
   }
   .u-sub li{
-    margin: 0;                         /* remove extra gaps between items */
-    line-height: inherit;              /* match the block line-height */
+    margin: 0;                 /* kill UA gaps between items */
+    line-height: inherit;      /* match the block’s line-height exactly */
   }
 
-  /* Plain-line variant (newline-delimited) */
-  .u-subtext{
-    white-space: pre-line;             /* preserve manual line breaks */
-  }
+  /* Plain-line variant */
+  .u-subtext{ white-space: pre-line; }
 
+  /* Double-space ONLY before media, regardless of bullets/plain lines */
+  .u-sub:has(+ a.u-shot),
+  .u-subtext:has(+ a.u-shot){
+    margin-bottom: calc(2 * var(--lead-lh) * 1em);  /* e.g., 2.4em at lh=1.2 */
+  }
+    
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
     background: var(--black);
@@ -512,6 +522,7 @@
   </script>
 </body>
 </html>
+
 
 
 
