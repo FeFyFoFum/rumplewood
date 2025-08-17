@@ -223,6 +223,8 @@
       </a>
     </article>
   </main>
+  
+<div id="lg-root"></div>
 
   <!-- LightGallery core + iframe plugin -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
@@ -231,20 +233,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('page-gallery');
-  if (!root) return;
+  const mount = document.getElementById('lg-root');   // empty div just for LG
+  if (!root || !mount) return;
 
-  // 0) Prevent LightGallery from scanning the DOM (static mode)
-  //    and make sure images have data-src. This avoids the "data-src not provided" error.
-  root.querySelectorAll('a.u-shot').forEach(a => {
-    a.classList.remove('lg-item'); // disable static scan
-    const href = a.getAttribute('href') || '';
-    if (!a.hasAttribute('data-src') &&
-        /\.(png|jpe?g|gif|webp|avif|svg)(?:$|[?#])/i.test(href)) {
-      a.setAttribute('data-src', href);
-    }
-  });
-
-  // Keep inline video thumbnails looping (cosmetic)
+  // Keep inline video thumbs looping (cosmetic)
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
@@ -260,16 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const dataSrc = a.getAttribute('data-src') || '';
       const poster  = a.getAttribute('data-poster') || '';
       const subHtml = a.getAttribute('data-sub-html') || '';
-
       const src     = dataSrc || href;
       const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
 
       if (!isVideo) {
-        // IMAGE slide
+        // Image slide
         return { src, thumb: src, subHtml };
       }
 
-      // VIDEO slide
+      // Video slide via iframe player (autoplay/muted/loop)
       if (hasIframePlugin) {
         const params = new URLSearchParams({
           src,
@@ -281,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return { src: `player.html?${params.toString()}`, iframe: true, subHtml };
       }
 
-      // Fallback: pure HTML <video> inside the slide
+      // Fallback: native <video> inside the slide (no plugin)
       const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
       const html = `
         <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
@@ -298,12 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openGalleryAt(index) {
     const items = buildSlides();
-
-    // Force DYNAMIC mode; set a selector that matches nothing to disable HTML scan
-    const lg = lightGallery(root, {
+    // Mount LG on the EMPTY #lg-root so it NEVER scans your post markup
+    const lg = lightGallery(mount, {
       dynamic: true,
       dynamicEl: items,
-      selector: '.__no_match__',
+      selector: '.__never__',     // ensure static scan is disabled
       plugins: hasIframePlugin ? [lgIframe] : [],
       licenseKey: '0000-0000-0000-0000',
       speed: 300,
@@ -311,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
       swipeToClose: true,
       mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
     });
-
     lg.openGallery(index);
   }
 
@@ -320,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const a = e.target.closest('a.u-shot');
     if (!a) return;
     e.preventDefault();
-
     const anchors = Array.from(root.querySelectorAll('a.u-shot'));
     const index = anchors.indexOf(a);
     if (index >= 0) openGalleryAt(index);
@@ -329,8 +317,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
+
 </body>
 </html>
+
 
 
 
