@@ -214,17 +214,25 @@
     /* Hide lightbox arrows on mobile */
     @media (max-width: 768px){
       .lg-prev, .lg-next { display:none !important; }
-/* === rumplewood mobile rails+frame final tune === */
+/* === rumplewood rails + width containment (safe) === */
 @media (max-width: 520px) {
+  /* 1) Guarantee visible rails, but don’t change any type/band sizing */
   :root {
-    --wrap-width: 94vw;              /* wide body (what you liked) */
-    --side-rail: max(10px, 3vw);     /* slim rails, always show a sliver */
+    --side-rail: 12px;                 /* slim but always visible */
+    /* restore wrap-width to your original token so we don't inflate it */
+    --wrap-width: calc(var(--u) * 36);
   }
+
+  /* 2) Make the content width respect body padding (rails) exactly.
+     This preserves the roomy column while leaving a sliver of pink inside the rails. */
   .wrap,
   .updates-wrap {
-    width: min(var(--wrap-width), 100vw);
+    width: min(var(--wrap-width), calc(100vw - (var(--side-rail) * 2) - 6px));
+    /*        ^ don’t exceed viewport minus rails          ^ tiny buffer to avoid edge kissing */
   }
 }
+/* === end rumplewood rails + width containment (safe) === */
+
 
 
   </style>
@@ -443,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
