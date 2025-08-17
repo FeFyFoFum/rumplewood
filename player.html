@@ -5,18 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>LOLA Player</title>
 <style>
-  html,body{height:100%;margin:0;background:#000;display:flex;align-items:center;justify-content:center}
+  html,body{
+    height:100%;margin:0;background:#000;
+    display:flex;align-items:center;justify-content:center
+  }
   video{max-width:96vw;max-height:90vh;background:#000;outline:0}
 </style>
 </head>
 <body>
 <script>
-  // read ?src=...&poster=...
+  // --- Read query params ---
   const p = new URLSearchParams(location.search);
-  const src = p.get('src') || '';
+  const src    = p.get('src')    || '';
   const poster = p.get('poster') || '';
 
-  // only allow same-origin sources for safety
+  // Default to autoplay (muted) & loop unless explicitly disabled
+  const autoplay = (p.get('autoplay') ?? '1') === '1';
+  const muted    = (p.get('muted')    ?? '1') === '1';
+  const loop     = (p.get('loop')     ?? '1') === '1';
+
+  // --- Same-origin safety: only allow local assets ---
   try {
     const u = new URL(src, location.origin);
     if (u.origin !== location.origin) throw new Error('cross-origin not allowed');
@@ -25,15 +33,36 @@
     throw new Error('Invalid source');
   }
 
+  // --- Build video element ---
   const v = document.createElement('video');
   v.setAttribute('controls','');
   v.setAttribute('playsinline','');
   v.setAttribute('preload','metadata');
   if (poster) v.setAttribute('poster', poster);
 
+  if (autoplay) v.setAttribute('autoplay','');
+  if (muted)    v.setAttribute('muted','');
+  if (loop)     v.setAttribute('loop','');
+
+  // Also set properties (some browsers check both prop + attribute)
+  v.autoplay = autoplay;
+  v.muted    = muted;
+  v.loop     = loop;
+
   const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
   v.innerHTML = `<source src="${src}" type="${type}">Sorry, your browser doesn't support video.`;
   document.body.appendChild(v);
+
+  // --- Kick playback as soon as we can (helps iOS/Safari) ---
+  const tryPlay = () => v.play().catch(()=>{ /* may require user gesture if muted=false */ });
+
+  if (autoplay) {
+    // Try immediately, then again when ready
+    tryPlay();
+    v.addEventListener('canplay', tryPlay, { once: true });
+    // As a belt-and-suspenders, try once more on metadata loaded
+    v.addEventListener('loadedmetadata', tryPlay, { once: true });
+  }
 </script>
 </body>
 </html>
