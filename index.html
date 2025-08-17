@@ -217,11 +217,13 @@
     }
     @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
 
-    /* Hide lightbox arrows on mobile */
-    @media (max-width: 768px){
-      .lg-prev, .lg-next { display:none !important; }
-/* === rumplewood revert-to-almost-perfect (mobile) === */
-/* Put this AFTER any prior mobile tweaks so it wins in cascade. */
+   /* === rumplewood subtitle→media gap (exactly one line) === */
+.u-sub + a.u-shot,
+.u-subtext + a.u-shot {
+  margin-top: 1em;   /* ~one line of the current subtitle font */
+}
+/* === end rumplewood subtitle→media gap === */
+
 @media (max-width: 520px) {
   /* v4 rails + width you liked */
   :root {
@@ -467,6 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
