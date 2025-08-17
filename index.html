@@ -277,6 +277,23 @@
     line-height: 1.06;
     margin:
 
+/* === rumplewood: symmetric pink gutter (mobile) === */
+@media (max-width: 520px) {
+  :root {
+    --gutter: 6px; /* tweak up/down until pink flank looks right */
+  }
+
+  body {
+    padding-left:  calc(var(--side-rail) + var(--gutter));
+    padding-right: calc(var(--side-rail) + var(--gutter));
+  }
+
+  .wrap,
+  .updates-wrap {
+    width: min(var(--wrap-width), 100%); /* respect body padding */
+  }
+}
+/* === end rumplewood: symmetric pink gutter (mobile) === */
 
 
 
@@ -496,4 +513,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
