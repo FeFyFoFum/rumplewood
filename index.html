@@ -236,13 +236,14 @@
   .wrap,
   .updates-wrap {
     width: min(var(--wrap-width), 100vw);
-    /* === rumplewood flank pink micro-adjust === */
+   /* === rumplewood flank pink adjust to 91vw === */
 @media (max-width: 520px) {
   :root {
-    --wrap-width: 91.5vw;   /* was 92vw — tiny nudge narrower for more pink */
+    --wrap-width: 91vw;   /* narrower posts → subtle extra pink flank */
   }
 }
-/* === end rumplewood flank pink micro-adjust === */
+/* === end rumplewood flank pink adjust to 91vw === */
+
 
   }
 
@@ -477,6 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
