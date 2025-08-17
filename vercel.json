@@ -1,0 +1,11 @@
+{
+  "headers": [
+    {
+      "source": "/assets/:path*.(mp4|webm)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Accept-Ranges",  "value": "bytes" }
+      ]
+    }
+  ]
+}
