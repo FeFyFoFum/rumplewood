@@ -14,30 +14,36 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/css/lightgallery-bundle.min.css">
 
   <style>
-    :root{
-      --u: clamp(6px, 1.1vw, 14px);
+  :root{
+  --u: clamp(6px, 1.1vw, 14px);
 
-      /* Colors */
-      --pink:#fbd3de;
-      --cream:#fffcf3;
-      --black:#000;
-      --navy:#0a3161;
-      --star-red:#b50e12;
+  /* Colors */
+  --pink:#fbd3de;
+  --cream:#fffcf3;
+  --black:#000;
+  --navy:#0a3161;
+  --star-red:#b50e12;
 
-      /* Measurements */
-      --top-border: calc(var(--u) * 3);
-      --side-rail:  calc(var(--u) * 6);
-      --band-pad-y: calc(var(--u) * 1.75);
-      --rule-thickness: max(1px, calc(var(--u) * 0.17));
-      --rule-gap:       max(1px, calc(var(--u) * 0.17));
-      --logo-size:      calc(var(--u) * 3.0); /* you said 3.0 looked best */
-      --stars-h:        calc(var(--u) * 1.8);
-      --cluster-gap:    calc(var(--u) * 0.6);
-      --wrap-width:     calc(var(--u) * 36);
-      --wrap-margin-top:calc(var(--u) * 3.7);
+  /* Measurements */
+  --top-border: calc(var(--u) * 3);
+  --side-rail:  calc(var(--u) * 6);
+  --band-pad-y: calc(var(--u) * 1.75);
 
-      --ring:#e6e6e6;
-    }
+  /* Twin rule sizing (perfect symmetry) */
+  --rule-size: calc(var(--u) * 0.17);  /* thickness and gap all equal */
+
+  --rule-thickness: var(--rule-size);
+  --rule-gap:       var(--rule-size);
+
+  --logo-size:      calc(var(--u) * 3.0);
+  --stars-h:        calc(var(--u) * 1.8);
+  --cluster-gap:    calc(var(--u) * 0.6);
+  --wrap-width:     calc(var(--u) * 36);
+  --wrap-margin-top:calc(var(--u) * 3.7);
+
+  --ring:#e6e6e6;
+}
+
 
     html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
     body{
@@ -373,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
