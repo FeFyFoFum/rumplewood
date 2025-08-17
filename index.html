@@ -159,33 +159,39 @@
     color:var(--star-red); margin-top:6px;
   }
 
-  /* --- Subtitle rhythm + precise gap before media --- */
-  :root { --lead-lh: 1.22; --lead-gap: calc(2 * var(--lead-lh) * 1em - 0.40em); }
+/* --- Uniform subtitle rhythm; exact two-line gap before media --- */
+  :root { --lead-lh: 1.22; --line: calc(var(--lead-lh) * 1em); }
 
+  /* Each subtitle line block (bulleted or plain) */
   .update-card > .u-sub,
   .update-card > .u-subtext{
     margin: 0 !important;
     padding: 0 !important;
     color: var(--black);
-    font-size: 11px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    line-height: var(--lead-lh);   /* slightly looser than before */
+    font-size: 11px;
+    line-height: var(--lead-lh);
+    min-block-size: var(--line);                /* same block height for every line */
   }
 
+  /* Bullet lines: normalize layout so height matches plain lines exactly */
   .update-card > .u-sub{ list-style: none !important; }
   .update-card > .u-sub li{
     margin: 0;
-    line-height: inherit;
-    display: flex;
-    gap: 0.22em;
+    min-block-size: var(--line);                /* enforce identical line height */
+    display: grid;
+    grid-template-columns: 0.9em 1fr;           /* bullet column + text */
+    column-gap: 0.22em;
     align-items: baseline;
   }
+  .update-card > .u-sub .u-bullet{
+    justify-self: end;
+    line-height: inherit;
+  }
 
-  .update-card > .u-subtext{ white-space: pre-line; }
-
-  /* exact “two-line” feel (pulled back from previous, which was too tall) */
-  .update-card > a.u-shot{ margin-top: var(--lead-gap); }
+  /* Exact two-line buffer before media */
+  .update-card > a.u-shot{ margin-top: calc(2 * var(--line)); }
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
@@ -515,6 +521,7 @@
   </script>
 </body>
 </html>
+
 
 
 
