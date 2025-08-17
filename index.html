@@ -153,6 +153,24 @@
     }
 
     /* Post card (cream background) */
+    /* === rumplewood: symmetric pink flanks on mobile === */
+@media (max-width: 520px) {
+  /* add a tiny, equal pink gutter inside both rails */
+  body {
+    padding-left:  calc(var(--side-rail) + 6px);
+    padding-right: calc(var(--side-rail) + 6px);
+  }
+
+  /* keep content strictly inside the padded body (no vw math) */
+  .wrap,
+  .updates-wrap {
+    width: min(var(--wrap-width), 100%); /* 100% of the padded box = symmetric */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+/* === end rumplewood: symmetric pink flanks on mobile === */
+
     .update-card{
       background: var(--cream);
       border: 2px solid var(--black);
@@ -513,5 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
