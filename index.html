@@ -326,7 +326,13 @@
   /* Pink gutter: equal on both sides (wins over earlier rules) */
   body {
     padding-left:  calc(var(--side-rail) + 6px) !important;
+        /* rumplewood: final pink gutter — tune the px to taste (decimals ok) */
+    /* both sides added AFTER the old right-side line so they override together */
+    padding-left:  calc(var(--side-rail) + 8px) !important;
+    padding-right: calc(var(--side-rail) + 8px) !important;
+
     padding-right: calc(var(--side-rail) + 6px) !important;
+    
   }
 
   /* Content width measured INSIDE body padding (symmetry lock) */
@@ -605,6 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
