@@ -232,6 +232,16 @@
       line-height: 1.06;
       margin:0;
     }
+        /* Make terminal band full-bleed on mobile (ignore body padding/gutters) */
+    .page-end{
+      position: relative;
+      width: 100vw;                     /* span entire viewport width */
+      left: 50%; right: 50%;            /* center the element */
+      margin-left: -50vw;               /* pull to full-bleed */
+      margin-right: -50vw;
+      /* height + margin-top come from the base .page-end rule */
+    }
+
   }
 
   /* --------- Lightweight Overlay Gallery (CSS in stylesheet, not injected) --------- */
@@ -522,6 +532,7 @@ Step 17: their loss is our gain: welcome to rumplewood
   </script>
 </body>
 </html>
+
 
 
 
