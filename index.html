@@ -214,46 +214,56 @@
     /* Hide lightbox arrows on mobile */
     @media (max-width: 768px){
       .lg-prev, .lg-next { display:none !important; }
-/* === rumplewood mobile header hotfix v2 === */
+/* === rumplewood mobile layout fix v3 === */
 
-/* Prevent any stray horizontal scroll on tiny devices */
+/* Keep assets fluid just in case */
+img, svg, video.u-thumb { max-width: 100%; height: auto; display: block; }
 html, body { overflow-x: hidden; }
 
-/* Mobile-only header spacing & type fixes */
+/* Phone-specific layout variables + header polish */
 @media (max-width: 520px) {
-  /* Give the band more breathing room so rules don’t “underline” text */
+  /* 1) Make the content column wider and rails slimmer */
+  :root {
+    /* Wider main column on mobile */
+    --wrap-width: 94vw;
+    /* Slim down the black side rails */
+    --side-rail: max(10px, 3.2vw);
+    /* So the twin rules look less like underlines on tight layouts */
+    --rule-size: 3px; /* affects both --rule-thickness and --rule-gap */
+  }
+
+  /* Ensure the wrappers pick up the wider width */
+  .wrap,
+  .updates-wrap {
+    width: min(var(--wrap-width), 100vw);
+  }
+
+  /* 2) Header spacing/typography */
   .band {
-    padding-top:    calc(var(--band-pad-y) * 1.35);
-    padding-bottom: calc(var(--band-pad-y) * 1.35);
+    padding-top:    calc(var(--band-pad-y) * 1.45);
+    padding-bottom: calc(var(--band-pad-y) * 1.45);
+    padding-left:   calc(var(--u) * 0.9);
+    padding-right:  calc(var(--u) * 0.9);
   }
 
-  /* Keep logo strong but responsive; ensure clean spacing to subhead */
   .logo {
-    font-size: clamp(22px, 8.4vw, var(--logo-size));
+    font-size: clamp(22px, 8.2vw, var(--logo-size));
     line-height: 1.06;
-    margin: 0; /* avoid extra squeeze */
-    display: block;
+    margin: 0;
   }
 
-  /* Let the subhead wrap and read comfortably */
   .subhead {
-    white-space: normal;             /* was nowrap */
-    line-height: 1.25;
-    margin-top: calc(var(--u) * 0.55);
+    white-space: normal;      /* allow wrap */
+    line-height: 1.28;        /* easier reading */
+    margin-top: calc(var(--u) * 0.6);
   }
 
-  /* Nudge the stars a bit farther from the band */
   .stars {
-    margin-bottom: calc(var(--cluster-gap) * 1.2);
+    margin-bottom: calc(var(--cluster-gap) * 1.25);
   }
 }
+/* === end rumplewood mobile layout fix v3 === */
 
-/* Belt-and-suspenders: keep images/SVGs fluid */
-img, svg { max-width: 100%; height: auto; }
-/* Ensure inline video thumbs stay fluid */
-video.u-thumb { width: 100%; height: auto; display: block; }
-
-/* === end rumplewood mobile header hotfix v2 === */
 
 
   </style>
@@ -472,6 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
