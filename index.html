@@ -345,6 +345,24 @@
   }
 
   /* Content width measured INSIDE body padding (symmetry lock) */
+      /* === rumplewood: REVERT — restore equal gutters + inside width === */
+  body {
+    /* both sides equal; this wins because it comes after the earlier lines */
+    padding-left:  calc(var(--side-rail) + 6px) !important;
+    padding-right: calc(var(--side-rail) + 6px) !important;
+  }
+
+  /* measure width inside the padded body so rails & pink remain even */
+  .wrap,
+  .updates-wrap {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box;
+  }
+  /* === end rumplewood: REVERT === */
+
   .wrap,
   .updates-wrap {
     width: 100% !important;    /* override any 92vw/100vw min() from earlier */
@@ -620,6 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
