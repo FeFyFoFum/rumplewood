@@ -347,6 +347,38 @@
   }
 }
 /* === end rumplewood: mobile cleanup — one canonical block === */
+/* === rumplewood: mobile cleanup — canonical override v2 === */
+@media (max-width: 520px) {
+  /* vars: slim rails + lighter twin rules (safe, consistent) */
+  :root {
+    --side-rail: max(12px, 3.4vw);
+    --rule-size: 3px;
+  }
+
+  /* equal pink inside both rails */
+  body {
+    padding-left:  calc(var(--side-rail) + 6px) !important;
+    padding-right: calc(var(--side-rail) + 6px) !important;
+  }
+
+  /* measure width inside body padding so sides stay symmetric */
+  .wrap,
+  .updates-wrap {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box;
+  }
+
+  /* belt & suspenders for media */
+  .u-thumb,
+  video.u-thumb {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+  }
+}
+/* === end rumplewood: mobile cleanup — canonical override v2 === */
 
 
   </style>
@@ -565,6 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
