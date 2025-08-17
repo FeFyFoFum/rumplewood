@@ -229,109 +229,91 @@
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/iframe/lg-iframe.umd.min.js"></script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('page-gallery');
-    if (!root) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('page-gallery');
+  if (!root) return;
 
-    // Keep inline video thumbnails looping on the page
-    root.querySelectorAll('video.u-thumb').forEach(v => {
-      v.setAttribute('autoplay',''); v.setAttribute('muted','');
-      v.setAttribute('loop','');     v.setAttribute('playsinline','');
-      v.play().catch(()=>{});
-    });
-
-    const hasIframePlugin = typeof window.lgIframe !== 'undefined';
-
-    function buildSlides() {
-      const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-      return anchors.map(a => {
-        const href    = a.getAttribute('href') || '';
-        const dataSrc = a.getAttribute('data-src') || '';
-        const poster  = a.getAttribute('data-poster') || '';
-        const subHtml = a.getAttribute('data-sub-html') || '';
-        const src     = dataSrc || href;
-        const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
-
-        if (!isVideo) {
-          return { src: href, thumb: href, subHtml };
-        }
-
-        if (hasIframePlugin) {
-          const params = new URLSearchParams({
-            src,
-            poster: poster || '',
-            autoplay: '1',
-            muted: '1',
-            loop: '1'
-          });
-          const iframeSrc = `player.html?${params.toString()}`;
-          return { src: iframeSrc, iframe: true, subHtml };
-        } else {
-          // Fallback: pure HTML slide with native <video>
-          const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
-          const html = `
-            <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
-              <video style="max-width:90vw;max-height:80vh;outline:0"
-                     controls playsinline preload="metadata"
-                     ${poster ? `poster="${poster}"` : ''} autoplay muted loop>
-                <source src="${src}" type="${type}">
-                Sorry, your browser doesn't support embedded video.
-              </video>
-            </div>`;
-          return { html, subHtml };
-        }
-      });
-    }
-
-    let lgInstance = null;
-    function openGalleryAt(index) {
-      const items = buildSlides();
-      try {
-        if (!lgInstance) {
-          lgInstance = lightGallery(root, {
-            dynamic: true,
-            dynamicEl: items,
-            selector: '',
-            plugins: hasIframePlugin ? [lgIframe] : [],
-            speed: 300,
-            download: false,
-            swipeToClose: true,
-            mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
-          });
-        } else {
-          lgInstance.updateSlides(items);
-        }
-        lgInstance.openGallery(index);
-      } catch (e) {
-        // Last-resort: open content in a new tab so you're never stuck
-        const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-        const a = anchors[index];
-        if (a) {
-          const href    = a.getAttribute('href') || '';
-          const dataSrc = a.getAttribute('data-src') || '';
-          const poster  = a.getAttribute('data-poster') || '';
-          const src     = dataSrc || href;
-          const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
-          if (isVideo) {
-            const q = new URLSearchParams({ src, poster: poster || '', autoplay: '1', muted: '1', loop: '1' });
-            window.open(`player.html?${q.toString()}`, '_blank', 'noopener');
-          } else {
-            window.open(href, '_blank', 'noopener');
-          }
-        }
-      }
-    }
-
-    // Intercept clicks and open matching slide
-    root.addEventListener('click', (e) => {
-      const a = e.target.closest('a.u-shot');
-      if (!a) return;
-      e.preventDefault();
-      const anchors = Array.from(root.querySelectorAll('a.u-shot'));
-      const index = anchors.indexOf(a);
-      if (index >= 0) openGalleryAt(index);
-    });
+  // Keep inline video thumbnails looping on the page
+  root.querySelectorAll('video.u-thumb').forEach(v => {
+    v.setAttribute('autoplay',''); v.setAttribute('muted','');
+    v.setAttribute('loop','');     v.setAttribute('playsinline','');
+    v.play().catch(()=>{});
   });
-  </script>
+
+  const hasIframePlugin = typeof window.lgIframe !== 'undefined';
+
+  function buildSlides() {
+    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+    return anchors.map(a => {
+      const href    = a.getAttribute('href') || '';
+      const dataSrc = a.getAttribute('data-src') || '';
+      const poster  = a.getAttribute('data-poster') || '';
+      const subHtml = a.getAttribute('data-sub-html') || '';
+      const src     = dataSrc || href;
+      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+
+      if (!isVideo) {
+        // Image slide
+        return { src: href, thumb: href, subHtml };
+      }
+
+      // Video slide
+      if (hasIframePlugin) {
+        const params = new URLSearchParams({
+          src,
+          poster: poster || '',
+          autoplay: '1',
+          muted: '1',
+          loop: '1'
+        });
+        return { src: `player.html?${params.toString()}`, iframe: true, subHtml };
+      } else {
+        // Fallback: HTML slide with native <video>
+        const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+        const html = `
+          <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+            <video style="max-width:90vw;max-height:80vh;outline:0"
+                   controls playsinline preload="metadata"
+                   ${poster ? `poster="${poster}"` : ''} autoplay muted loop>
+              <source src="${src}" type="${type}">
+              Sorry, your browser doesn't support embedded video.
+            </video>
+          </div>`;
+        return { html, subHtml };
+      }
+    });
+  }
+
+  // IMPORTANT: dynamic mode only — DO NOT set "selector"
+  function openGalleryAt(index) {
+    const items = buildSlides();
+    // Create a fresh instance each open to avoid stale config
+    const lg = lightGallery(root, {
+      dynamic: true,
+      dynamicEl: items,
+      // selector: (omitted on purpose)
+      plugins: hasIframePlugin ? [lgIframe] : [],
+      licenseKey: '0000-0000-0000-0000',
+      speed: 300,
+      download: false,
+      swipeToClose: true,
+      mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+    });
+    lg.openGallery(index);
+  }
+
+  // Intercept clicks and open the matching slide
+  root.addEventListener('click', (e) => {
+    const a = e.target.closest('a.u-shot');
+    if (!a) return;
+    e.preventDefault();
+    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+    const index = anchors.indexOf(a);
+    if (index >= 0) openGalleryAt(index);
+  });
+});
+</script>
+
 </body>
 </html>
+
