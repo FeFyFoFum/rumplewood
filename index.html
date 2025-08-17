@@ -214,21 +214,25 @@
     /* Hide lightbox arrows on mobile */
     @media (max-width: 768px){
       .lg-prev, .lg-next { display:none !important; }
-/* === rumplewood mobile rails tune v4 === */
+/* === rumplewood mobile logo tweak A (compact+airy) === */
 @media (max-width: 520px) {
-  :root {
-    --wrap-width: 92vw;                     /* just a touch narrower than v3 */
-    --side-rail: max(12px, 3.4vw);          /* always show at least ~12px rail */
-    --rule-size: 3px;
+  .band {
+    padding-top:    calc(var(--band-pad-y) * 1.55);
+    padding-bottom: calc(var(--band-pad-y) * 1.55);
   }
-  .wrap,
-  .updates-wrap {
-    width: min(var(--wrap-width), 100vw);
+  .logo {
+    font-size: clamp(20px, 7.4vw, var(--logo-size));
+    line-height: 1.06;
+    letter-spacing: 0.45px;   /* tiny tracking adjustment */
+    margin: 0;
+    display: block;
+  }
+  .subhead {
+    white-space: normal;
+    line-height: 1.28;
+    margin-top: calc(var(--u) * 0.62);
   }
 }
-/* === end rumplewood mobile rails tune v4 === */
-
-
 
 
   </style>
@@ -447,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
