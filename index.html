@@ -58,6 +58,7 @@
     display:flex;                 /* sticky-footer layout */
     flex-direction:column;
     min-height:100dvh;            /* mobile-safe viewport height */
+    background: var(--pink);       /* ensure no gradient stripe remains */
     box-sizing:border-box;
     display:flex;
     flex-direction:column;
@@ -260,14 +261,7 @@
     body {
       padding-left:  calc(var(--side-rail) + 6px);
       padding-right: calc(var(--side-rail) + 6px);
-     /* Mobile: make the terminal stripe visually thicker and ensure no pink below */
-      background: linear-gradient(
-        to bottom,
-        var(--pink) calc(100% - 22px),
-        var(--black) 0
-      );
-      padding-left:  calc(var(--side-rail) + 6px);
-      padding-right: calc(var(--side-rail) + 6px);
+      background: var(--pink); /* guarantee: no mobile gradient stripe */
     }
     .wrap, .updates-wrap {
       width: min(var(--wrap-width), 100%);
@@ -569,6 +563,7 @@ so now we&#39;re gonna see HOW I say <strong>HOW</strong> I say [how](rumplewood
   </script>
 </body>
 </html>
+
 
 
 
