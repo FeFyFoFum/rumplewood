@@ -294,26 +294,27 @@
     font-size: clamp(22px, 8.2vw, var(--logo-size));
     line-height: 1.06;
     margin:
+  0;
+  }                 /* close .logo */
 
-/* === rumplewood: symmetric pink gutter (mobile) === */
+}                   /* close @media (max-width: 520px) */
+
+/* === rumplewood: symmetric pink gutter & inside-width (mobile) === */
 @media (max-width: 520px) {
-  :root {
-    --gutter: 6px; /* tweak up/down until pink flank looks right */
-  }
-
+  /* tiny, equal pink inside both rails */
   body {
-    padding-left:  calc(var(--side-rail) + var(--gutter));
-    padding-right: calc(var(--side-rail) + var(--gutter));
+    padding-left:  calc(var(--side-rail) + 6px);
+    padding-right: calc(var(--side-rail) + 6px);
   }
-
+  /* width measured inside the padded body = symmetric flanks */
   .wrap,
   .updates-wrap {
-    width: min(var(--wrap-width), 100%); /* respect body padding */
+    width: min(var(--wrap-width), 100%);
+    margin-left: auto;
+    margin-right: auto;
   }
 }
-/* === end rumplewood: symmetric pink gutter (mobile) === */
-
-
+/* === end rumplewood: symmetric pink gutter & inside-width === */
 
   </style>
 </head>
@@ -531,6 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
