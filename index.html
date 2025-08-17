@@ -238,7 +238,7 @@
 
   <!-- LightGallery core + plugins -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/zoom/lg-zoom.umd.min.js"></script>
+ 
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
 
 <script>
@@ -246,67 +246,57 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('page-gallery');
   if (!root) return;
 
-  // --- 1) NORMALIZE YOUR EXISTING POSTS (no changes to your generator required) ---
-  // Goal: for any video link, ensure poster (or '#') is in href, MP4/WEBM in data-src, and data-video exists.
+  // 1) Normalize anchors so LG handles videos reliably (no changes to your generator needed)
   root.querySelectorAll('a.u-shot').forEach(a => {
+    a.classList.add('lg-item');
+
     const href    = a.getAttribute('href') || '';
     const dataSrc = a.getAttribute('data-src') || '';
     const poster  = a.getAttribute('data-poster') || '';
     const src     = (dataSrc || href);
-    const isVideo = /\.(mp4|webm)(?:$|[?#])/.test((src || '').toLowerCase());
+    const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
 
     if (!isVideo) return;
 
-    // Put the real video in data-src (LG looks here first for video)
-    if (!dataSrc) a.setAttribute('data-src', href);
+    // Put real video in data-src; keep browser from navigating away
+    const finalSrc = (dataSrc || href);
+    a.setAttribute('data-src', finalSrc);
+    a.setAttribute('href', poster || '#');
 
-    // Put a poster (or #) in href so the browser doesn't navigate away
-    if (poster) a.setAttribute('href', poster);
-    else a.setAttribute('href', '#');
-
-    // Size hint helps LG lay out the slide immediately
+    // Helpful size hint
     if (!a.hasAttribute('data-lg-size')) a.setAttribute('data-lg-size', '1280-720');
 
     // Ensure data-video JSON exists
     if (!a.hasAttribute('data-video')) {
-      const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+      const type = /\.webm(?:$|[?#])/.test(finalSrc.toLowerCase()) ? 'video/webm' : 'video/mp4';
       a.setAttribute('data-video', JSON.stringify({
-        source: [{ src: a.getAttribute('data-src'), type }],
+        source: [{ src: finalSrc, type }],
         attributes: { preload: 'metadata', playsinline: true, controls: true }
       }));
     }
   });
 
-  // --- 2) INIT LIGHTGALLERY (STATIC SELECTOR MODE) ---
-  // This is more tolerant than dynamic mode for mixed image/video anchors.
-  const lg = lightGallery(root, {
+  // 2) Init LightGallery in selector mode (no zoom plugin)
+  lightGallery(root, {
     selector: '.lg-item',
-    plugins: [lgZoom, lgVideo],
+    plugins: [lgVideo],
     speed: 300,
     download: false,
     swipeToClose: true,
     mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
   });
 
-  // --- 3) KEEP INLINE THUMBS LOOPING (cosmetic) ---
+  // 3) Keep inline video thumbnails looping
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(()=>{});
   });
-
-  // --- 4) DIAGNOSTIC (optional but helpful): one-time console ping on first video click ---
-  root.addEventListener('click', (e) => {
-    const a = e.target.closest('a.u-shot');
-    if (!a) return;
-    const src = a.getAttribute('data-src') || a.getAttribute('href') || '';
-    if (/\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase())) {
-      console.log('[LOLA] Opening video in LG:', { href: a.getAttribute('href'), dataSrc: a.getAttribute('data-src'), poster: a.getAttribute('data-poster') });
-    }
-  }, { once:true });
 });
 </script>
 
+
 </body>
 </html>
+
 
