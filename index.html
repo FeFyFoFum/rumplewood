@@ -333,6 +333,10 @@
   .wrap,
   .updates-wrap {
     width: 100% !important;    /* override any 92vw/100vw min() from earlier */
+        /* rumplewood: respect body padding for true symmetry */
+    width: auto !important;
+    max-width: 100% !important;
+
     margin-left: auto !important;
     margin-right: auto !important;
     box-sizing: border-box;
@@ -601,6 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
