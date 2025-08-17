@@ -10,574 +10,114 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik+Mono+One&family=Josefin+Sans:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- LightGallery CSS -->
+  <!-- (Optional) LightGallery CSS — harmless to keep even though we use a custom overlay -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/css/lightgallery-bundle.min.css">
 
   <style>
   :root{
-  --u: clamp(6px, 1.1vw, 14px);
+    --u: clamp(6px, 1.1vw, 14px);
 
-  /* Colors */
-  --pink:#fbd3de;
-  --cream:#fffcf3;
-  --black:#000;
-  --navy:#0a3161;
-  --star-red:#b50e12;
+    /* Colors */
+    --pink:#fbd3de;
+    --cream:#fffcf3;
+    --black:#000;
+    --navy:#0a3161;
+    --star-red:#b50e12;
 
-  /* Measurements */
-   --top-border: calc(var(--u) * 3);
-  --side-rail:  calc(var(--u) * 6);
-  --band-pad-y: calc(var(--u) * 1.5);
+    /* Measurements */
+    --top-border: calc(var(--u) * 3);
+    --side-rail:  calc(var(--u) * 6);
+    --band-pad-y: calc(var(--u) * 1.5);
 
-  /* Twin rule sizing (perfect symmetry, forced whole-pixel) */
-  --rule-size: 4.0px;   /* try 1px, 1.5px, 2px etc. */
+    /* Twin rule sizing */
+    --rule-size: 4px;
+    --rule-thickness: var(--rule-size);
+    --rule-gap:       var(--rule-size);
 
-  --rule-thickness: var(--rule-size);
-  --rule-gap:       var(--rule-size);
+    --logo-size:      calc(var(--u) * 3.0);
+    --stars-h:        calc(var(--u) * 1.8);
+    --cluster-gap:    calc(var(--u) * 0.6);
+    --wrap-width:     calc(var(--u) * 36);
+    --wrap-margin-top:calc(var(--u) * 3.7);
 
-  --logo-size:      calc(var(--u) * 3.0);
-  --stars-h:        calc(var(--u) * 1.8);
-  --cluster-gap:    calc(var(--u) * 0.6);
-  --wrap-width:     calc(var(--u) * 36);
-  --wrap-margin-top:calc(var(--u) * 3.7);
-
-
-  --ring:#e6e6e6;
-}
-
-
-    html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
-    body{
-      background:var(--pink);
-      color:#111;
-      border-top: var(--top-border) solid var(--black);
-      min-height:100vh;
-      box-sizing:border-box;
-      padding-left: var(--side-rail);
-      padding-right: var(--side-rail);
-    }
-
-    /* Fixed side rails */
-    .rail{
-      position:fixed; top:0; bottom:0;
-      width: var(--side-rail); background: var(--black);
-      z-index: 1000; pointer-events:none;
-    }
-    .rail-left{ left:0; }
-    .rail-right{ right:0; }
-
-    .wrap{
-      width:min(var(--wrap-width), 92vw);
-      margin: var(--wrap-margin-top) auto 32px;
-      text-align:center;
-      padding: 0 calc(var(--u) * 1);
-      box-sizing:border-box;
-    }
-    .stars{
-      display:block; margin:0 auto var(--cluster-gap);
-      height: var(--stars-h); width:auto;
-    }
-
-    /* Cream band with twin rules */
-    .band{
-      position:relative; background:var(--cream);
-      padding: var(--band-pad-y) calc(var(--u) * 1);
-      display:inline-block; box-sizing:border-box;
-    }
-    .band::before, .band::after{
-      content:""; position:absolute; left:0; right:0;
-      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
-      pointer-events:none;
-    }
-    .band::before{
-         top:0;
-      content:"";
-      position:absolute;
-      left:0; right:0;
-      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
-      pointer-events:none;
-
-      background-image:
-        linear-gradient(var(--black), var(--black)),
-        linear-gradient(var(--black), var(--black));
-      background-repeat: no-repeat, no-repeat;
-      background-size:
-        100% var(--rule-thickness),
-        100% var(--rule-thickness);
-      background-position:
-        0 0,
-        0 calc(var(--rule-thickness) + var(--rule-gap));
-    }
-
-    .band::after{
-      bottom:0;
-      content:"";
-      position:absolute;
-      left:0; right:0;
-      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
-      pointer-events:none;
-
-      background-image:
-        linear-gradient(var(--navy), var(--navy)),
-        linear-gradient(var(--navy), var(--navy));
-      background-repeat: no-repeat, no-repeat;
-      background-size:
-        100% var(--rule-thickness),
-        100% var(--rule-thickness);
-      background-position:
-        0 0,
-        0 calc(var(--rule-thickness) + var(--rule-gap));
-
-}
-
-    .logo{
-      font-family:'Rubik Mono One',sans-serif;
-      font-size: var(--logo-size);
-      margin:0; letter-spacing:.5px; white-space:nowrap;
-      
-    }
-    .subhead{
-      font-family:'Josefin Sans',sans-serif;
-      font-size: calc(var(--u) * 1.625);
-      margin: calc(var(--u) * 0.4) 0 0;
-      font-weight: 400; color: var(--navy);
-      white-space:nowrap;
-      
-    }
-    .subhead .caps{ color:var(--star-red); font-weight:600; }
-
-    /* Updates area */
-    .updates-wrap{
-      width:min(var(--wrap-width), 92vw);
-      margin: 16px auto 80px; text-align:left;
-    }
-
-    /* Post card (cream background) */
-    /* === rumplewood: symmetric pink flanks on mobile === */
-@media (max-width: 520px) {
-  /* add a tiny, equal pink gutter inside both rails */
-  body {
-    padding-left:  calc(var(--side-rail) + 6px);
-    padding-right: calc(var(--side-rail) + 6px);
+    --ring:#e6e6e6;
   }
 
-  /* keep content strictly inside the padded body (no vw math) */
-  .wrap,
-  .updates-wrap {
-    width: min(var(--wrap-width), 100%); /* 100% of the padded box = symmetric */
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-/* === end rumplewood: symmetric pink flanks on mobile === */
-
-    .update-card{
-      background: var(--cream);
-      border: 2px solid var(--black);
-      border-radius:14px;
-      padding:16px;
-      box-shadow:0 6px 18px rgba(0,0,0,.08);
-      margin-bottom: 32px;
-    }
-
-    /* Title lines */
-    .u-title{ text-align:center; margin:0 0 28px; }
-    .u-title-line1{
-      font-family:'Montserrat',sans-serif; font-weight:800;
-      text-transform:uppercase; font-size:20px;
-      letter-spacing:.2px; color:var(--navy);
-    }
-    .u-title-line2{
-      font-family:'Josefin Sans',sans-serif; font-size:16px;
-      color:var(--star-red); margin-top:6px;
-    }
-
-    /* Bulleted subtitle list (only when you type bullet markers) */
-    .u-sub{
-      margin:0 0 14px; color:var(--black);
-      font-size:11px; padding-left:18px;
-      font-family:'Inter',sans-serif;
-      font-weight:500;
-    }
-    .u-sub li{ margin:4px 0; }
-
-  /* === rumplewood subtitle-to-media spacing === */
-.u-sub,
-.u-subtext {
-  margin-bottom: 1em;   /* one line of space before any following media */
-}
-/* === end rumplewood subtitle-to-media spacing === */
-
-    .u-subtext{
-      margin:0 0 14px; color:var(--black);
-      font-size:11px;
-      font-family:'Inter',sans-serif;
-      font-weight:500;
-      white-space:pre-line;
-    }
-
-    /* Media frames */
-    a.u-shot{
-      position:relative; display:block;
-      border:2px solid var(--black);
-      border-radius:10px;
-      overflow:hidden;
-      background:#f7f7f7; cursor:zoom-in; text-decoration:none;
-    }
-    .u-thumb{ width:100%; height:auto; display:block; object-fit:contain; }
-    video.u-thumb { display:block; width:100%; height:auto; }
-    .u-shot::after{
-      content:""; position:absolute; right:10px; bottom:10px;
-      width:26px; height:26px; border:2px solid var(--black);
-      border-radius:6px;
-      background:radial-gradient(circle at center, transparent 8px, var(--black) 9px);
-      opacity:.28; pointer-events:none;
-    }
-    @media (hover:hover){ .u-shot:hover::after{ opacity:.45; } }
-
-  /* === rumplewood mobile flank pink gutter + width (clean, pre-broken block) === */
-@media (max-width: 520px) {
-  /* Keep your wide column + visible rails */
-  :root {
-    --wrap-width: 91vw;                /* subtle narrow for a hair more pink */
-    --side-rail: max(12px, 3.4vw);     /* slim but present rails */
-    --rule-size: 3px;                  /* lighter twin rules */
+  html, body { height:100%; margin:0; font-family:'Inter',sans-serif; }
+  body{
+    background:var(--pink);
+    color:#111;
+    border-top: var(--top-border) solid var(--black);
+    min-height:100vh;
+    box-sizing:border-box;
+    padding-left: var(--side-rail);
+    padding-right: var(--side-rail);
+    overflow-x:hidden; /* never block vertical scrolling */
   }
 
-  /* Add a tiny pink gutter inside the rails */
-  body {
-    padding-left:  calc(var(--side-rail) + 4px);
-    padding-right: calc(var(--side-rail) + 4px);
+  /* Fixed side rails */
+  .rail{
+    position:fixed; top:0; bottom:0;
+    width: var(--side-rail); background: var(--black);
+    z-index: 1000; pointer-events:none;
+  }
+  .rail-left{ left:0; }
+  .rail-right{ right:0; }
+
+  .wrap{
+    width:min(var(--wrap-width), 92vw);
+    margin: var(--wrap-margin-top) auto 32px;
+    text-align:center;
+    padding: 0 calc(var(--u) * 1);
+    box-sizing:border-box;
+  }
+  .stars{
+    display:block; margin:0 auto var(--cluster-gap);
+    height: var(--stars-h); width:auto;
   }
 
-  /* Ensure wrappers respect the target width */
-  .wrap,
-  .updates-wrap {
-    width: min(var(--wrap-width), 100vw);
+  /* Cream band with twin rules */
+  .band{
+    position:relative; background:var(--cream);
+    padding: var(--band-pad-y) calc(var(--u) * 1);
+    display:inline-block; box-sizing:border-box;
   }
-}
-/* === end rumplewood mobile flank pink gutter + width === */
-
-/* === end rumplewood subtitle→media gap === */
-
-@media (max-width: 520px) {
-  /* v4 rails + width you liked */
-  :root {
-    --wrap-width: 92vw;                 /* wide post column */
-    --side-rail: max(12px, 3.4vw);      /* slim but visible rails */
-    --rule-size: 3px;                   /* lighter twin rules (no underline vibe) */
+  .band::before, .band::after{
+    content:""; position:absolute; left:0; right:0;
+    height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
+    pointer-events:none;
   }
-
-  /* Keep the roomy column (don’t let it collapse to edge or over-narrow) */
-  .wrap,
-  .updates-wrap {
-    width: min(var(--wrap-width), 100vw);
-   /* === rumplewood flank pink adjust to 90vw === */
-@media (max-width: 520px) {
-  :root {
-    --wrap-width: 90vw;   /* narrower posts → subtle extra pink flank */
+  .band::before{
+    top:0;
+    background-image:
+      linear-gradient(var(--black), var(--black)),
+      linear-gradient(var(--black), var(--black));
+    background-repeat: no-repeat;
+    background-size:
+      100% var(--rule-thickness),
+      100% var(--rule-thickness);
+    background-position:
+      0 0,
+      0 calc(var(--rule-thickness) + var(--rule-gap));
   }
-}
-/* === end rumplewood flank pink adjust to 91vw === */
-
-
-  }
-
-  /* v3 header polish that looked right */
-  .band {
-    padding-top:    calc(var(--band-pad-y) * 1.45);
-    padding-bottom: calc(var(--band-pad-y) * 1.45);
-    padding-left:   calc(var(--u) * 0.9);
-    padding-right:  calc(var(--u) * 0.9);
-  }
-  .logo {
-    font-size: clamp(22px, 8.2vw, var(--logo-size));
-    line-height: 1.06;
-    margin:
-  0;
-  }                 /* close .logo */
-
-}                   /* close @media (max-width: 520px) */
-
-/* === rumplewood: symmetric pink gutter & inside-width (mobile) === */
-@media (max-width: 520px) {
-  /* tiny, equal pink inside both rails */
-  body {
-    padding-left:  calc(var(--side-rail) + 6px);
-    padding-right: calc(var(--side-rail) + 6px);
-  }
-  /* width measured inside the padded body = symmetric flanks */
-  .wrap,
-  .updates-wrap {
-    width: min(var(--wrap-width), 100%);
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-/* === end rumplewood: symmetric pink gutter & inside-width === */
-
-  </style>
-</head>
-<body>
-  <!-- Fixed side rails -->
-  <div class="rail rail-left"></div>
-  <div class="rail rail-right"></div>
-
-  <!-- Header -->
-  <div class="wrap">
-    <img src="loladomeLOGOstars.png" alt="" class="stars" />
-    <div class="band">
-      <h1 class="logo">LOLA</h1>
-      <div class="subhead">
-        <span class="caps">L</span>eague's <span class="caps">O</span>fficial <span class="caps">L</span>eague <span class="caps">A</span>cronym
-      </div>
-    </div>
-  </div>
-
-  <!-- Posts -->
-  <main class="updates-wrap" id="page-gallery">
-    <!-- FEFYFOFUM -->
-    <article class="update-card" data-id="00002">
-  <div class="u-title">
-    <div class="u-title-line1">WHY RUMPLEWOOD?</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<div class="u-subtext" style="white-space:pre-wrap !important">I&#39;ve never made a website and I thought it would be a fun learning experience
-
-Step 01: last week I visited lola.com just to see what was there
-
-Step 02: lola.com turned out to be a crappy dating website that by a crazy coincidence had folded their business <em>that week</em> and were putting their domain name lola.com FOR SALE THE VERY NEXT DAY. This was obviously a sign from god that my destiny was to own lola.com
-
-Step 03: I wrote lola.com a short email asking what the price is. I opened negotiations by offering $350
-
-Step 04: while waiting for them to respond, I started looking into other website names as a backup
-
-Step 05: I saw that lolaworld.com was also for sale, and I eagerly clicked through to the price
-
-Step 06: I saw that the price was $8749.99
-
-Step 07: I continued to research, and quickly realized that the price for lola.com was going to be well over one hundred thousand dollars. This was far more than I was willing to pay
-
-Step 08: I remembered, again, that we live in a fallen world---an obscene world
-
-Step 09: I made a new plan: I bought a domain name! I bought LOLA DOME dot com for nine dollars. I just liked how it sounded. It was like, welcome to the Lola Dome!
-
-Step 10: I then spent <em>an amount of time</em> learning how to make a website
-
-Step 11: I made the website and then realized---very suddenly---that loladome.com wouldn&#39;t work as a name. This happened when my eyes and brain finally worked together and figured out that loladome.com smooshed together into one word looks like &quot;LOLA, DO ME!!&quot; and that I now owned LOLA DO ME dot com
-
-Step 12: I quickly invested in a new domain name: I bought lola17.com, for nine dollars
-
-Step 13: then last night I was out for a beer, and I told a friend the happy news. I told her that I had built a new website, and it was called lola17.com. She replied, &quot;lola17? that&#39;s awesome! is it a porn site? is 17 even legal?&quot;
-
-Step 14: I finally hear back from lola.com. They have rejected my offer of $350
-
-Step 15: I scrap all ideas of having a domain name with the word LOLA in it
-
-Step 16: I close my eyes and think back to a simpler time, ten years ago, when a buddy of mine asked me to name his big house that is in the hills and trees of California. I guess he wanted it to have a name like big houses do in Jane Austen books. I thought about it for a whole day and then suggested a name. His family was thrilled and said thank you for the suggestion, but we are going to go in a different direction
-
-Step 17: their loss is our gain: welcome to rumplewood</div>
-<a class="u-shot lg-item" href="assets/00001LOLA.com.png" data-sub-html="WHY RUMPLEWOOD? — 17 August 2025 (Item 1)">
-  <img class="u-thumb" src="assets/00001LOLA.com.png" alt="WHY RUMPLEWOOD? image 1">
-</a>
-</article>
- <article class="update-card" data-id="00001">
-  <div class="u-title">
-    <div class="u-title-line1">HELLOLA WORLD!</div>
-    <div class="u-title-line2">17 August 2025</div>
-  </div>
-<ul class="u-sub" style="list-style:none;margin:0.4em 0 0.6em 0;padding:0">
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new season</span></li>
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>new LOLA</span></li>
-  <li style="display:flex;gap:0.22em;align-items:baseline"><span class="u-bullet" aria-hidden="true">•</span><span>same pink</span></li>
-</ul>
-<a class="u-shot lg-item"
-   href="assets/00000HELLOLAworld.mp4"
-   data-src="assets/00000HELLOLAworld.mp4"
-   data-video='{&quot;source&quot;:[{&quot;src&quot;:&quot;assets/00000HELLOLAworld.mp4&quot;,&quot;type&quot;:&quot;video/mp4&quot;}],&quot;attributes&quot;:{&quot;preload&quot;:&quot;metadata&quot;,&quot;playsinline&quot;:true,&quot;muted&quot;:true,&quot;autoplay&quot;:true,&quot;loop&quot;:true}}'
-   data-sub-html="HELLOLA WORLD! — 17 August 2025 (Item 1)">
-  <video class="u-thumb" autoplay muted loop playsinline>
-    <source src="assets/00000HELLOLAworld.mp4" type="video/mp4">
-  </video>
-</a>
-</article>
-
-    <!-- END FEFYFOFUM -->
-
-  </main>
-  
-<!-- Lightweight LOLA overlay gallery -->
-<div id="lglb" aria-hidden="true">
-  <button class="lb-close" aria-label="Close">×</button>
-  <button class="lb-prev"  aria-label="Previous">‹</button>
-  <div class="lb-frame"></div>
-  <button class="lb-next"  aria-label="Next">›</button>
-  <div class="lb-cap"></div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('page-gallery');
-  const lb   = document.getElementById('lglb');
-  if (!root || !lb) return;
-
-  // Styles (ensure video can grow to viewport)
-  const style = document.createElement('style');
-  style.textContent = 
-    #lglb{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#000;z-index:2000}
-    #lglb.show{display:flex}
-    #lglb .lb-frame{position:relative;max-width:96vw;max-height:90vh;display:flex;align-items:center;justify-content:center}
-    #lglb img,#lglb video{max-width:96vw;max-height:90vh;border:0;background:#000;display:block}
-    #lglb .lb-cap{position:absolute;left:18px;bottom:16px;color:#fff;font:14px/1.4 'Inter',sans-serif;opacity:.9}
-    #lglb .lb-count{position:absolute;right:18px;bottom:16px;color:#fff;font:14px/1.4 'Inter',sans-serif;opacity:.8}
-    #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{
-      position:absolute;border:0;background:transparent;color:#fff;font-size:28px;line-height:1;cursor:pointer;padding:8px 12px;opacity:.9;z-index:1
-    }
-    #lglb .lb-close{top:12px;right:12px}
-    #lglb .lb-prev{top:50%;left:12px;transform:translateY(-50%)}
-    #lglb .lb-next{top:50%;right:12px;transform:translateY(-50%)}
-    @media (hover:hover){ #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{opacity:.8} #lglb .lb-close:hover,#lglb .lb-prev:hover,#lglb .lb-next:hover{opacity:1} }
-  ;
-  document.head.appendChild(style);
-
-  // Keep inline thumbnails looping
-  root.querySelectorAll('video.u-thumb').forEach(v => {
-    v.setAttribute('autoplay',''); v.setAttribute('muted','');
-    v.setAttribute('loop','');     v.setAttribute('playsinline','');
-    v.play().catch(()=>{});
-  });
-
-  // Collect anchors and neutralize navigation
-  function getAnchors(){
-    const as = Array.from(root.querySelectorAll('a.u-shot'));
-    as.forEach(a => {
-      const href = a.getAttribute('href') || '';
-      if (!a.hasAttribute('data-src')) a.setAttribute('data-src', href);
-      a.setAttribute('href', '#');     // never navigate away
-      a.classList.remove('lg-item');   // neutralize LG leftovers
-    });
-    return as;
-  }
-  function toItems(as){
-    return as.map(a => {
-      const src     = a.getAttribute('data-src') || '';
-      const poster  = a.getAttribute('data-poster') || '';
-      const caption = a.getAttribute('data-sub-html') || '';
-      const isVideo = /\.(mp4|webm)(?:$|[?#])/i.test(src.toLowerCase());
-      return { isVideo, src, poster, caption };
-    });
+  .band::after{
+    bottom:0;
+    background-image:
+      linear-gradient(var(--navy), var(--navy)),
+      linear-gradient(var(--navy), var(--navy));
+    background-repeat: no-repeat;
+    background-size:
+      100% var(--rule-thickness),
+      100% var(--rule-thickness);
+    background-position:
+      0 0,
+      0 calc(var(--rule-thickness) + var(--rule-gap));
   }
 
-  const frame = lb.querySelector('.lb-frame');
-  const cap   = lb.querySelector('.lb-cap');
-  const btnX  = lb.querySelector('.lb-close');
-  const btnP  = lb.querySelector('.lb-prev');
-  const btnN  = lb.querySelector('.lb-next');
-  const count = document.createElement('div');
-  count.className = 'lb-count';
-  lb.appendChild(count);
-
-  let idx = 0, anchors = getAnchors(), items = toItems(anchors);
-
-  // Scroll lock
-  const lockScroll = () => {
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.overscrollBehavior = 'contain';
-  };
-  const unlockScroll = () => {
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.overscrollBehavior = '';
-  };
-
-  function render(i){
-    anchors = getAnchors();
-    items   = toItems(anchors);
-    if (items.length === 0) return;
-
-    idx = (i + items.length) % items.length;
-    const it = items[idx];
-    frame.innerHTML = '';
-
-    if (it.isVideo) {
-      // DIRECT <video> (no iframe) so CSS can size it to viewport
-      const vid = document.createElement('video');
-      vid.setAttribute('playsinline','');
-      vid.setAttribute('autoplay','');
-      vid.setAttribute('muted','');
-      vid.setAttribute('loop','');
-      vid.setAttribute('controls','');
-      if (it.poster) vid.setAttribute('poster', it.poster);
-      const type = /\.webm(?:$|[?#])/i.test(it.src) ? 'video/webm' : 'video/mp4';
-      const srcEl = document.createElement('source');
-      srcEl.src = it.src;
-      srcEl.type = type;
-      vid.appendChild(srcEl);
-      frame.appendChild(vid);
-      // Kick playback on some mobile browsers
-      setTimeout(() => { vid.play().catch(()=>{}); }, 0);
-    } else {
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = it.src;
-      img.alt = 'Image';
-      frame.appendChild(img);
-      // Preload neighbors (images only)
-      const next = new Image(), prev = new Image();
-      const nextIt = items[(idx+1)%items.length], prevIt = items[(idx-1+items.length)%items.length];
-      if (nextIt && !nextIt.isVideo) next.src = nextIt.src;
-      if (prevIt && !prevIt.isVideo) prev.src = prevIt.src;
-    }
-
-    cap.innerHTML = it.caption || '';         // allow HTML captions
-    count.textContent = ${idx+1} / ${items.length};
+  .logo{
+    font-family:'Rubik Mono One',sans-serif;
+    font-size: var(--logo-size);
+    margin:0; letter-spacing:.5px; white-space:nowrap;
   }
-
-  function open(i){ lb.classList.add('show'); lb.setAttribute('aria-hidden','false'); lockScroll(); render(i); }
-  function close(){ lb.classList.remove('show'); lb.setAttribute('aria-hidden','true'); frame.innerHTML=''; unlockScroll(); }
-
-  // Capture clicks so the browser never navigates away
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a.u-shot');
-    if (!a || !root.contains(a)) return;
-    if (e.metaKey || e.ctrlKey) return;
-    e.preventDefault(); e.stopPropagation();
-    const i = anchors.indexOf(a);
-    open(i >= 0 ? i : 0);
-  }, true);
-
-  // Buttons + keyboard
-  btnX.addEventListener('click', close);
-  btnP.addEventListener('click', () => render(idx - 1));
-  btnN.addEventListener('click', () => render(idx + 1));
-  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
-  document.addEventListener('keydown', (e) => {
-    if (!lb.classList.contains('show')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') render(idx - 1);
-    if (e.key === 'ArrowRight') render(idx + 1);
-  });
-
-  // Simple swipe
-  let sx=0, sy=0;
-  lb.addEventListener('touchstart', (e) => { const t=e.touches[0]; sx=t.clientX; sy=t.clientY; }, {passive:true});
-  lb.addEventListener('touchend',   (e) => {
-    if (!sx && !sy) return;
-    const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
-    if (Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>30) { if (dx>0) render(idx-1); else render(idx+1); }
-    sx=sy=0;
-  }, {passive:true});
-});
-
-</script>
-
-
-
-</body>
-</html>
-
-
-
-
-
+  .subhead{
+    font-family:'Josef
