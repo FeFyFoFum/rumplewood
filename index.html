@@ -159,39 +159,45 @@
     color:var(--star-red); margin-top:6px;
   }
 
-/* --- Uniform subtitle rhythm; exact two-line gap before media --- */
-  :root { --lead-lh: 1.22; --line: calc(var(--lead-lh) * 1em); }
+ /* --- Uniform subtitle rhythm; ~1× line gap before media --- */
+  :root { --lead-lh: 1.21; --line: calc(var(--lead-lh) * 1em); }
 
-  /* Each subtitle line block (bulleted or plain) */
+  /* Normalize the two kinds of “subtitle lines” and kill generator margins */
   .update-card > .u-sub,
   .update-card > .u-subtext{
     margin: 0 !important;
     padding: 0 !important;
     color: var(--black);
+    font-size: 11px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    font-size: 11px;
     line-height: var(--lead-lh);
-    min-block-size: var(--line);                /* same block height for every line */
+    min-block-size: var(--line);               /* equal line box height */
   }
 
-  /* Bullet lines: normalize layout so height matches plain lines exactly */
+  /* Bulleted lines: remove native list markers, override inline flex -> grid */
   .update-card > .u-sub{ list-style: none !important; }
   .update-card > .u-sub li{
-    margin: 0;
-    min-block-size: var(--line);                /* enforce identical line height */
-    display: grid;
-    grid-template-columns: 0.9em 1fr;           /* bullet column + text */
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;                  /* beats inline display:flex */
+    grid-template-columns: 0.9em 1fr;
     column-gap: 0.22em;
-    align-items: baseline;
+    align-items: center !important;            /* consistent vertical feel */
+    line-height: var(--lead-lh) !important;
+    min-block-size: var(--line);
   }
   .update-card > .u-sub .u-bullet{
-    justify-self: end;
-    line-height: inherit;
+    display: block;
+    line-height: var(--lead-lh) !important;
+    text-align: center;
   }
 
-  /* Exact two-line buffer before media */
-  .update-card > a.u-shot{ margin-top: calc(2 * var(--line)); }
+  /* Plain-line variant still preserves manual newlines from generator */
+  .update-card > .u-subtext{ white-space: pre-wrap !important; }
+
+  /* Bring media ~60% closer vs. last attempt: exactly 1 line-height */
+  .update-card > a.u-shot{ margin-top: var(--line) !important; }
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
@@ -521,6 +527,7 @@
   </script>
 </body>
 </html>
+
 
 
 
