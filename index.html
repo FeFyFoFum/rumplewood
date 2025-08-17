@@ -238,65 +238,87 @@
 
   <!-- LightGallery core + plugins -->
   <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/lightgallery.umd.min.js"></script>
- 
-  <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.8.2/plugins/video/lg-video.umd.min.js"></script>
-
-<script>
+ <script>
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('page-gallery');
   if (!root) return;
 
-  // 1) Normalize anchors so LG handles videos reliably (no changes to your generator needed)
-  root.querySelectorAll('a.u-shot').forEach(a => {
-    a.classList.add('lg-item');
-
-    const href    = a.getAttribute('href') || '';
-    const dataSrc = a.getAttribute('data-src') || '';
-    const poster  = a.getAttribute('data-poster') || '';
-    const src     = (dataSrc || href);
-    const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
-
-    if (!isVideo) return;
-
-    // Put real video in data-src; keep browser from navigating away
-    const finalSrc = (dataSrc || href);
-    a.setAttribute('data-src', finalSrc);
-    a.setAttribute('href', poster || '#');
-
-    // Helpful size hint
-    if (!a.hasAttribute('data-lg-size')) a.setAttribute('data-lg-size', '1280-720');
-
-    // Ensure data-video JSON exists
-    if (!a.hasAttribute('data-video')) {
-      const type = /\.webm(?:$|[?#])/.test(finalSrc.toLowerCase()) ? 'video/webm' : 'video/mp4';
-      a.setAttribute('data-video', JSON.stringify({
-        source: [{ src: finalSrc, type }],
-        attributes: { preload: 'metadata', playsinline: true, controls: true }
-      }));
-    }
-  });
-
-  // 2) Init LightGallery in selector mode (no zoom plugin)
-  lightGallery(root, {
-    selector: '.lg-item',
-    plugins: [lgVideo],
-    speed: 300,
-    download: false,
-    swipeToClose: true,
-    mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
-  });
-
-  // 3) Keep inline video thumbnails looping
+  // Keep inline video thumbnails looping on the page
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(()=>{});
   });
+
+  // Build LightGallery "dynamicEl" items from the current DOM.
+  // For IMAGES: provide src
+  // For VIDEOS: provide an HTML <video> element (bypasses LG's video plugin completely)
+  function buildItems() {
+    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+    return anchors.map(a => {
+      const href    = a.getAttribute('href') || '';
+      const dataSrc = a.getAttribute('data-src') || '';
+      const poster  = a.getAttribute('data-poster') || '';
+      const subHtml = a.getAttribute('data-sub-html') || '';
+      const src     = dataSrc || href;
+      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+
+      if (!isVideo) {
+        // image
+        return { src: href, thumb: href, subHtml };
+      }
+
+      // video (HTML slide)
+      const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+          <video style="max-width:90vw;max-height:80vh;outline:0" controls playsinline preload="metadata" ${poster ? `poster="${poster}"` : ''}>
+            <source src="${src}" type="${type}">
+            Sorry, your browser doesn't support embedded video.
+          </video>
+        </div>`;
+      return { html, subHtml };
+    });
+  }
+
+  // Create one LG instance in dynamic mode. We'll open it on demand.
+  let lgInstance = null;
+  function openGalleryAt(index) {
+    const items = buildItems();
+    if (!lgInstance) {
+      lgInstance = lightGallery(root, {
+        dynamic: true,
+        dynamicEl: items,
+        selector: '',           // dynamic mode (no selector scanning)
+        speed: 300,
+        download: false,
+        swipeToClose: true,
+        mobileSettings: { controls: true, showCloseIcon: true, showNext: false, showPrev: false }
+      });
+    } else {
+      // If items changed (you pasted a new post), refresh slides
+      lgInstance.updateSlides(items);
+    }
+    lgInstance.openGallery(index);
+  }
+
+  // Intercept clicks and open the matching slide
+  root.addEventListener('click', (e) => {
+    const a = e.target.closest('a.u-shot');
+    if (!a) return;
+    e.preventDefault();
+
+    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+    const index = anchors.indexOf(a);
+    if (index >= 0) openGalleryAt(index);
+  });
 });
 </script>
 
 
+
 </body>
 </html>
+
 
 
