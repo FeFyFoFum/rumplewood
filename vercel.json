@@ -1,7 +1,14 @@
 {
   "headers": [
     {
-      "source": "/assets/:path*.(mp4|webm)",
+      "source": "/assets/(.*)\\.mp4",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Accept-Ranges",  "value": "bytes" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)\\.webm",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
         { "key": "Accept-Ranges",  "value": "bytes" }
@@ -9,3 +16,5 @@
     }
   ]
 }
+
+
