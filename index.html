@@ -90,28 +90,44 @@
       pointer-events:none;
     }
     .band::before{
-      top:0; background:
-        linear-gradient(var(--black),var(--black)) top/100% var(--rule-thickness) no-repeat,
-        linear-gradient(var(--black),var(--black)) bottom/100% var(--rule-thickness) no-repeat;
-    }
-   .band::after{
-  content:"";
-  position:absolute;
-  left:0; right:0; bottom:0;
-  height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
-  pointer-events:none;
+         top:0;
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
+      pointer-events:none;
 
-  /* both stripes positioned from TOP to avoid bottom-edge rounding */
-  background-image:
-    linear-gradient(var(--navy), var(--navy)),
-    linear-gradient(var(--navy), var(--navy));
-  background-repeat: no-repeat, no-repeat;
-  background-size:
-    100% var(--rule-thickness),
-    100% var(--rule-thickness);
-  background-position:
-    0 0,
-    0 calc(var(--rule-thickness) + var(--rule-gap));
+      background-image:
+        linear-gradient(var(--black), var(--black)),
+        linear-gradient(var(--black), var(--black));
+      background-repeat: no-repeat, no-repeat;
+      background-size:
+        100% var(--rule-thickness),
+        100% var(--rule-thickness);
+      background-position:
+        0 0,
+        0 calc(var(--rule-thickness) + var(--rule-gap));
+    }
+
+    .band::after{
+      bottom:0;
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      height: calc((var(--rule-thickness) * 2) + var(--rule-gap));
+      pointer-events:none;
+
+      background-image:
+        linear-gradient(var(--navy), var(--navy)),
+        linear-gradient(var(--navy), var(--navy));
+      background-repeat: no-repeat, no-repeat;
+      background-size:
+        100% var(--rule-thickness),
+        100% var(--rule-thickness);
+      background-position:
+        0 0,
+        0 calc(var(--rule-thickness) + var(--rule-gap));
+
 }
 
     .logo{
@@ -394,6 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
