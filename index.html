@@ -239,14 +239,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const lb   = document.getElementById('lglb');
   if (!root || !lb) return;
 
-  // Inject minimal styles (self-contained)
+  // Styles (ensure video can grow to viewport)
   const style = document.createElement('style');
   style.textContent = `
     #lglb{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#000;z-index:2000}
     #lglb.show{display:flex}
     #lglb .lb-frame{position:relative;max-width:96vw;max-height:90vh;display:flex;align-items:center;justify-content:center}
-    #lglb img,#lglb video,#lglb iframe{max-width:96vw;max-height:90vh;border:0;background:#000}
+    #lglb img,#lglb video{max-width:96vw;max-height:90vh;border:0;background:#000;display:block}
     #lglb .lb-cap{position:absolute;left:18px;bottom:16px;color:#fff;font:14px/1.4 'Inter',sans-serif;opacity:.9}
+    #lglb .lb-count{position:absolute;right:18px;bottom:16px;color:#fff;font:14px/1.4 'Inter',sans-serif;opacity:.8}
     #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{
       position:absolute;border:0;background:transparent;color:#fff;font-size:28px;line-height:1;cursor:pointer;padding:8px 12px;opacity:.9;z-index:1
     }
@@ -257,26 +258,25 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.head.appendChild(style);
 
-  // Keep inline video thumbnails looping (cosmetic)
+  // Keep inline thumbnails looping
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(()=>{});
   });
 
-  // Helper: gather anchors and make them non-navigating
+  // Collect anchors and neutralize navigation
   function getAnchors(){
     const as = Array.from(root.querySelectorAll('a.u-shot'));
     as.forEach(a => {
       const href = a.getAttribute('href') || '';
       if (!a.hasAttribute('data-src')) a.setAttribute('data-src', href);
-      a.setAttribute('href', '#');         // prevent leaving the page
-      a.classList.remove('lg-item');       // neutralize any LG leftovers
+      a.setAttribute('href', '#');     // never navigate away
+      a.classList.remove('lg-item');   // neutralize LG leftovers
     });
     return as;
   }
-
-  function itemsFrom(as){
+  function toItems(as){
     return as.map(a => {
       const src     = a.getAttribute('data-src') || '';
       const poster  = a.getAttribute('data-poster') || '';
@@ -291,48 +291,81 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnX  = lb.querySelector('.lb-close');
   const btnP  = lb.querySelector('.lb-prev');
   const btnN  = lb.querySelector('.lb-next');
+  const count = document.createElement('div');
+  count.className = 'lb-count';
+  lb.appendChild(count);
 
-  let idx = 0, anchors = getAnchors(), items = itemsFrom(anchors);
+  let idx = 0, anchors = getAnchors(), items = toItems(anchors);
+
+  // Scroll lock
+  const lockScroll = () => {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'contain';
+  };
+  const unlockScroll = () => {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.body.style.overscrollBehavior = '';
+  };
 
   function render(i){
-    // Recompute in case you pasted new posts
     anchors = getAnchors();
-    items   = itemsFrom(anchors);
+    items   = toItems(anchors);
+    if (items.length === 0) return;
 
     idx = (i + items.length) % items.length;
     const it = items[idx];
     frame.innerHTML = '';
 
     if (it.isVideo) {
-      const q = new URLSearchParams({ src: it.src, poster: it.poster || '', autoplay: '1', muted: '1', loop: '1' });
-      const ifr = document.createElement('iframe');
-      ifr.src = `player.html?${q.toString()}`;
-      ifr.allow = 'autoplay; fullscreen';
-      ifr.setAttribute('title','Video');
-      frame.appendChild(ifr);
+      // DIRECT <video> (no iframe) so CSS can size it to viewport
+      const vid = document.createElement('video');
+      vid.setAttribute('playsinline','');
+      vid.setAttribute('autoplay','');
+      vid.setAttribute('muted','');
+      vid.setAttribute('loop','');
+      vid.setAttribute('controls','');
+      if (it.poster) vid.setAttribute('poster', it.poster);
+      const type = /\.webm(?:$|[?#])/i.test(it.src) ? 'video/webm' : 'video/mp4';
+      const srcEl = document.createElement('source');
+      srcEl.src = it.src;
+      srcEl.type = type;
+      vid.appendChild(srcEl);
+      frame.appendChild(vid);
+      // Kick playback on some mobile browsers
+      setTimeout(() => { vid.play().catch(()=>{}); }, 0);
     } else {
       const img = new Image();
+      img.decoding = 'async';
       img.src = it.src;
       img.alt = 'Image';
       frame.appendChild(img);
+      // Preload neighbors (images only)
+      const next = new Image(), prev = new Image();
+      const nextIt = items[(idx+1)%items.length], prevIt = items[(idx-1+items.length)%items.length];
+      if (nextIt && !nextIt.isVideo) next.src = nextIt.src;
+      if (prevIt && !prevIt.isVideo) prev.src = prevIt.src;
     }
-    cap.textContent = it.caption || '';
+
+    cap.innerHTML = it.caption || '';         // allow HTML captions
+    count.textContent = `${idx+1} / ${items.length}`;
   }
 
-  function open(i){ lb.classList.add('show'); lb.setAttribute('aria-hidden','false'); render(i); }
-  function close(){ lb.classList.remove('show'); lb.setAttribute('aria-hidden','true'); frame.innerHTML=''; }
+  function open(i){ lb.classList.add('show'); lb.setAttribute('aria-hidden','false'); lockScroll(); render(i); }
+  function close(){ lb.classList.remove('show'); lb.setAttribute('aria-hidden','true'); frame.innerHTML=''; unlockScroll(); }
 
   // Capture clicks so the browser never navigates away
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a.u-shot');
     if (!a || !root.contains(a)) return;
-    if (e.metaKey || e.ctrlKey) return;  // let users open new tab if they want
+    if (e.metaKey || e.ctrlKey) return;
     e.preventDefault(); e.stopPropagation();
     const i = anchors.indexOf(a);
     open(i >= 0 ? i : 0);
-  }, true); // capture phase
+  }, true);
 
-  // Controls + keyboard
+  // Buttons + keyboard
   btnX.addEventListener('click', close);
   btnP.addEventListener('click', () => render(idx - 1));
   btnN.addEventListener('click', () => render(idx + 1));
@@ -343,13 +376,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowLeft') render(idx - 1);
     if (e.key === 'ArrowRight') render(idx + 1);
   });
+
+  // Simple swipe
+  let sx=0, sy=0;
+  lb.addEventListener('touchstart', (e) => { const t=e.touches[0]; sx=t.clientX; sy=t.clientY; }, {passive:true});
+  lb.addEventListener('touchend',   (e) => {
+    if (!sx && !sy) return;
+    const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if (Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>30) { if (dx>0) render(idx-1); else render(idx+1); }
+    sx=sy=0;
+  }, {passive:true});
 });
+
 </script>
 
 
 
 </body>
 </html>
+
 
 
 
