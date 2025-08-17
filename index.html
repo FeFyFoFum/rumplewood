@@ -56,6 +56,9 @@
     border-top: var(--top-border) solid var(--black);
     min-height:100vh;
     box-sizing:border-box;
+    /* Sticky footer: body stacks content top→bottom and lets the footer sit at the bottom */
+    display: flex;
+    flex-direction: column;
     padding-left: var(--side-rail);
     padding-right: var(--side-rail);    
     
@@ -208,10 +211,10 @@
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
-    background: var(--black);
-    height: var(--side-rail);        /* same thickness as side rails */
+      background: var(--black);
+    height: var(--side-rail);        /* desktop thickness */
     width: 100%;
-    margin-top: calc(var(--u) * 6);  /* guaranteed pink breathing room above */
+    margin-top: auto;                 /* push footer to bottom; no pink below */
   }
 
   /* Media frames */
@@ -268,14 +271,15 @@
       line-height: 1.06;
       margin:0;
     }
-        /* Make terminal band full-bleed on mobile (ignore body padding/gutters) */
+       /* Make terminal band full-bleed and slightly thicker on mobile; always bottoms out */
     .page-end{
       position: relative;
-      width: 100vw;                     /* span entire viewport width */
-      left: 50%; right: 50%;            /* center the element */
-      margin-left: -50vw;               /* pull to full-bleed */
+      width: 100vw;          /* span entire viewport */
+      left: 50%; right: 50%;
+      margin-left: -50vw;
       margin-right: -50vw;
-      /* height + margin-top come from the base .page-end rule */
+      height: 22px;          /* thicker mobile bar */
+      margin-top: auto;      /* sticky-footer: no pink below */
     }
 
   }
@@ -548,6 +552,7 @@ so now we&#39;re gonna see HOW I say <strong>HOW</strong> I say [how](rumplewood
   </script>
 </body>
 </html>
+
 
 
 
