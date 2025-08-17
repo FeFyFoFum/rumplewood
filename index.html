@@ -236,39 +236,98 @@ document.addEventListener('DOMContentLoaded', () => {
   const mount = document.getElementById('lg-root');   // empty div just for LG
   if (!root || !mount) return;
 
-  // 1) Disable LG's markup mode + make images safe if LG ever scans
-  root.querySelectorAll('a.u-shot').forEach(a => {
-    a.classList.remove('lg-item');   // stop LG’s built-in click handler
-    const href = a.getAttribute('href') || '';
-    if (!a.hasAttribute('data-src') &&
-        /\.(png|jpe?g|gif|webp|avif|svg)(?:$|[?#])/i.test(href)) {
-      a.setAttribute('data-src', href);
-    }
-  });
-
-  // 2) Keep inline video thumbs looping (cosmetic)
+  // Keep inline video thumbs looping (cosmetic)
   root.querySelectorAll('video.u-thumb').forEach(v => {
     v.setAttribute('autoplay',''); v.setAttribute('muted','');
     v.setAttribute('loop','');     v.setAttribute('playsinline','');
     v.play().catch(()=>{});
   });
 
-  const hasIframePlugin = typeof window.lgIframe !== 'undefined';
+  // 1) Neutralize default link navigation and stop LG's markup handler
+  const anchors = Array.from(root.querySelectorAll('a.u-shot'));
+  anchors.forEach(a => {
+    const href = a.getAttribute('href') || '';
+    // ensure data-src exists (images need it if LG ever scans)
+    if (!a.hasAttribute('data-src')) a.setAttribute('data-src', href);
+    a.setAttribute('href', '#');     // prevent navigation if handler misses
+    a.classList.remove('lg-item');   // disable markup-mode handler
+  });
 
-  // 3) Build slides from anchors
   function buildSlides() {
-    const anchors = Array.from(root.querySelectorAll('a.u-shot'));
     return anchors.map(a => {
-      const href    = a.getAttribute('href') || '';
-      const dataSrc = a.getAttribute('data-src') || '';
+      const src     = a.getAttribute('data-src') || '';
       const poster  = a.getAttribute('data-poster') || '';
-      const subHtml = a.getA
+      const subHtml = a.getAttribute('data-sub-html') || '';
+      const isVideo = /\.(mp4|webm)(?:$|[?#])/.test(src.toLowerCase());
+
+      if (!isVideo) {
+        return { src, thumb: src, subHtml };
+      }
+
+      if (typeof window.lgIframe !== 'undefined') {
+        const params = new URLSearchParams({
+          src,
+          poster: poster || '',
+          autoplay: '1',
+          muted: '1',
+          loop: '1'
+        });
+        return { src: `player.html?${params.toString()}`, iframe: true, subHtml };
+      }
+
+      const type = /\.webm(?:$|[?#])/.test(src.toLowerCase()) ? 'video/webm' : 'video/mp4';
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+          <video style="max-width:90vw;max-height:80vh;outline:0"
+                 controls playsinline preload="metadata"
+                 ${poster ? `poster="${poster}"` : ''} autoplay muted loop>
+            <source src="${src}" type="${type}">
+            Sorry, your browser doesn't support embedded video.
+          </video>
+        </div>`;
+      return { html, subHtml };
+    });
+  }
+
+  function openGalleryAt(index) {
+    const lg = lightGallery(mount, {
+      dynamic: true,
+      dynamicEl: buildSlides(),
+      selector: '.__never__',              // never scan DOM
+      plugins: (typeof window.lgIframe !== 'undefined') ? [lgIframe] : [],
+      licenseKey: '0000-0000-0000-0000',
+      speed: 300,
+      download: false,
+      swipeToClose: true,
+      mobileSettings: { controls: true, showCloseIcon: true, showNext: true, showPrev: true }
+    });
+    lg.openGallery(index);
+  }
+
+  // 2) Capture clicks globally so we intercept before browser navigation
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a.u-shot');
+    if (!a) return;
+
+    // allow new-tab behavior if user holds Cmd/Ctrl
+    if (e.metaKey || e.ctrlKey) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const index = anchors.indexOf(a);
+    if (index >= 0) openGalleryAt(index);
+  }, true); // <-- capture phase
+});
+</script>
+
 
 
 
 
 </body>
 </html>
+
 
 
 
