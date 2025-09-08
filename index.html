@@ -220,6 +220,15 @@
 
   /* Bring media ~60% closer vs. last attempt: exactly 1 line-height */
   .update-card > a.u-shot{ margin-top: var(--line) !important; }
+      /* Ensure body text is left-aligned and consistent */
+  .update-card > .u-subtext{ text-align: left !important; }
+
+  /* Tighter space when an image follows body text */
+  .update-card > .u-subtext + a.u-shot{ margin-top: calc(var(--line) * 0.45) !important; }
+
+  /* A bit more space when body text follows an image */
+  .update-card > a.u-shot + .u-subtext{ margin-top: calc(var(--line) * 0.9) !important; }
+
     
     /* Terminal footer band matching side rails (in document flow) */
   .page-end{
@@ -374,6 +383,7 @@
     <div class="u-title-line1">🔓 LOCKS OF THE WEEK</div>
     <div class="u-title-line2">3 September 2025</div><div class="u-subtext" style="white-space:pre-wrap !important">how it started…
 
+     <div class="u-title-line2">3 September 2025</div>
   </div>
 
   <div class="u-subtext" style="white-space:pre-wrap !important">
@@ -771,83 +781,6 @@ same pink</div>
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
