@@ -336,25 +336,32 @@
     #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{opacity:.8}
     #lglb .lb-close:hover,#lglb .lb-prev:hover,#lglb .lb-next:hover{opacity:1}
   }
-      /* === Inline picture helpers (opt-in) =============================== */
+        /* === Inline picture helpers ======================================= */
   .updates-wrap img.inline-pic{
     display:inline;
-    height:1.1em;                 /* roughly cap-height; tweak as desired */
-    vertical-align:-0.2em;        /* nestle on the text baseline */
-    margin:0 0.3em;               /* tiny breathing room */
-    border-radius:0.25rem;        /* subtle rounding; remove if you like */
-    max-width:none;               /* ignore any global img max-width rules */
+    height:1.1em;                 /* roughly cap-height */
+    vertical-align:-0.2em;
+    margin:0 0.3em;
+    border-radius:0.25rem;
+    max-width:none;
   }
-  /* quick size nudges (optional) */
   .updates-wrap img.inline-pic.sm{ height:0.95em; }
   .updates-wrap img.inline-pic.md{ height:1.25em; }
   .updates-wrap img.inline-pic.lg{ height:1.6em; }
 
-  /* if you wrap the inline image in a link for zoom/lightbox */
-  .updates-wrap a.inline-pic-link{ text-decoration:none; }
-
-  /* keep list bullets aligned even when an inline image appears in the line */
-  .update-card > .u-sub li img.inline-pic{ vertical-align:-0.22em; }
+  /* Inline version of .u-shot (joins gallery but stays inline) */
+  a.u-shot.inline{
+    display:inline;
+    position:relative;
+    border:0;
+    background:transparent;
+    border-radius:0;
+    overflow:visible;
+    padding:0;
+    text-decoration:none;
+    cursor:zoom-in;
+  }
+  a.u-shot.inline::after{ content:none; } /* hide the corner zoom box */
   </style>
 </head>
 <body>
@@ -633,7 +640,56 @@ same pink</div>
     const root = document.getElementById('page-gallery');
     const lb   = document.getElementById('lglb');
     if (!root || !lb) return;
+ // Turn tokens like [[thumb -> full | cap="Caption" | size=md]] into inline pics.
+    // Defaults: size=md, joins montage (u-shot inline), full=thumb if omitted.
+    function expandInlineTokens(container){
+      const ESC = (s) => s.replace(/[&<>"']/g, c => (
+        c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='"'?'&quot;':'&#39;'
+      ));
+      function tokenToHTML(inner){
+        // split into [pathsPart, ...opts]
+        const parts = inner.split('|').map(s=>s.trim()).filter(Boolean);
+        const pathsPart = parts.shift() || '';
+        let [thumb, full] = pathsPart.split(/\s*->\s*/).map(s=>s.trim());
+        if (!full) full = thumb;
 
+        // defaults
+        let size = 'md', join = true, cap = '', alt = '';
+        for (const raw of parts){
+          const m = raw.match(/^(\w+)(?:=(.*))?$/);
+          if (!m) continue;
+          const k = m[1].toLowerCase();
+          let v = (m[2]||'').trim();
+          if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+            v = v.slice(1,-1);
+          }
+          if (k==='size') size = v || 'md';
+          else if (k==='cap' || k==='caption') cap = v;
+          else if (k==='alt') alt = v;
+          else if (k==='noj' || k==='solo' || k==='nolightbox') join = false;
+          else if (k==='join') join = true;
+        }
+
+        const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+        if (join){
+          const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
+          return `<a class="u-shot inline" href="${full}"${capAttr}>${img}</a>`;
+        } else {
+          // no montage; still inline
+          return img;
+        }
+      }
+
+      // Replace inside .u-subtext and the text spans of list items
+      const targets = container.querySelectorAll('.u-subtext, .u-sub li span:last-child');
+      targets.forEach(el => {
+        const html = el.innerHTML.replace(/\[\[([\s\S]+?)\]\]/g, (_, inner) => tokenToHTML(inner));
+        el.innerHTML = html;
+      });
+    }
+
+    // Expand tokens *before* the gallery scans anchors
+    expandInlineTokens(root);
     // Keep inline thumbnails looping
     root.querySelectorAll('video.u-thumb').forEach(v => {
       v.setAttribute('autoplay',''); v.setAttribute('muted','');
@@ -778,6 +834,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
