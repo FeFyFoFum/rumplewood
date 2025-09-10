@@ -664,76 +664,68 @@ same pink</div>
     const root = document.getElementById('page-gallery');
     const lb   = document.getElementById('lglb');
     if (!root || !lb) return;
- // Turn tokens like [[thumb -> full | cap="Caption" | size=md]] into inline pics.
-    // Defaults: size=md, joins montage (u-shot inline), full=thumb if omitted.
-    function expandInlineTokens(container){
-      const ESC = (s) => s.replace(/[&<>"']/g, c => (
-        c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='"'?'&quot;':'&#39;'
-      ));
-      function tokenToHTML(inner){
-        // split into [pathsPart, ...opts]
-        const parts = inner.split('|').map(s=>s.trim()).filter(Boolean);
-        const pathsPart = parts.shift() || '';
-        let [thumb, full] = pathsPart.split(/\s*->\s*/).map(s=>s.trim());
-        if (!full) full = thumb;
+<!-- START LOLA PATCH: Inline media tokens (block-by-default) -->
+<script>
+  // Turn tokens like [[thumb -> full | cap="Caption" | inline]] into media.
+  // Default = BLOCK (full-width). Inline only if | inline OR | size=sm|md|lg.
+  function expandInlineTokens(container){
+    const ESC = (s) => String(s).replace(/[&<>"']/g, c => (
+      c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='"'?'&quot;':'&#39;'
+    ));
 
-        // defaults
-        let size = 'md', join = true, cap = '', alt = '';
-        for (const raw of parts){
-          const m = raw.match(/^(\w+)(?:=(.*))?$/);
-          if (!m) continue;
-          const k = m[1].toLowerCase();
-          let v = (m[2]||'').trim();
-          if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
-            v = v.slice(1,-1);
-          }
-          if (k==='size') size = v || 'md';
-          else if (k==='cap' || k==='caption') cap = v;
-          else if (k==='alt') alt = v;
-          else if (k==='noj' || k==='solo' || k==='nolightbox') join = false;
-          else if (k==='join') join = true;
-        }
+    function tokenToHTML(inner){
+      const parts = inner.split('|').map(s=>s.trim()).filter(Boolean);
+      const pathsPart = parts.shift() || '';
+      let [thumb, full] = pathsPart.split(/\s*->\s*/).map(s=>s.trim());
+      if (!full) full = thumb;
 
-        const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
-        if (join){
-          const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
-                  // Default rendering is now "block" (full-width). Opt into inline via:
-        //   | inline   OR   | size=sm|md|lg
-        const wantsInline =
-          (typeof size === 'string' && /^(sm|md|lg)$/i.test(size)) ||
-          parts.some(p => /^inline$/i.test(p));
+      // options (defaults)
+      let size = '';          // '' means auto (block unless inline explicitly requested)
+      let cap  = '';
+      let alt  = '';
+      let join = true;
+      let mode = 'auto';      // 'auto' | 'inline' | 'block'
 
-        if (!wantsInline){
-          // BLOCK MODE (same look/size as end-of-post media)
-          const capAttrBlock = cap ? ` data-sub-html="${ESC(cap)}"` : '';
-          const imgHTML = `<img class="u-thumb" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
-          return join
-            ? `<a class="u-shot" href="${full}"${capAttrBlock}>${imgHTML}</a>`
-            : imgHTML; // full-width, no montage
+      for (const raw of parts){
+        const m = raw.match(/^(\w+)(?:=(.*))?$/);
+        if (!m) continue;
+        const k = m[1].toLowerCase();
+        let v = (m[2]||'').trim();
+        if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+          v = v.slice(1,-1);
         }
-
-        // INLINE MODE (only when explicitly requested)
-        const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
-        if (join){
-          const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
-          return `<a class="u-shot inline" href="${full}"${capAttr}>${img}</a>`;
-        } else {
-          return img; // inline only, no montage
-        }
-          return `<a class="u-shot inline" href="${full}"${capAttr}>${img}</a>`;
-        } else {
-          // no montage; still inline
-          return img;
-        }
+        if (k==='size') size = v;
+        else if (k==='cap' || k==='caption') cap = v;
+        else if (k==='alt') alt = v;
+        else if (k==='inline') mode = 'inline';
+        else if (k==='block')  mode = 'block';
+        else if (k==='noj' || k==='solo' || k==='nolightbox') join = false;
+        else if (k==='join') join = true;
       }
 
-      // Replace inside .u-subtext and the text spans of list items
-      const targets = container.querySelectorAll('.u-subtext, .u-sub li span:last-child');
-      targets.forEach(el => {
-        const html = el.innerHTML.replace(/\[\[([\s\S]+?)\]\]/g, (_, inner) => tokenToHTML(inner));
-        el.innerHTML = html;
-      });
+      const wantsInline = mode==='inline' || /^(sm|md|lg)$/i.test(size);
+
+      if (wantsInline){
+        const img = `<img class="inline-pic ${size || 'md'}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+        return join
+          ? `<a class="u-shot inline" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
+          : img;
+      } else {
+        const img = `<img class="u-thumb" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+        return join
+          ? `<a class="u-shot" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
+          : img;
+      }
     }
+
+    // Replace inside .u-subtext and the text spans of list items
+    const targets = container.querySelectorAll('.u-subtext, .u-sub li span:last-child');
+    targets.forEach(el => {
+      el.innerHTML = el.innerHTML.replace(/\[\[([\s\S]+?)\]\]/g, (_, inner) => tokenToHTML(inner));
+    });
+  }
+</script>
+<!-- END LOLA PATCH: Inline media tokens (block-by-default) -->
 
     // Expand tokens *before* the gallery scans anchors
     expandInlineTokens(root);
@@ -881,6 +873,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
