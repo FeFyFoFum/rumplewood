@@ -336,6 +336,25 @@
     #lglb .lb-close,#lglb .lb-prev,#lglb .lb-next{opacity:.8}
     #lglb .lb-close:hover,#lglb .lb-prev:hover,#lglb .lb-next:hover{opacity:1}
   }
+      /* === Inline picture helpers (opt-in) =============================== */
+  .updates-wrap img.inline-pic{
+    display:inline;
+    height:1.1em;                 /* roughly cap-height; tweak as desired */
+    vertical-align:-0.2em;        /* nestle on the text baseline */
+    margin:0 0.3em;               /* tiny breathing room */
+    border-radius:0.25rem;        /* subtle rounding; remove if you like */
+    max-width:none;               /* ignore any global img max-width rules */
+  }
+  /* quick size nudges (optional) */
+  .updates-wrap img.inline-pic.sm{ height:0.95em; }
+  .updates-wrap img.inline-pic.md{ height:1.25em; }
+  .updates-wrap img.inline-pic.lg{ height:1.6em; }
+
+  /* if you wrap the inline image in a link for zoom/lightbox */
+  .updates-wrap a.inline-pic-link{ text-decoration:none; }
+
+  /* keep list bullets aligned even when an inline image appears in the line */
+  .update-card > .u-sub li img.inline-pic{ vertical-align:-0.22em; }
   </style>
 </head>
 <body>
@@ -759,6 +778,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
