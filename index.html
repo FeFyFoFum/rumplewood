@@ -367,6 +367,10 @@
 
   /* Optional: if you ever use <a class="inline-pic-link"><img class="inline-pic"></a> */
   .updates-wrap a.inline-pic-link{ text-decoration:none; }
+/* When a full-width .u-shot appears inside .u-subtext, space it like media */
+.u-subtext a.u-shot{ margin: var(--line) 0; }
+
+    
   </style>
 </head>
 <body>
@@ -692,6 +696,29 @@ same pink</div>
         const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
         if (join){
           const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
+           // Default rendering is now "block" (full-width). Opt into inline via:
+        //   | inline   OR   | size=sm|md|lg
+        const wantsInline =
+          (typeof size === 'string' && /^(sm|md|lg)$/i.test(size)) ||
+          parts.some(p => /^inline$/i.test(p));
+
+        if (!wantsInline){
+          // BLOCK MODE (same look/size as end-of-post media)
+          const capAttrBlock = cap ? ` data-sub-html="${ESC(cap)}"` : '';
+          const imgHTML = `<img class="u-thumb" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+          return join
+            ? `<a class="u-shot" href="${full}"${capAttrBlock}>${imgHTML}</a>`
+            : imgHTML; // full-width, no montage
+        }
+
+        // INLINE MODE (only when explicitly requested)
+        const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+        if (join){
+          const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
+          return `<a class="u-shot inline" href="${full}"${capAttr}>${img}</a>`;
+        } else {
+          return img; // inline only, no montage
+        }
           return `<a class="u-shot inline" href="${full}"${capAttr}>${img}</a>`;
         } else {
           // no montage; still inline
@@ -853,6 +880,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
