@@ -362,6 +362,11 @@
     cursor:zoom-in;
   }
   a.u-shot.inline::after{ content:none; } /* hide the corner zoom box */
+      /* Keep bullets aligned when an inline image appears in the line */
+  .update-card > .u-sub li img.inline-pic{ vertical-align:-0.22em; }
+
+  /* Optional: if you ever use <a class="inline-pic-link"><img class="inline-pic"></a> */
+  .updates-wrap a.inline-pic-link{ text-decoration:none; }
   </style>
 </head>
 <body>
@@ -834,6 +839,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
