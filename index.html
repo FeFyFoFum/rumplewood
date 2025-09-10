@@ -664,69 +664,64 @@ same pink</div>
     const root = document.getElementById('page-gallery');
     const lb   = document.getElementById('lglb');
     if (!root || !lb) return;
-<!-- START LOLA PATCH: Inline media tokens (block-by-default) -->
-<script>
-  // Turn tokens like [[thumb -> full | cap="Caption" | inline]] into media.
-  // Default = BLOCK (full-width). Inline only if | inline OR | size=sm|md|lg.
-  function expandInlineTokens(container){
-    const ESC = (s) => String(s).replace(/[&<>"']/g, c => (
-      c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='"'?'&quot;':'&#39;'
-    ));
+// Turn tokens like [[thumb -> full | cap="Caption" | inline]] into media.
+// Default = BLOCK (full-width). Inline only if | inline OR | size=sm|md|lg.
+function expandInlineTokens(container){
+  const ESC = (s) => String(s).replace(/[&<>"']/g, c =>
+    c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='"'?'&quot;':'&#39;'
+  );
 
-    function tokenToHTML(inner){
-      const parts = inner.split('|').map(s=>s.trim()).filter(Boolean);
-      const pathsPart = parts.shift() || '';
-      let [thumb, full] = pathsPart.split(/\s*->\s*/).map(s=>s.trim());
-      if (!full) full = thumb;
+  function tokenToHTML(inner){
+    const parts = inner.split('|').map(s=>s.trim()).filter(Boolean);
+    const pathsPart = parts.shift() || '';
+    let [thumb, full] = pathsPart.split(/\s*->\s*/).map(s=>s.trim());
+    if (!full) full = thumb;
 
-      // options (defaults)
-      let size = '';          // '' means auto (block unless inline explicitly requested)
-      let cap  = '';
-      let alt  = '';
-      let join = true;
-      let mode = 'auto';      // 'auto' | 'inline' | 'block'
+    // options (defaults)
+    let size = '';          // '' = auto (block unless inline explicitly requested)
+    let cap  = '';
+    let alt  = '';
+    let join = true;
+    let mode = 'auto';      // 'auto' | 'inline' | 'block'
 
-      for (const raw of parts){
-        const m = raw.match(/^(\w+)(?:=(.*))?$/);
-        if (!m) continue;
-        const k = m[1].toLowerCase();
-        let v = (m[2]||'').trim();
-        if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
-          v = v.slice(1,-1);
-        }
-        if (k==='size') size = v;
-        else if (k==='cap' || k==='caption') cap = v;
-        else if (k==='alt') alt = v;
-        else if (k==='inline') mode = 'inline';
-        else if (k==='block')  mode = 'block';
-        else if (k==='noj' || k==='solo' || k==='nolightbox') join = false;
-        else if (k==='join') join = true;
+    for (const raw of parts){
+      const m = raw.match(/^(\w+)(?:=(.*))?$/);
+      if (!m) continue;
+      const k = m[1].toLowerCase();
+      let v = (m[2]||'').trim();
+      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+        v = v.slice(1,-1);
       }
-
-      const wantsInline = mode==='inline' || /^(sm|md|lg)$/i.test(size);
-
-      if (wantsInline){
-        const img = `<img class="inline-pic ${size || 'md'}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
-        return join
-          ? `<a class="u-shot inline" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
-          : img;
-      } else {
-        const img = `<img class="u-thumb" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
-        return join
-          ? `<a class="u-shot" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
-          : img;
-      }
+      if (k==='size') size = v;
+      else if (k==='cap' || k==='caption') cap = v;
+      else if (k==='alt') alt = v;
+      else if (k==='inline') mode = 'inline';
+      else if (k==='block')  mode = 'block';
+      else if (k==='noj' || k==='solo' || k==='nolightbox') join = false;
+      else if (k==='join') join = true;
     }
 
-    // Replace inside .u-subtext and the text spans of list items
-    const targets = container.querySelectorAll('.u-subtext, .u-sub li span:last-child');
-    targets.forEach(el => {
-      el.innerHTML = el.innerHTML.replace(/\[\[([\s\S]+?)\]\]/g, (_, inner) => tokenToHTML(inner));
-    });
-  }
-</script>
-<!-- END LOLA PATCH: Inline media tokens (block-by-default) -->
+    const wantsInline = mode==='inline' || /^(sm|md|lg)$/i.test(size);
 
+    if (wantsInline){
+      const img = `<img class="inline-pic ${size || 'md'}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+      return join
+        ? `<a class="u-shot inline" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
+        : img;
+    } else {
+      const img = `<img class="u-thumb" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
+      return join
+        ? `<a class="u-shot" href="${full}"${cap?` data-sub-html="${ESC(cap)}"`:''}>${img}</a>`
+        : img;
+    }
+  }
+
+  // Replace inside .u-subtext and the text spans of list items
+  const targets = container.querySelectorAll('.u-subtext, .u-sub li span:last-child');
+  targets.forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/\[\[([\s\S]+?)\]\]/g, (_, inner) => tokenToHTML(inner));
+  });
+}
     // Expand tokens *before* the gallery scans anchors
     expandInlineTokens(root);
     // Keep inline thumbnails looping
@@ -873,6 +868,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
