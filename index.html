@@ -697,7 +697,7 @@ same pink</div>
         const img = `<img class="inline-pic ${size}" src="${thumb}" alt="${ESC(alt||cap||'')}" loading="lazy">`;
         if (join){
           const capAttr = cap ? ` data-sub-html="${ESC(cap)}"` : '';
-           // Default rendering is now "block" (full-width). Opt into inline via:
+                  // Default rendering is now "block" (full-width). Opt into inline via:
         //   | inline   OR   | size=sm|md|lg
         const wantsInline =
           (typeof size === 'string' && /^(sm|md|lg)$/i.test(size)) ||
@@ -881,6 +881,7 @@ same pink</div>
   </script>
 </body>
 </html>
+
 
 
 
